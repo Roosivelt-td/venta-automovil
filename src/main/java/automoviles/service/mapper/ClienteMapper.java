@@ -1,30 +1,41 @@
 package automoviles.service.mapper;
 
-import automoviles.dto.ClienteDto;
+import automoviles.dto.response.ClienteResponse;
+import automoviles.dto.response.UsuarioResponse;
 import automoviles.model.Cliente;
+import automoviles.model.Usuario;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Component
 public class ClienteMapper {
 
-    public ClienteDto toDto(Cliente cliente) {
-        ClienteDto dto = new ClienteDto();
-        dto.setId(cliente.getId());
-        dto.setNombre(cliente.getNombre());
-        dto.setDni(cliente.getDni());
-        dto.setTelefono(cliente.getTelefono());
-        dto.setDireccion(cliente.getDireccion());
-        dto.setCorreo(cliente.getCorreo());
-        return dto;
+    public Collection<ClienteResponse> toListClienteToClienteResponse(Collection<Cliente> listarCliente) {
+        Collection<ClienteResponse> listarClienteResponse = new ArrayList<ClienteResponse>();
+        if (listarCliente != null && !listarCliente.isEmpty()) {
+            for (Cliente cliente : listarCliente) {
+                ClienteResponse clienteResponse = new ClienteResponse();
+                clienteResponse.setIdentificador(cliente.getId());
+                clienteResponse.setNombre(cliente.getNombre());
+                clienteResponse.setDni(cliente.getDni());
+                clienteResponse.setTelefono(cliente.getTelefono());
+                clienteResponse.setDireccion(cliente.getDireccion());
+                clienteResponse.setCorreo(cliente.getCorreo());
+            }
+        }
+        return listarClienteResponse;
     }
-
-    public Cliente toEntity(ClienteDto dto) {
-        Cliente cliente = new Cliente();
-        cliente.setNombre(dto.getNombre());
-        cliente.setDni(dto.getDni());
-        cliente.setTelefono(dto.getTelefono());
-        cliente.setDireccion(dto.getDireccion());
-        cliente.setCorreo(dto.getCorreo());
-        return cliente;
+    public ClienteResponse toClienteToClienteResponse(Cliente cliente) {
+        ClienteResponse clienteResponse = new ClienteResponse();
+        if (cliente != null) {
+            clienteResponse.setNombre(cliente.getNombre());
+            clienteResponse.setDni(cliente.getDni());
+            clienteResponse.setTelefono(cliente.getTelefono());
+            clienteResponse.setDireccion(cliente.getDireccion());
+            clienteResponse.setCorreo(cliente.getCorreo());
+        }
+        return clienteResponse;
     }
 }

@@ -1,6 +1,5 @@
 package automoviles.service;
 
-import automoviles.dto.CompraDto;
 import java.util.List;
 
 public interface CompraService {

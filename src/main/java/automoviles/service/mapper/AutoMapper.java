@@ -1,40 +1,51 @@
 package automoviles.service.mapper;
 
-import automoviles.dto.AutoDto;
+import automoviles.dto.response.AutoResponse;
 import automoviles.model.Auto;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Component
 public class AutoMapper {
 
-    public AutoDto toDto(Auto auto) {
-        AutoDto dto = new AutoDto();
-        dto.setId(auto.getId());
-        dto.setMarca(auto.getMarca());
-        dto.setModelo(auto.getModelo());
-        dto.setAnio(auto.getAnio());
-        dto.setColor(auto.getColor());
-        dto.setKilometraje(auto.getKilometraje());
-        dto.setTipo(auto.getTipo());
-        dto.setPrecio(auto.getPrecio());
-        dto.setDescripcion(auto.getDescripcion());
-        dto.setImagenUrl(auto.getImagenUrl());
-        dto.setEstado(auto.getEstado());
-        return dto;
+    public Collection<AutoResponse> toListAutoToAutoResponse(Collection<Auto> listarAuto) {
+        Collection<AutoResponse> listarAutoResponse = new ArrayList<AutoResponse>();
+        if (listarAuto != null && !listarAuto.isEmpty()) {
+            for (Auto auto : listarAuto) {
+                AutoResponse autoResponse = new AutoResponse();
+                autoResponse.setIdentificador(auto.getId());
+                autoResponse.setMarca(auto.getMarca());
+                autoResponse.setModelo(auto.getModelo());
+                autoResponse.setAnio(auto.getAnio());
+                autoResponse.setColor(auto.getColor());
+                autoResponse.setKilometraje(auto.getKilometraje());
+                autoResponse.setTipo(auto.getTipo());
+                autoResponse.setPrecio(auto.getPrecio());
+                autoResponse.setDescripcion(auto.getDescripcion());
+                autoResponse.setImagenUrl(auto.getImagenUrl());
+                autoResponse.setEstado(auto.getEstado());
+            }
+        }
+        return listarAutoResponse;
     }
 
-    public Auto toEntity(AutoDto dto) {
-        Auto auto = new Auto();
-        auto.setMarca(dto.getMarca());
-        auto.setModelo(dto.getModelo());
-        auto.setAnio(dto.getAnio());
-        auto.setColor(dto.getColor());
-        auto.setKilometraje(dto.getKilometraje());
-        auto.setTipo(dto.getTipo());
-        auto.setPrecio(dto.getPrecio());
-        auto.setDescripcion(dto.getDescripcion());
-        auto.setImagenUrl(dto.getImagenUrl());
-        auto.setEstado(dto.getEstado());
-        return auto;
+    public AutoResponse toAutoToAutoResponse(Auto auto) {
+        AutoResponse autoResponse = new AutoResponse();
+        if (auto != null) {
+            autoResponse.setMarca(auto.getMarca());
+            autoResponse.setModelo(auto.getModelo());
+            autoResponse.setAnio(auto.getAnio());
+            autoResponse.setColor(auto.getColor());
+            autoResponse.setKilometraje(auto.getKilometraje());
+            autoResponse.setTipo(auto.getTipo());
+            autoResponse.setPrecio(auto.getPrecio());
+            autoResponse.setDescripcion(auto.getDescripcion());
+            autoResponse.setImagenUrl(auto.getImagenUrl());
+            autoResponse.setEstado(auto.getEstado());
+        }
+        return autoResponse;
     }
+
 }

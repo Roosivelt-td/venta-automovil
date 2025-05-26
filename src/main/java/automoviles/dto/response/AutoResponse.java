@@ -6,7 +6,8 @@ import java.math.BigDecimal;
 
 @Data
 public class AutoResponse {
-    private Long id;
+
+    private Long identificador;
     private String marca;
     private String modelo;
     private Integer anio;

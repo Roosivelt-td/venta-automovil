@@ -1,6 +1,5 @@
 package automoviles.service;
 
-import automoviles.dto.VentaDto;
 import java.util.List;
 
 public interface VentaService {

@@ -1,6 +1,5 @@
 package automoviles.service.impl;
 
-import automoviles.dto.VentaDto;
 import automoviles.model.*;
 import automoviles.repository.*;
 import automoviles.service.VentaService;

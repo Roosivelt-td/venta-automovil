@@ -1,11 +1,13 @@
 package automoviles.controller;
 
-import automoviles.dto.AutoDto;
+import automoviles.dto.request.AutoRequest;
+import automoviles.dto.response.AutoResponse;
 import automoviles.service.AutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
+
+import java.util.Collection;
 
 @RestController
 @RequestMapping("/api/autos")
@@ -13,34 +15,29 @@ public class AutoController {
 
     @Autowired
     private AutoService autoService;
-//hola
-    @PostMapping
-    public ResponseEntity<AutoDto> crearAuto(@RequestBody AutoDto autoDto) {
-        AutoDto nuevoAuto = autoService.crearAuto(autoDto);
-        return ResponseEntity.ok(nuevoAuto);
-    }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<AutoDto> obtenerAutoPorId(@PathVariable Long id) {
-        AutoDto auto = autoService.obtenerAutoPorId(id);
-        return ResponseEntity.ok(auto);
-    }
+    @PostMapping // crear auto
+    public void crearAuto(@RequestBody AutoRequest request) { autoService.crearAuto(request);}
 
-    @GetMapping
-    public ResponseEntity<List<AutoDto>> obtenerTodosLosAutos() {
-        List<AutoDto> autos = autoService.obtenerTodosLosAutos();
-        return ResponseEntity.ok(autos);
+    @GetMapping("/{id}/auto") // obtener un auto por su id
+    public ResponseEntity<AutoResponse> obtenerAutoPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(autoService.obtenerAutoPorId(id));
     }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<AutoDto> actualizarAuto(@PathVariable Long id, @RequestBody AutoDto autoDto) {
-        AutoDto autoActualizado = autoService.actualizarAuto(id, autoDto);
-        return ResponseEntity.ok(autoActualizado);
+    @GetMapping // obtener todos los autos
+    public ResponseEntity<Collection<AutoResponse>> obtenerTodosLosAutos() {
+        return ResponseEntity.ok(autoService.obtenerTodosLosAutos());
     }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarAuto(@PathVariable Long id) {
+    @PutMapping("/{id}/update")// actualizar un auto por id
+    public void actualizarAutoId(@PathVariable Long id, @RequestBody AutoRequest request) {
+        if (autoService.obtenerAutoPorId(id) != null) {
+            autoService.actualizarAuto(id, request);
+        } else {
+            throw new RuntimeException("No existe un auto con el id: " + id);
+        }
+    }
+    @DeleteMapping("/{id}/delete") // eliminar un auto  por id
+    public void eliminarAutoId(@PathVariable Long id) {
         autoService.eliminarAuto(id);
-        return ResponseEntity.noContent().build();
     }
+
 }

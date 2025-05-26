@@ -1,14 +1,15 @@
 package automoviles.service.impl;
 
-import automoviles.dto.ClienteDto;
+import automoviles.dto.request.ClienteRequest;
+import automoviles.dto.response.ClienteResponse;
 import automoviles.model.Cliente;
 import automoviles.repository.ClienteRepository;
 import automoviles.service.ClienteService;
 import automoviles.service.mapper.ClienteMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.stream.Collectors;
+
+import java.util.Collection;
 
 @Service
 public class ClienteServiceImpl implements ClienteService {
@@ -19,42 +20,49 @@ public class ClienteServiceImpl implements ClienteService {
     @Autowired
     private ClienteMapper clienteMapper;
 
-    @Override
-    public ClienteDto crearCliente(ClienteDto clienteDto) {
-        Cliente cliente = clienteMapper.toEntity(clienteDto);
-        cliente = clienteRepository.save(cliente);
-        return clienteMapper.toDto(cliente);
+    @Override //registro de cliente
+    public void crearCliente(ClienteRequest request) {
+        Cliente clienteNew = new Cliente();
+        System.out.println("Nuevo Cliente" + clienteNew);
+        clienteNew.setNombre(request.getNombre());
+        clienteNew.setDni(request.getDni());
+        clienteNew.setTelefono(request.getTelefono());
+        clienteNew.setDireccion(request.getDireccion());
+        clienteNew.setCorreo(request.getCorreo());
+        clienteRepository.save(clienteNew);
+
     }
 
-    @Override
-    public ClienteDto obtenerClientePorId(Long id) {
-        Cliente cliente = clienteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
-        return clienteMapper.toDto(cliente);
+    @Override // buscar Cliente por id
+    public ClienteResponse obtenerClientePorId(Long id) {
+        Cliente cliente = clienteRepository.findById(id).orElse(null);
+        return clienteMapper.toClienteToClienteResponse(cliente);
     }
 
-    @Override
-    public List<ClienteDto> obtenerTodosLosClientes() {
-        return clienteRepository.findAll().stream()
-                .map(clienteMapper::toDto)
-                .collect(Collectors.toList());
+    @Override // obtener todos los clientes
+    public Collection<ClienteResponse> obtenerTodosLosClientes() {
+        Collection<Cliente> listClienteResponse = clienteRepository.findAll();
+        return clienteMapper.toListClienteToClienteResponse(listClienteResponse);
     }
 
-    @Override
-    public ClienteDto actualizarCliente(Long id, ClienteDto clienteDto) {
-        Cliente cliente = clienteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
-        cliente.setNombre(clienteDto.getNombre());
-        cliente.setDni(clienteDto.getDni());
-        cliente.setTelefono(clienteDto.getTelefono());
-        cliente.setDireccion(clienteDto.getDireccion());
-        cliente.setCorreo(clienteDto.getCorreo());
-        cliente = clienteRepository.save(cliente);
-        return clienteMapper.toDto(cliente);
+    @Override // actualizar clientes
+    public void actualizarCliente(Long id, ClienteRequest request) {
+        Cliente cliente = clienteRepository.findById(id).orElse(null);
+        if (cliente != null) {
+            cliente.setNombre(request.getNombre());
+            cliente.setDni(request.getDni());
+            cliente.setTelefono(request.getTelefono());
+            cliente.setDireccion(request.getDireccion());
+            cliente.setCorreo(request.getCorreo());
+            clienteRepository.save(cliente);
+        }
     }
 
-    @Override
+    @Override // eliminar clientes
     public void eliminarCliente(Long id) {
-        clienteRepository.deleteById(id);
+        Cliente cliente = clienteRepository.findById(id).orElse(null);
+        if (cliente != null) {
+            clienteRepository.delete(cliente);
+        }
     }
 }

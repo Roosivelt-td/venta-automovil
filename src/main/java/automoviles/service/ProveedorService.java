@@ -1,6 +1,5 @@
 package automoviles.service;
 
-import automoviles.dto.ProveedorDto;
 import java.util.List;
 
 public interface ProveedorService {

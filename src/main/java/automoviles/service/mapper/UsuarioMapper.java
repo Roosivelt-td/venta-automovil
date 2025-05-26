@@ -1,6 +1,5 @@
 package automoviles.service.mapper;
 
-
 import automoviles.dto.response.UsuarioResponse;
 import automoviles.model.Usuario;
 import org.springframework.stereotype.Component;

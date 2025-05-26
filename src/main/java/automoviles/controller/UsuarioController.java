@@ -1,6 +1,5 @@
 package automoviles.controller;
 
-
 import automoviles.dto.request.UsuarioRequest;
 import automoviles.dto.response.UsuarioResponse;
 import automoviles.service.UsuarioService;

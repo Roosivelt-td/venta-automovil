@@ -1,6 +1,5 @@
 package automoviles.service.mapper;
 
-import automoviles.dto.PagoDto;
 import automoviles.model.Pago;
 import org.springframework.stereotype.Component;
 

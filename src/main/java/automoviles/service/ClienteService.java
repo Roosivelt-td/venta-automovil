@@ -1,12 +1,16 @@
 package automoviles.service;
 
-import automoviles.dto.ClienteDto;
-import java.util.List;
+import automoviles.dto.request.ClienteRequest;
+import automoviles.dto.response.ClienteResponse;
+
+import java.util.Collection;
 
 public interface ClienteService {
-    ClienteDto crearCliente(ClienteDto clienteDto);
-    ClienteDto obtenerClientePorId(Long id);
-    List<ClienteDto> obtenerTodosLosClientes();
-    ClienteDto actualizarCliente(Long id, ClienteDto clienteDto);
+
+    Collection<ClienteResponse> obtenerTodosLosClientes();
+    ClienteResponse obtenerClientePorId(Long id);
+    void crearCliente(ClienteRequest request);
+    void actualizarCliente(Long id, ClienteRequest request);
     void eliminarCliente(Long id);
+
 }

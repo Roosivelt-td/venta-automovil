@@ -1,6 +1,5 @@
 package automoviles.controller;
 
-import automoviles.dto.CompraDto;
 import automoviles.service.CompraService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

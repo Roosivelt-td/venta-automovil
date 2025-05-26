@@ -1,11 +1,13 @@
 package automoviles.controller;
 
-import automoviles.dto.ClienteDto;
+import automoviles.dto.request.ClienteRequest;
+import automoviles.dto.response.ClienteResponse;
 import automoviles.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
+
+import java.util.Collection;
 
 @RestController
 @RequestMapping("/api/clientes")
@@ -14,33 +16,33 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
-    @PostMapping
-    public ResponseEntity<ClienteDto> crearCliente(@RequestBody ClienteDto clienteDto) {
-        ClienteDto nuevoCliente = clienteService.crearCliente(clienteDto);
-        return ResponseEntity.ok(nuevoCliente);
+    @PostMapping // crear cliente
+    public void crearCliente(@RequestBody ClienteRequest request) { ClienteService.crearCliente(request);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ClienteDto> obtenerClientePorId(@PathVariable Long id) {
-        ClienteDto cliente = clienteService.obtenerClientePorId(id);
-        return ResponseEntity.ok(cliente);
+    @GetMapping("/{id}") // obtener un cliente por su id
+    public ResponseEntity<ClienteResponse> obtenerClientePorId(@PathVariable Long id) {
+        return ResponseEntity.ok(clienteService.obtenerClientePorId(id));
     }
 
-    @GetMapping
-    public ResponseEntity<List<ClienteDto>> obtenerTodosLosClientes() {
-        List<ClienteDto> clientes = clienteService.obtenerTodosLosClientes();
-        return ResponseEntity.ok(clientes);
+    @GetMapping// obtener todos los clientes
+    public  ResponseEntity<Collection<ClienteResponse>> obtenerTodosLosClientes() {
+        return ResponseEntity.ok(clienteService.obtenerTodosLosClientes());
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ClienteDto> actualizarCliente(@PathVariable Long id, @RequestBody ClienteDto clienteDto) {
-        ClienteDto clienteActualizado = clienteService.actualizarCliente(id, clienteDto);
-        return ResponseEntity.ok(clienteActualizado);
+    @PutMapping("/{id}/update")// actualizar un cliente por id
+    public void actualizarClienteId(@PathVariable Long id, @RequestBody ClienteRequest request) {
+        if (clienteService.obtenerClientePorId(id) != null) {
+            clienteService.actualizarCliente(id, request);
+        } else {
+            throw new RuntimeException("No existe un cliente con el id: " + id);
+        }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarCliente(@PathVariable Long id) {
+    @DeleteMapping("/{id}/delete") // eliminar un cliente  por id
+    public void eliminarCliente(@PathVariable Long id) {
         clienteService.eliminarCliente(id);
-        return ResponseEntity.noContent().build();
     }
+
+
 }

@@ -4,7 +4,8 @@ import lombok.Data;
 
 @Data
 public class ClienteResponse {
-    private Long id;
+
+    private Long identificador;
     private String nombre;
     private String dni;
     private String telefono;

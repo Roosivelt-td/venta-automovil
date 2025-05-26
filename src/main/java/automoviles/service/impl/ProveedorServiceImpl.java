@@ -1,6 +1,5 @@
 package automoviles.service.impl;
 
-import automoviles.dto.ProveedorDto;
 import automoviles.model.Proveedor;
 import automoviles.repository.ProveedorRepository;
 import automoviles.service.ProveedorService;
