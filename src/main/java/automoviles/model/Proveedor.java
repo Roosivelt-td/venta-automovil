@@ -19,10 +19,9 @@ public class Proveedor {
     @Column(name = "ruc", unique = true, nullable = false)
     private String ruc;
 
-    @Column(name = "contacto")
     private String contacto;
 
-    @Column(name = "telefono")
+    @Column(name = "telefono", unique = true, nullable = false)
     private String telefono;
 
     @Column(name = "direccion", columnDefinition = "TEXT")

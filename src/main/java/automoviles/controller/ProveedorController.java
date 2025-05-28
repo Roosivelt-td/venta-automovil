@@ -1,10 +1,13 @@
 package automoviles.controller;
 
+import automoviles.dto.request.ProveedorRequest;
+import automoviles.dto.response.ProveedorResponse;
 import automoviles.service.ProveedorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
+
+import java.util.Collection;
 
 @RestController
 @RequestMapping("/api/proveedores")
@@ -13,33 +16,32 @@ public class ProveedorController {
     @Autowired
     private ProveedorService proveedorService;
 
-    @PostMapping
-    public ResponseEntity<ProveedorDto> crearProveedor(@RequestBody ProveedorDto proveedorDto) {
-        ProveedorDto nuevoProveedor = proveedorService.crearProveedor(proveedorDto);
-        return ResponseEntity.ok(nuevoProveedor);
+    @PostMapping // crear un proveedor
+    public void crearProveedor(@RequestBody ProveedorRequest request) { proveedorService.crearProveedor(request);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ProveedorDto> obtenerProveedorPorId(@PathVariable Long id) {
-        ProveedorDto proveedor = proveedorService.obtenerProveedorPorId(id);
-        return ResponseEntity.ok(proveedor);
+    @GetMapping("/{id}") // obtener un proveedor por su id
+    public ResponseEntity<ProveedorResponse> obtenerProveedorPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(proveedorService.obtenerProveedorPorId(id));
     }
 
-    @GetMapping
-    public ResponseEntity<List<ProveedorDto>> obtenerTodosLosProveedores() {
-        List<ProveedorDto> proveedores = proveedorService.obtenerTodosLosProveedores();
-        return ResponseEntity.ok(proveedores);
+    @GetMapping// obtener todos los proveedors
+    public ResponseEntity<Collection<ProveedorResponse>> obtenerTodosLosProveedors() {
+        return ResponseEntity.ok(proveedorService.obtenerTodosLosProveedors());
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ProveedorDto> actualizarProveedor(@PathVariable Long id, @RequestBody ProveedorDto proveedorDto) {
-        ProveedorDto proveedorActualizado = proveedorService.actualizarProveedor(id, proveedorDto);
-        return ResponseEntity.ok(proveedorActualizado);
+    @PutMapping("/{id}/update")// actualizar un proveedor por id
+    public void actualizarProveedorId(@PathVariable Long id, @RequestBody ProveedorRequest request) {
+        if (proveedorService.obtenerProveedorPorId(id) != null) {
+            proveedorService.actualizarProveedor(id, request);
+        } else {
+            throw new RuntimeException("No existe un proveedor con el id: " + id);
+        }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarProveedor(@PathVariable Long id) {
+    @DeleteMapping("/{id}/delete") // eliminar un proveedor  por id
+    public void eliminarProveedorId(@PathVariable Long id) {
         proveedorService.eliminarProveedor(id);
-        return ResponseEntity.noContent().build();
     }
+
 }

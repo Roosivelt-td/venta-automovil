@@ -7,7 +7,8 @@ import java.time.LocalDate;
 
 @Data
 public class CompraResponse {
-    private Long id;
+
+    private Long identificador;
     private Long idProveedor;  // ID del proveedor
     private Long idAuto;      // ID del auto
     private LocalDate fecha;

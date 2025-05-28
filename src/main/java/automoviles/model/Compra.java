@@ -16,16 +16,14 @@ public class Compra {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "id_proveedor", nullable = false)
+    @JoinColumn(name = "idProveedor", nullable = false)
     private Proveedor proveedor;
 
     @ManyToOne
-    @JoinColumn(name = "id_auto", nullable = false)
+    @JoinColumn(name = "idAuto", nullable = false)
     private Auto auto;
 
-    @Column(name = "fecha", nullable = false)
     private LocalDate fecha;
-
     @Column(name = "precio_compra", nullable = false, precision = 10, scale = 2)
     private BigDecimal precioCompra;
 }

@@ -1,6 +1,5 @@
 package automoviles.dto.request;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 

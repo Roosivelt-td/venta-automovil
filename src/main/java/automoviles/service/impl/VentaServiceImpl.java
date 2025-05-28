@@ -1,19 +1,24 @@
 package automoviles.service.impl;
 
+import automoviles.dto.request.VentaRequest;
+import automoviles.dto.response.VentaResponse;
 import automoviles.model.*;
 import automoviles.repository.*;
 import automoviles.service.VentaService;
 import automoviles.service.mapper.VentaMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.stream.Collectors;
+
+import java.util.Collection;
 
 @Service
 public class VentaServiceImpl implements VentaService {
 
     @Autowired
     private VentaRepository ventaRepository;
+
+    @Autowired
+    private VentaMapper ventaMapper;
 
     @Autowired
     private ClienteRepository clienteRepository;
@@ -24,40 +29,64 @@ public class VentaServiceImpl implements VentaService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    @Autowired
-    private VentaMapper ventaMapper;
+    @Override
+    public Collection<VentaResponse> obtenerTodosLosVentas() {
+        Collection<Venta> ventas = ventaRepository.findAll();
+        return ventaMapper.toListVentaToVentaResponse(ventas);
+    }
 
     @Override
-    public VentaDto crearVenta(VentaDto ventaDto) {
-        Venta venta = ventaMapper.toEntity(ventaDto);
+    public VentaResponse obtenerVentaPorId(Long id) {
+        Venta venta = ventaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Venta no encontrada con ID: " + id));
+        return ventaMapper.toVentaToVentaResponse(venta);
+    }
+
+    @Override
+    public void crearVenta(VentaRequest request) {
+        Venta venta = new Venta();
 
         // Cargar las entidades relacionadas
-        Cliente cliente = clienteRepository.findById(ventaDto.getIdCliente())
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
-        Auto auto = autoRepository.findById(ventaDto.getIdAuto())
-                .orElseThrow(() -> new RuntimeException("Auto no encontrado"));
-        Usuario usuario = usuarioRepository.findById(ventaDto.getIdUsuario())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        Cliente cliente = clienteRepository.findById(request.getIdCliente()).orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + request.getIdCliente()));
+        Auto auto = autoRepository.findById(request.getIdAuto()).orElseThrow(() -> new RuntimeException("Auto no encontrado con ID: " + request.getIdAuto()));
+        Usuario usuario = usuarioRepository.findById(request.getIdUsuario()).orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + request.getIdUsuario()));
 
+        // Configurar la venta
         venta.setCliente(cliente);
         venta.setAuto(auto);
         venta.setUsuario(usuario);
+        venta.setFecha(request.getFecha());
+        venta.setPrecioVenta(request.getPrecioVenta());
 
-        venta = ventaRepository.save(venta);
-        return ventaMapper.toDto(venta);
+        ventaRepository.save(venta);
     }
 
     @Override
-    public VentaDto obtenerVentaPorId(Long id) {
-        Venta venta = ventaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Venta no encontrada"));
-        return ventaMapper.toDto(venta);
+    public void actualizarVenta(Long id, VentaRequest request) {
+        Venta ventaExistente = ventaRepository.findById(id).orElseThrow(() -> new RuntimeException("Venta no encontrada con ID: " + id));
+
+        // Cargar las entidades relacionadas
+        Cliente cliente = clienteRepository.findById(request.getIdCliente()).orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + request.getIdCliente()));
+        Auto auto = autoRepository.findById(request.getIdAuto())
+                .orElseThrow(() -> new RuntimeException("Auto no encontrado con ID: " + request.getIdAuto()));
+        Usuario usuario = usuarioRepository.findById(request.getIdUsuario())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + request.getIdUsuario()));
+
+        // Actualizar la venta
+        ventaExistente.setCliente(cliente);
+        ventaExistente.setAuto(auto);
+        ventaExistente.setUsuario(usuario);
+        ventaExistente.setFecha(request.getFecha());
+        ventaExistente.setPrecioVenta(request.getPrecioVenta());
+
+        ventaRepository.save(ventaExistente);
     }
 
     @Override
-    public List<VentaDto> obtenerTodasLasVentas() {
-        return ventaRepository.findAll().stream()
-                .map(ventaMapper::toDto)
-                .collect(Collectors.toList());
+    public void eliminarVenta(Long id) {
+        if (!ventaRepository.existsById(id)) {
+            throw new RuntimeException("Venta no encontrada con ID: " + id);
+        }
+        ventaRepository.deleteById(id);
     }
 }

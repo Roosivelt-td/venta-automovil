@@ -1,10 +1,13 @@
 package automoviles.controller;
 
+import automoviles.dto.request.ReembolsoRequest;
+import automoviles.dto.response.ReembolsoResponse;
 import automoviles.service.ReembolsoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
+
+import java.util.Collection;
 
 @RestController
 @RequestMapping("/api/reembolsos")
@@ -13,15 +16,32 @@ public class ReembolsoController {
     @Autowired
     private ReembolsoService reembolsoService;
 
-    @PostMapping
-    public ResponseEntity<ReembolsoDto> crearReembolso(@RequestBody ReembolsoDto reembolsoDto) {
-        ReembolsoDto nuevoReembolso = reembolsoService.crearReembolso(reembolsoDto);
-        return ResponseEntity.ok(nuevoReembolso);
+    @PostMapping // crear un reembolso
+    public void crearReembolso(@RequestBody ReembolsoRequest request) { reembolsoService.crearReembolso(request);
     }
 
-    @GetMapping("/venta/{idVenta}")
-    public ResponseEntity<List<ReembolsoDto>> obtenerReembolsosPorVenta(@PathVariable Long idVenta) {
-        List<ReembolsoDto> reembolsos = reembolsoService.obtenerReembolsosPorVenta(idVenta);
-        return ResponseEntity.ok(reembolsos);
+    @GetMapping("/{id}") // obtener un reembolso por su id
+    public ResponseEntity<ReembolsoResponse> obtenerReembolsoPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(reembolsoService.obtenerReembolsoPorId(id));
     }
+
+    @GetMapping// obtener todos los reembolsos
+    public ResponseEntity<Collection<ReembolsoResponse>> obtenerTodosLosReembolsos() {
+        return ResponseEntity.ok(reembolsoService.obtenerTodosLosReembolsos());
+    }
+
+    @PutMapping("/{id}/update")// actualizar un reembolso por id
+    public void actualizarReembolsoId(@PathVariable Long id, @RequestBody ReembolsoRequest request) {
+        if (reembolsoService.obtenerReembolsoPorId(id) != null) {
+            reembolsoService.actualizarReembolso(id, request);
+        } else {
+            throw new RuntimeException("No existe un reembolso con el id: " + id);
+        }
+    }
+
+    @DeleteMapping("/{id}/delete") // eliminar un reembolso  por id
+    public void eliminarReembolsoId(@PathVariable Long id) {
+        reembolsoService.eliminarReembolso(id);
+    }
+
 }

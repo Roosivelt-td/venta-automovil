@@ -7,7 +7,8 @@ import java.time.LocalDate;
 
 @Data
 public class ReembolsoResponse {
-    private Long id;
+
+    private Long identificador;
     private Long idVenta;  // ID de la venta asociada
     private String motivo;
     private BigDecimal monto;

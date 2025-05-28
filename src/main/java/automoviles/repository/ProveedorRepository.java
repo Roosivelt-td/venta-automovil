@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProveedorRepository extends JpaRepository<Proveedor, Long> {
-    Proveedor findByRuc(String ruc); // Búsqueda personalizada por RUC
+
 }

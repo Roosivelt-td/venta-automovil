@@ -1,13 +1,20 @@
 package automoviles.service.impl;
 
-import automoviles.model.*;
-import automoviles.repository.*;
+import automoviles.dto.request.ReembolsoRequest;
+import automoviles.dto.response.ReembolsoResponse;
+import automoviles.dto.response.UsuarioResponse;
+import automoviles.model.Reembolso;
+import automoviles.model.Usuario;
+import automoviles.model.Venta;
+import automoviles.repository.ReembolsoRepository;
+import automoviles.repository.VentaRepository;
 import automoviles.service.ReembolsoService;
 import automoviles.service.mapper.ReembolsoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.stream.Collectors;
+
+import java.util.Collection;
+import java.util.Optional;
 
 @Service
 public class ReembolsoServiceImpl implements ReembolsoService {
@@ -22,20 +29,53 @@ public class ReembolsoServiceImpl implements ReembolsoService {
     private ReembolsoMapper reembolsoMapper;
 
     @Override
-    public ReembolsoDto crearReembolso(ReembolsoDto reembolsoDto) {
-        Reembolso reembolso = reembolsoMapper.toEntity(reembolsoDto);
-        Venta venta = ventaRepository.findById(reembolsoDto.getIdVenta())
-                .orElseThrow(() -> new RuntimeException("Venta no encontrada"));
-        reembolso.setVenta(venta);
-        reembolso = reembolsoRepository.save(reembolso);
-        return reembolsoMapper.toDto(reembolso);
+    public Collection<ReembolsoResponse> obtenerTodosLosReembolsos() {
+        Collection<Reembolso> listReembolsoResponse = reembolsoRepository.findAll();
+        return reembolsoMapper.toListReembolsoToReembolsoResponse(listReembolsoResponse);
     }
 
     @Override
-    public List<ReembolsoDto> obtenerReembolsosPorVenta(Long idVenta) {
-        List<Reembolso> reembolsos = reembolsoRepository.findByVentaId(idVenta);
-        return reembolsos.stream()
-                .map(reembolsoMapper::toDto)
-                .collect(Collectors.toList());
+    public ReembolsoResponse obtenerReembolsoPorId(Long id) {
+        Optional<Reembolso> reembolso = reembolsoRepository.findById(id);
+        return reembolso.map(reembolsoMapper::toReembolsoToReembolsoResponse)
+                .orElse(null);
+    }
+
+    @Override
+    public void crearReembolso(ReembolsoRequest request) {
+        Venta venta = ventaRepository.findById(request.getIdVenta())
+                .orElseThrow(() -> new RuntimeException("Venta no encontrada con ID: " + request.getIdVenta()));
+
+        Reembolso reembolso = new Reembolso();
+        reembolso.setVenta(venta);
+        reembolso.setMotivo(request.getMotivo());
+        reembolso.setMonto(request.getMonto());
+        reembolso.setFecha(request.getFecha());
+
+        reembolsoRepository.save(reembolso);
+    }
+
+    @Override
+    public void actualizarReembolso(Long id, ReembolsoRequest request) {
+        Reembolso reembolsoExistente = reembolsoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Reembolso no encontrado con ID: " + id));
+
+        Venta venta = ventaRepository.findById(request.getIdVenta())
+                .orElseThrow(() -> new RuntimeException("Venta no encontrada con ID: " + request.getIdVenta()));
+
+        reembolsoExistente.setVenta(venta);
+        reembolsoExistente.setMotivo(request.getMotivo());
+        reembolsoExistente.setMonto(request.getMonto());
+        reembolsoExistente.setFecha(request.getFecha());
+
+        reembolsoRepository.save(reembolsoExistente);
+    }
+
+    @Override
+    public void eliminarReembolso(Long id) {
+        if (!reembolsoRepository.existsById(id)) {
+            throw new RuntimeException("Reembolso no encontrado con ID: " + id);
+        }
+        reembolsoRepository.deleteById(id);
     }
 }

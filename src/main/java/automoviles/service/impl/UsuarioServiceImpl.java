@@ -42,7 +42,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override // obtener todos los usuarios
     public Collection<UsuarioResponse> obtenerTodosLosUsuarios() {
         Collection<Usuario> listUsuarioResponse = usuarioRepository.findAll();
-        return usuarioMapper.toListUsuarioToUsuairoResponse(listUsuarioResponse);
+        return usuarioMapper.toListUsuarioToUsuarioResponse(listUsuarioResponse);
     }
 
     @Override // actualizar usuario

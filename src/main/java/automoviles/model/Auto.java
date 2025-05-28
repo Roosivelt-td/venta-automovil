@@ -21,10 +21,8 @@ public class Auto {
     private String tipo;
     @Column(name = "precio", nullable = false, precision = 10, scale = 2)
     private BigDecimal precio;
-
     @Column(name = "descripcion", columnDefinition = "TEXT")
     private String descripcion;
-
     @Column(name = "imagenUrl", columnDefinition = "TEXT")
     private String imagenUrl;
     private String estado;

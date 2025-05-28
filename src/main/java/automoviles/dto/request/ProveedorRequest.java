@@ -1,8 +1,10 @@
 package automoviles.dto.request;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Setter
+@Getter
 public class ProveedorRequest {
     private Long id;
     private String nombreEmpresa;

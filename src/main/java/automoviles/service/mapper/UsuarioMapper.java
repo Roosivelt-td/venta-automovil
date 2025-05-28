@@ -10,7 +10,7 @@ import java.util.Collection;
 @Component
 public class UsuarioMapper {
 
-    public Collection<UsuarioResponse> toListUsuarioToUsuairoResponse(Collection<Usuario> listarUsuario) {
+    public Collection<UsuarioResponse> toListUsuarioToUsuarioResponse(Collection<Usuario> listarUsuario) {
         Collection<UsuarioResponse> listarUsuarioResponse = new ArrayList<UsuarioResponse>();
 
         if (listarUsuario != null && !listarUsuario.isEmpty()) {
@@ -37,7 +37,6 @@ public class UsuarioMapper {
             usuarioResponse.setContrasena(usuario.getContrasena());
             usuarioResponse.setRol(usuario.getRol());
             usuarioResponse.setEstado(usuario.getEstado());
-
         }
         return usuarioResponse;
     }

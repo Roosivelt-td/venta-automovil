@@ -16,11 +16,10 @@ public class Pago {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "id_venta", nullable = false)
+    @JoinColumn(name = "iVenta", nullable = false)
     private Venta venta;
 
-    @Column(name = "metodo_pago", nullable = false)
-    private String metodoPago; // Ej: "Tarjeta", "Efectivo", "Transferencia"
+    private String metodoPago;
 
     @Column(name = "monto", nullable = false, precision = 10, scale = 2)
     private BigDecimal monto;

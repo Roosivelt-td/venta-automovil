@@ -1,13 +1,15 @@
 package automoviles.service.impl;
 
+import automoviles.dto.request.ProveedorRequest;
+import automoviles.dto.response.ProveedorResponse;
 import automoviles.model.Proveedor;
 import automoviles.repository.ProveedorRepository;
 import automoviles.service.ProveedorService;
 import automoviles.service.mapper.ProveedorMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.stream.Collectors;
+
+import java.util.Collection;
 
 @Service
 public class ProveedorServiceImpl implements ProveedorService {
@@ -18,42 +20,49 @@ public class ProveedorServiceImpl implements ProveedorService {
     @Autowired
     private ProveedorMapper proveedorMapper;
 
-    @Override
-    public ProveedorDto crearProveedor(ProveedorDto proveedorDto) {
-        Proveedor proveedor = proveedorMapper.toEntity(proveedorDto);
-        proveedor = proveedorRepository.save(proveedor);
-        return proveedorMapper.toDto(proveedor);
+    @Override //registro de proveedor
+
+    public void crearProveedor(ProveedorRequest  request) {
+        Proveedor  proveedorNew= new Proveedor();
+        System.out.println("Nuevo proveedor" + proveedorNew);
+        proveedorNew.setNombreEmpresa(request.getNombreEmpresa());
+        proveedorNew.setRuc(request.getRuc());
+        proveedorNew.setContacto(request.getContacto());
+        proveedorNew.setTelefono(request.getTelefono());
+        proveedorNew.setDireccion(request.getDireccion());
+        proveedorRepository.save(proveedorNew);
     }
 
-    @Override
-    public ProveedorDto obtenerProveedorPorId(Long id) {
-        Proveedor proveedor = proveedorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Proveedor no encontrado"));
-        return proveedorMapper.toDto(proveedor);
+    @Override // buscar proveedor por id
+    public ProveedorResponse obtenerProveedorPorId(Long id) {
+        Proveedor proveedor = proveedorRepository.findById(id).orElse(null);
+        return proveedorMapper.toProveedorToProveedorResponse(proveedor);
     }
 
-    @Override
-    public List<ProveedorDto> obtenerTodosLosProveedores() {
-        return proveedorRepository.findAll().stream()
-                .map(proveedorMapper::toDto)
-                .collect(Collectors.toList());
+    @Override // obtener todos los proveedors
+    public Collection<ProveedorResponse> obtenerTodosLosProveedors() {
+        Collection<Proveedor> listProveedorResponse = proveedorRepository.findAll();
+        return proveedorMapper.toListProveedorToProveedorResponse(listProveedorResponse);
     }
 
-    @Override
-    public ProveedorDto actualizarProveedor(Long id, ProveedorDto proveedorDto) {
-        Proveedor proveedor = proveedorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Proveedor no encontrado"));
-        proveedor.setNombreEmpresa(proveedorDto.getNombreEmpresa());
-        proveedor.setRuc(proveedorDto.getRuc());
-        proveedor.setContacto(proveedorDto.getContacto());
-        proveedor.setTelefono(proveedorDto.getTelefono());
-        proveedor.setDireccion(proveedorDto.getDireccion());
-        proveedor = proveedorRepository.save(proveedor);
-        return proveedorMapper.toDto(proveedor);
+    @Override // actualizar proveedor
+    public void actualizarProveedor(Long id, ProveedorRequest request) {
+        Proveedor proveedor = proveedorRepository.findById(id).orElse(null);
+        if (proveedor != null) {
+            proveedor.setNombreEmpresa(request.getNombreEmpresa());
+            proveedor.setRuc(request.getRuc());
+            proveedor.setContacto(request.getContacto());
+            proveedor.setTelefono(request.getTelefono());
+            proveedor.setDireccion(request.getDireccion());
+            proveedorRepository.save(proveedor);
+        }
     }
 
-    @Override
+    @Override // eliminar proveedor
     public void eliminarProveedor(Long id) {
-        proveedorRepository.deleteById(id);
+        Proveedor proveedor = proveedorRepository.findById(id).orElse(null);
+        if (proveedor != null) {
+            proveedorRepository.delete(proveedor);
+        }
     }
 }

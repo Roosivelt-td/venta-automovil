@@ -1,11 +1,13 @@
 package automoviles.dto.request;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Data
+@Setter
+@Getter
 public class VentaRequest {
     private Long id;
     private Long idCliente;  // Solo almacena el ID para simplificar

@@ -7,5 +7,5 @@ import java.util.List;
 
 @Repository
 public interface PagoRepository extends JpaRepository<Pago, Long> {
-    List<Pago> findByVentaId(Long ventaId); // Busca pagos por ID de venta
+
 }

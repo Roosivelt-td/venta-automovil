@@ -1,11 +1,16 @@
 package automoviles.service;
 
-import java.util.List;
+import automoviles.dto.request.ProveedorRequest;
+import automoviles.dto.response.ProveedorResponse;
+
+import java.util.Collection;
 
 public interface ProveedorService {
-    ProveedorDto crearProveedor(ProveedorDto proveedorDto);
-    ProveedorDto obtenerProveedorPorId(Long id);
-    List<ProveedorDto> obtenerTodosLosProveedores();
-    ProveedorDto actualizarProveedor(Long id, ProveedorDto proveedorDto);
+
+    Collection<ProveedorResponse> obtenerTodosLosProveedors();
+    ProveedorResponse obtenerProveedorPorId(Long id);
+    void crearProveedor(ProveedorRequest request);
+    void actualizarProveedor(Long id, ProveedorRequest request);
     void eliminarProveedor(Long id);
+
 }

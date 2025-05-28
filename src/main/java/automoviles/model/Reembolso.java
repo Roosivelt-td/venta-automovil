@@ -16,7 +16,7 @@ public class Reembolso {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "id_venta", nullable = false)
+    @JoinColumn(name = "idVenta", nullable = false)
     private Venta venta;  // Relación con la venta asociada
 
     @Column(name = "motivo", columnDefinition = "TEXT", nullable = false)

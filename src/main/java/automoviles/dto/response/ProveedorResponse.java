@@ -4,7 +4,8 @@ import lombok.Data;
 
 @Data
 public class ProveedorResponse {
-    private Long id;
+
+    private Long identificador;
     private String nombreEmpresa;
     private String ruc;
     private String contacto;

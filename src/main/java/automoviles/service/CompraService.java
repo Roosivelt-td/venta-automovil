@@ -1,9 +1,15 @@
 package automoviles.service;
 
-import java.util.List;
+import automoviles.dto.request.CompraRequest;
+import automoviles.dto.response.CompraResponse;
+
+import java.util.Collection;
 
 public interface CompraService {
-    CompraDto crearCompra(CompraDto compraDto);
-    List<CompraDto> obtenerComprasPorProveedor(Long idProveedor);
-    List<CompraDto> obtenerComprasPorAuto(Long idAuto);
+
+    Collection<CompraResponse> obtenerTodosLosCompras();
+    CompraResponse obtenerCompraPorId(Long id);
+    void crearCompra(CompraRequest request);
+    void actualizarCompra(Long id, CompraRequest request);
+    void eliminarCompra(Long id);
 }

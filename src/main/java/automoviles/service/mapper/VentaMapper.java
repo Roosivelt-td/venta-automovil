@@ -1,27 +1,41 @@
 package automoviles.service.mapper;
 
+import automoviles.dto.response.VentaResponse;
 import automoviles.model.Venta;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Component
 public class VentaMapper {
 
-    public VentaDto toDto(Venta venta) {
-        VentaDto dto = new VentaDto();
-        dto.setId(venta.getId());
-        dto.setIdCliente(venta.getCliente().getId());
-        dto.setIdAuto(venta.getAuto().getId());
-        dto.setIdUsuario(venta.getUsuario().getId());
-        dto.setFecha(venta.getFecha());
-        dto.setPrecioVenta(venta.getPrecioVenta());
-        return dto;
-    }
+    public Collection<VentaResponse> toListVentaToVentaResponse(Collection<Venta> listarVenta) {
+        Collection<VentaResponse> listarVentaResponse = new ArrayList<VentaResponse>();
+        if (listarVenta != null && !listarVenta.isEmpty()) {
+            for (Venta venta : listarVenta) {
+                VentaResponse ventaResponse = new VentaResponse();
+                ventaResponse.setIdentificador(venta.getId());
+                ventaResponse.setIdUsuario(venta.getUsuario().getId());
+                ventaResponse.setIdCliente(venta.getCliente().getId());
+                ventaResponse.setIdAuto(venta.getAuto().getId());
+                ventaResponse.setFecha(venta.getFecha());
+                ventaResponse.setPrecioVenta(venta.getPrecioVenta());
 
-    public Venta toEntity(VentaDto dto) {
-        Venta venta = new Venta();
-        // Nota: Aquí solo asignamos IDs. Las entidades Cliente/Auto/Usuario se cargan en el servicio.
-        venta.setFecha(dto.getFecha());
-        venta.setPrecioVenta(dto.getPrecioVenta());
-        return venta;
+            }
+        }
+        return listarVentaResponse;
+    }
+    public VentaResponse toVentaToVentaResponse(Venta venta) {
+        VentaResponse ventaResponse = new VentaResponse();
+        if (venta != null) {
+            ventaResponse.setIdentificador(venta.getId());
+            ventaResponse.setFecha(venta.getFecha());
+            ventaResponse.setPrecioVenta(venta.getPrecioVenta());
+            ventaResponse.setIdAuto(venta.getAuto().getId());
+            ventaResponse.setIdCliente(venta.getCliente().getId());
+            ventaResponse.setIdUsuario(venta.getUsuario().getId());
+        }
+        return ventaResponse;
     }
 }

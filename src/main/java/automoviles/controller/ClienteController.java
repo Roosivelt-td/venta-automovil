@@ -12,12 +12,11 @@ import java.util.Collection;
 @RestController
 @RequestMapping("/api/clientes")
 public class ClienteController {
-
     @Autowired
     private ClienteService clienteService;
 
-    @PostMapping // crear cliente
-    public void crearCliente(@RequestBody ClienteRequest request) { ClienteService.crearCliente(request);
+    @PostMapping // crear un cliente
+    public void crearCliente(@RequestBody ClienteRequest request) { clienteService.crearCliente(request);
     }
 
     @GetMapping("/{id}") // obtener un cliente por su id
@@ -26,7 +25,7 @@ public class ClienteController {
     }
 
     @GetMapping// obtener todos los clientes
-    public  ResponseEntity<Collection<ClienteResponse>> obtenerTodosLosClientes() {
+    public ResponseEntity<Collection<ClienteResponse>> obtenerTodosLosClientes() {
         return ResponseEntity.ok(clienteService.obtenerTodosLosClientes());
     }
 
@@ -40,9 +39,8 @@ public class ClienteController {
     }
 
     @DeleteMapping("/{id}/delete") // eliminar un cliente  por id
-    public void eliminarCliente(@PathVariable Long id) {
+    public void eliminarClienteId(@PathVariable Long id) {
         clienteService.eliminarCliente(id);
     }
-
 
 }

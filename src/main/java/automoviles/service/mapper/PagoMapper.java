@@ -1,26 +1,39 @@
 package automoviles.service.mapper;
 
+import automoviles.dto.response.PagoResponse;
+import automoviles.dto.response.UsuarioResponse;
 import automoviles.model.Pago;
+import automoviles.model.Usuario;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Component
 public class PagoMapper {
 
-    public PagoDto toDto(Pago pago) {
-        PagoDto dto = new PagoDto();
-        dto.setId(pago.getId());
-        dto.setIdVenta(pago.getVenta().getId());
-        dto.setMetodoPago(pago.getMetodoPago());
-        dto.setMonto(pago.getMonto());
-        dto.setFecha(pago.getFecha());
-        return dto;
+    public Collection<PagoResponse> toListPagoToPagoResponse(Collection<Pago> listarPago) {
+        Collection<PagoResponse> listarPagoResponse = new ArrayList<PagoResponse>();
+        if (listarPago != null && !listarPago.isEmpty()) {
+            for (Pago pago : listarPago) {
+                PagoResponse pagoResponse = new PagoResponse();
+                pagoResponse.setIdentificador(pago.getId());
+                pagoResponse.setIdVenta(pago.getVenta().getId());
+                pagoResponse.setMetodoPago(pago.getMetodoPago());
+                pagoResponse.setMonto(pago.getMonto());
+                pagoResponse.setFecha(pago.getFecha());
+            }
+        }
+        return listarPagoResponse;
     }
-
-    public Pago toEntity(PagoDto dto) {
-        Pago pago = new Pago();
-        pago.setMetodoPago(dto.getMetodoPago());
-        pago.setMonto(dto.getMonto());
-        pago.setFecha(dto.getFecha());
-        return pago;
+    public PagoResponse toPagoToPagoResponse(Pago pago) {
+        PagoResponse pagoResponse = new PagoResponse();
+        if (pago != null) {
+            pagoResponse.setIdVenta(pago.getVenta().getId());
+            pagoResponse.setMetodoPago(pago.getMetodoPago());
+            pagoResponse.setMonto(pago.getMonto());
+            pagoResponse.setFecha(pago.getFecha());
+        }
+        return pagoResponse;
     }
 }

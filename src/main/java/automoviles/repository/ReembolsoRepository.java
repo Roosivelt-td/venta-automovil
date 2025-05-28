@@ -7,5 +7,5 @@ import java.util.List;
 
 @Repository
 public interface ReembolsoRepository extends JpaRepository<Reembolso, Long> {
-    List<Reembolso> findByVentaId(Long ventaId);  // Busca reembolsos por ID de venta
+
 }

@@ -1,9 +1,16 @@
 package automoviles.controller;
 
+import automoviles.dto.request.UsuarioRequest;
+import automoviles.dto.request.VentaRequest;
+import automoviles.dto.response.UsuarioResponse;
+import automoviles.dto.response.VentaResponse;
+import automoviles.service.UsuarioService;
 import automoviles.service.VentaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -13,21 +20,32 @@ public class VentaController {
     @Autowired
     private VentaService ventaService;
 
-    @PostMapping
-    public ResponseEntity<VentaDto> crearVenta(@RequestBody VentaDto ventaDto) {
-        VentaDto nuevaVenta = ventaService.crearVenta(ventaDto);
-        return ResponseEntity.ok(nuevaVenta);
+    @PostMapping // crear un venta
+    public void crearVenta(@RequestBody VentaRequest request) { ventaService.crearVenta(request);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<VentaDto> obtenerVentaPorId(@PathVariable Long id) {
-        VentaDto venta = ventaService.obtenerVentaPorId(id);
-        return ResponseEntity.ok(venta);
+    @GetMapping("/{id}") // obtener un venta por su id
+    public ResponseEntity<VentaResponse> obtenerVentaPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(ventaService.obtenerVentaPorId(id));
     }
 
-    @GetMapping
-    public ResponseEntity<List<VentaDto>> obtenerTodasLasVentas() {
-        List<VentaDto> ventas = ventaService.obtenerTodasLasVentas();
-        return ResponseEntity.ok(ventas);
+    @GetMapping// obtener todos los ventas
+    public ResponseEntity<Collection<VentaResponse>> obtenerTodosLosVentas() {
+        return ResponseEntity.ok(ventaService.obtenerTodosLosVentas());
     }
+
+    @PutMapping("/{id}/update")// actualizar un venta por id
+    public void actualizarVentaId(@PathVariable Long id, @RequestBody VentaRequest request) {
+        if (ventaService.obtenerVentaPorId(id) != null) {
+            ventaService.actualizarVenta(id, request);
+        } else {
+            throw new RuntimeException("No existe un venta con el id: " + id);
+        }
+    }
+
+    @DeleteMapping("/{id}/delete") // eliminar un venta  por id
+    public void eliminarVentaId(@PathVariable Long id) {
+        ventaService.eliminarVenta(id);
+    }
+
 }
