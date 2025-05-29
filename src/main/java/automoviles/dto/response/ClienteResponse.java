@@ -7,7 +7,7 @@ public class ClienteResponse {
 
     private Long identificador;
     private String nombre;
-    private String dni;
+    private Integer dni;
     private String telefono;
     private String direccion;
     private String correo;

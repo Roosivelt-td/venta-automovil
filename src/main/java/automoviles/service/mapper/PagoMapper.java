@@ -22,6 +22,7 @@ public class PagoMapper {
                 pagoResponse.setMetodoPago(pago.getMetodoPago());
                 pagoResponse.setMonto(pago.getMonto());
                 pagoResponse.setFecha(pago.getFecha());
+                listarPagoResponse.add(pagoResponse);
             }
         }
         return listarPagoResponse;

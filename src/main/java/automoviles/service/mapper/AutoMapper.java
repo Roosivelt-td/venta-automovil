@@ -26,6 +26,7 @@ public class AutoMapper {
                 autoResponse.setDescripcion(auto.getDescripcion());
                 autoResponse.setImagenUrl(auto.getImagenUrl());
                 autoResponse.setEstado(auto.getEstado());
+                listarAutoResponse.add(autoResponse);
             }
         }
         return listarAutoResponse;

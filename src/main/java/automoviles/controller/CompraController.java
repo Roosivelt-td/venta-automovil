@@ -16,7 +16,7 @@ public class CompraController {
     @Autowired
     private CompraService compraService;
 
-    @PostMapping // crear un compra
+    @PostMapping ("/create")// crear un compra
     public void crearCompra(@RequestBody CompraRequest request) { compraService.crearCompra(request);
     }
 
@@ -25,12 +25,12 @@ public class CompraController {
         return ResponseEntity.ok(compraService.obtenerCompraPorId(id));
     }
 
-    @GetMapping// obtener todos los compras
+    @GetMapping("/todos")// obtener todos los compras
     public ResponseEntity<Collection<CompraResponse>> obtenerTodosLosCompras() {
         return ResponseEntity.ok(compraService.obtenerTodosLosCompras());
     }
 
-    @PutMapping("/{id}/update")// actualizar un compra por id
+    @PutMapping("/update/{id}")// actualizar un compra por id
     public void actualizarCompraId(@PathVariable Long id, @RequestBody CompraRequest request) {
         if (compraService.obtenerCompraPorId(id) != null) {
             compraService.actualizarCompra(id, request);
@@ -39,7 +39,7 @@ public class CompraController {
         }
     }
 
-    @DeleteMapping("/{id}/delete") // eliminar un compra  por id
+    @DeleteMapping("/delete/{id}") // eliminar un compra  por id
     public void eliminarCompraId(@PathVariable Long id) {
         compraService.eliminarCompra(id);
     }

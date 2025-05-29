@@ -21,6 +21,7 @@ public class VentaMapper {
                 ventaResponse.setIdAuto(venta.getAuto().getId());
                 ventaResponse.setFecha(venta.getFecha());
                 ventaResponse.setPrecioVenta(venta.getPrecioVenta());
+                listarVentaResponse.add(ventaResponse);
 
             }
         }

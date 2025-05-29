@@ -16,7 +16,7 @@ public class ReembolsoController {
     @Autowired
     private ReembolsoService reembolsoService;
 
-    @PostMapping // crear un reembolso
+    @PostMapping ("/create")// crear un reembolso
     public void crearReembolso(@RequestBody ReembolsoRequest request) { reembolsoService.crearReembolso(request);
     }
 
@@ -25,12 +25,12 @@ public class ReembolsoController {
         return ResponseEntity.ok(reembolsoService.obtenerReembolsoPorId(id));
     }
 
-    @GetMapping// obtener todos los reembolsos
+    @GetMapping("/todos")// obtener todos los reembolsos
     public ResponseEntity<Collection<ReembolsoResponse>> obtenerTodosLosReembolsos() {
         return ResponseEntity.ok(reembolsoService.obtenerTodosLosReembolsos());
     }
 
-    @PutMapping("/{id}/update")// actualizar un reembolso por id
+    @PutMapping("/update/{id}")// actualizar un reembolso por id
     public void actualizarReembolsoId(@PathVariable Long id, @RequestBody ReembolsoRequest request) {
         if (reembolsoService.obtenerReembolsoPorId(id) != null) {
             reembolsoService.actualizarReembolso(id, request);
@@ -39,7 +39,7 @@ public class ReembolsoController {
         }
     }
 
-    @DeleteMapping("/{id}/delete") // eliminar un reembolso  por id
+    @DeleteMapping("/delete/{id}") // eliminar un reembolso  por id
     public void eliminarReembolsoId(@PathVariable Long id) {
         reembolsoService.eliminarReembolso(id);
     }

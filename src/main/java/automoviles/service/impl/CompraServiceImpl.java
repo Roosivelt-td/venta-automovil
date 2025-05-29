@@ -27,28 +27,11 @@ public class CompraServiceImpl implements CompraService {
     private CompraMapper compraMapper;
 
     @Override
-    public Collection<CompraResponse> obtenerTodosLosCompras() {
-        Collection<Compra> compras = compraRepository.findAll();
-        return compraMapper.toListCompraToCompraResponse(compras);
-    }
-
-    @Override
-    public CompraResponse obtenerCompraPorId(Long id) {
-        Compra compra = compraRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Compra no encontrada con ID: " + id));
-        return compraMapper.toCompraToCompraResponse(compra);
-    }
-
-    @Override
     public void crearCompra(CompraRequest request) {
         Compra compra = new Compra();
-
         // Obtener proveedor y auto asociados
-        Proveedor proveedor = proveedorRepository.findById(request.getIdProveedor())
-                .orElseThrow(() -> new RuntimeException("Proveedor no encontrado con ID: " + request.getIdProveedor()));
-
-        Auto auto = autoRepository.findById(request.getIdAuto())
-                .orElseThrow(() -> new RuntimeException("Auto no encontrado con ID: " + request.getIdAuto()));
+        Proveedor proveedor = proveedorRepository.findById(request.getIdProveedor()).orElseThrow(() -> new RuntimeException("Proveedor no encontrado con ID: " + request.getIdProveedor()));
+        Auto auto = autoRepository.findById(request.getIdAuto()).orElseThrow(() -> new RuntimeException("Auto no encontrado con ID: " + request.getIdAuto()));
 
         // Configurar la compra
         compra.setProveedor(proveedor);
@@ -65,16 +48,26 @@ public class CompraServiceImpl implements CompraService {
     }
 
     @Override
+    public CompraResponse obtenerCompraPorId(Long id) {
+        Compra compra = compraRepository.findById(id).orElse(null);
+        return compraMapper.toCompraToCompraResponse(compra);
+    }
+    @Override
+    public Collection<CompraResponse> obtenerTodosLosCompras() {
+        Collection<Compra> compras = compraRepository.findAll();
+        return compraMapper.toListCompraToCompraResponse(compras);
+    }
+
+
+
+    @Override
     public void actualizarCompra(Long id, CompraRequest request) {
-        Compra compraExistente = compraRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Compra no encontrada con ID: " + id));
+        Compra compraExistente = compraRepository.findById(id).orElseThrow(() -> new RuntimeException("Compra no encontrada con ID: " + id));
 
         // Obtener proveedor y auto asociados
-        Proveedor proveedor = proveedorRepository.findById(request.getIdProveedor())
-                .orElseThrow(() -> new RuntimeException("Proveedor no encontrado con ID: " + request.getIdProveedor()));
+        Proveedor proveedor = proveedorRepository.findById(request.getIdProveedor()).orElseThrow(() -> new RuntimeException("Proveedor no encontrado con ID: " + request.getIdProveedor()));
 
-        Auto auto = autoRepository.findById(request.getIdAuto())
-                .orElseThrow(() -> new RuntimeException("Auto no encontrado con ID: " + request.getIdAuto()));
+        Auto auto = autoRepository.findById(request.getIdAuto()).orElseThrow(() -> new RuntimeException("Auto no encontrado con ID: " + request.getIdAuto()));
 
         // Actualizar la compra
         compraExistente.setProveedor(proveedor);
@@ -87,9 +80,9 @@ public class CompraServiceImpl implements CompraService {
 
     @Override
     public void eliminarCompra(Long id) {
-        if (!compraRepository.existsById(id)) {
-            throw new RuntimeException("Compra no encontrada con ID: " + id);
+        Compra compra = compraRepository.findById(id).orElse(null);
+        if (compra != null) {
+            compraRepository.delete(compra);
         }
-        compraRepository.deleteById(id);
     }
 }

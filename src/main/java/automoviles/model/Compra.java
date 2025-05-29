@@ -24,6 +24,7 @@ public class Compra {
     private Auto auto;
 
     private LocalDate fecha;
+
     @Column(name = "precio_compra", nullable = false, precision = 10, scale = 2)
     private BigDecimal precioCompra;
 }

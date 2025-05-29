@@ -16,7 +16,7 @@ public class PagoController {
     @Autowired
     private PagoService pagoService;
 
-    @PostMapping // crear un pago
+    @PostMapping ("/create")// crear un pago
     public void crearPago(@RequestBody PagoRequest request) { pagoService.crearPago(request);
     }
 
@@ -25,12 +25,12 @@ public class PagoController {
         return ResponseEntity.ok(pagoService.obtenerPagoPorId(id));
     }
 
-    @GetMapping// obtener todos los pagos
+    @GetMapping("/todos")// obtener todos los pagos
     public ResponseEntity<Collection<PagoResponse>> obtenerTodosLosPagos() {
         return ResponseEntity.ok(pagoService.obtenerTodosLosPagos());
     }
 
-    @PutMapping("/{id}/update")// actualizar un pago por id
+    @PutMapping("/update/{id}")// actualizar un pago por id
     public void actualizarPagoId(@PathVariable Long id, @RequestBody PagoRequest request) {
         if (pagoService.obtenerPagoPorId(id) != null) {
             pagoService.actualizarPago(id, request);
@@ -39,7 +39,7 @@ public class PagoController {
         }
     }
 
-    @DeleteMapping("/{id}/delete") // eliminar un pago  por id
+    @DeleteMapping("/delete/{id}") // eliminar un pago  por id
     public void eliminarPagoId(@PathVariable Long id) {
         pagoService.eliminarPago(id);
     }

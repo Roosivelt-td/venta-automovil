@@ -16,7 +16,7 @@ public class ProveedorController {
     @Autowired
     private ProveedorService proveedorService;
 
-    @PostMapping // crear un proveedor
+    @PostMapping ("/create")// crear un proveedor
     public void crearProveedor(@RequestBody ProveedorRequest request) { proveedorService.crearProveedor(request);
     }
 
@@ -25,12 +25,12 @@ public class ProveedorController {
         return ResponseEntity.ok(proveedorService.obtenerProveedorPorId(id));
     }
 
-    @GetMapping// obtener todos los proveedors
+    @GetMapping("/todos")// obtener todos los proveedors
     public ResponseEntity<Collection<ProveedorResponse>> obtenerTodosLosProveedors() {
         return ResponseEntity.ok(proveedorService.obtenerTodosLosProveedors());
     }
 
-    @PutMapping("/{id}/update")// actualizar un proveedor por id
+    @PutMapping("/update/{id}")// actualizar un proveedor por id
     public void actualizarProveedorId(@PathVariable Long id, @RequestBody ProveedorRequest request) {
         if (proveedorService.obtenerProveedorPorId(id) != null) {
             proveedorService.actualizarProveedor(id, request);
@@ -39,7 +39,7 @@ public class ProveedorController {
         }
     }
 
-    @DeleteMapping("/{id}/delete") // eliminar un proveedor  por id
+    @DeleteMapping("/delete/{id}") // eliminar un proveedor  por id
     public void eliminarProveedorId(@PathVariable Long id) {
         proveedorService.eliminarProveedor(id);
     }

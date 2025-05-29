@@ -28,13 +28,18 @@ public class PagoServiceImpl implements PagoService {
     @Override
     public Collection<PagoResponse> obtenerTodosLosPagos() {
         Collection<Pago> pagos = pagoRepository.findAll();
+        if (pagos.isEmpty()) {
+            throw new RuntimeException("No hay pagos registrados");
+        }
         return pagoMapper.toListPagoToPagoResponse(pagos);
     }
 
     @Override
     public PagoResponse obtenerPagoPorId(Long id) {
-        Pago pago = pagoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pago no encontrado con ID: " + id));
+        Pago pago = pagoRepository.findById(id).orElse(null);
+        if (pago == null) {
+            throw new RuntimeException("Pago no encontrado con ID: " + id);
+        }
         return pagoMapper.toPagoToPagoResponse(pago);
     }
 
@@ -75,6 +80,7 @@ public class PagoServiceImpl implements PagoService {
 
     @Override
     public void eliminarPago(Long id) {
+        Pago pago = pagoRepository.findById(id).orElse(null);
         if (!pagoRepository.existsById(id)) {
             throw new RuntimeException("Pago no encontrado con ID: " + id);
         }

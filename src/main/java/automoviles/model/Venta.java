@@ -28,7 +28,6 @@ public class Venta {
     @JoinColumn(name = "idUsuario", nullable = false)
     private Usuario usuario;
 
-    @Column(name = "fecha", nullable = false)
     private LocalDate fecha;
 
     @Column(name = "precio_venta", nullable = false, precision = 10, scale = 2)

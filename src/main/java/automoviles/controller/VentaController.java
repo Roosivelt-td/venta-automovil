@@ -20,7 +20,7 @@ public class VentaController {
     @Autowired
     private VentaService ventaService;
 
-    @PostMapping // crear un venta
+    @PostMapping("/create") // crear un venta
     public void crearVenta(@RequestBody VentaRequest request) { ventaService.crearVenta(request);
     }
 
@@ -29,12 +29,12 @@ public class VentaController {
         return ResponseEntity.ok(ventaService.obtenerVentaPorId(id));
     }
 
-    @GetMapping// obtener todos los ventas
+    @GetMapping("/todos")// obtener todos los ventas
     public ResponseEntity<Collection<VentaResponse>> obtenerTodosLosVentas() {
         return ResponseEntity.ok(ventaService.obtenerTodosLosVentas());
     }
 
-    @PutMapping("/{id}/update")// actualizar un venta por id
+    @PutMapping("/update/{id}")// actualizar un venta por id
     public void actualizarVentaId(@PathVariable Long id, @RequestBody VentaRequest request) {
         if (ventaService.obtenerVentaPorId(id) != null) {
             ventaService.actualizarVenta(id, request);
@@ -43,7 +43,7 @@ public class VentaController {
         }
     }
 
-    @DeleteMapping("/{id}/delete") // eliminar un venta  por id
+    @DeleteMapping("/delete/{id}") // eliminar un venta  por id
     public void eliminarVentaId(@PathVariable Long id) {
         ventaService.eliminarVenta(id);
     }

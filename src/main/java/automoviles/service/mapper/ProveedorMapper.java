@@ -1,9 +1,7 @@
 package automoviles.service.mapper;
 
 import automoviles.dto.response.ProveedorResponse;
-import automoviles.dto.response.UsuarioResponse;
 import automoviles.model.Proveedor;
-import automoviles.model.Usuario;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

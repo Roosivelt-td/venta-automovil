@@ -16,18 +16,18 @@ public class AutoController {
     @Autowired
     private AutoService autoService;
 
-    @PostMapping // crear auto
+    @PostMapping ("/create")// crear auto
     public void crearAuto(@RequestBody AutoRequest request) { autoService.crearAuto(request);}
 
-    @GetMapping("/{id}/auto") // obtener un auto por su id
+    @GetMapping("/{id}") // obtener un auto por su id
     public ResponseEntity<AutoResponse> obtenerAutoPorId(@PathVariable Long id) {
         return ResponseEntity.ok(autoService.obtenerAutoPorId(id));
     }
-    @GetMapping // obtener todos los autos
+    @GetMapping ("/todos")// obtener todos los autos
     public ResponseEntity<Collection<AutoResponse>> obtenerTodosLosAutos() {
         return ResponseEntity.ok(autoService.obtenerTodosLosAutos());
     }
-    @PutMapping("/{id}/update")// actualizar un auto por id
+    @PutMapping("/update/{id}")// actualizar un auto por id
     public void actualizarAutoId(@PathVariable Long id, @RequestBody AutoRequest request) {
         if (autoService.obtenerAutoPorId(id) != null) {
             autoService.actualizarAuto(id, request);
@@ -35,7 +35,7 @@ public class AutoController {
             throw new RuntimeException("No existe un auto con el id: " + id);
         }
     }
-    @DeleteMapping("/{id}/delete") // eliminar un auto  por id
+    @DeleteMapping("/delete/{id}") // eliminar un auto  por id
     public void eliminarAutoId(@PathVariable Long id) {
         autoService.eliminarAuto(id);
     }

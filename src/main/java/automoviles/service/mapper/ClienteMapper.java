@@ -23,6 +23,7 @@ public class ClienteMapper {
                 clienteResponse.setTelefono(cliente.getTelefono());
                 clienteResponse.setDireccion(cliente.getDireccion());
                 clienteResponse.setCorreo(cliente.getCorreo());
+                listarClienteResponse.add(clienteResponse);
             }
         }
         return listarClienteResponse;

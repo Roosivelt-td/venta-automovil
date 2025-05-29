@@ -14,7 +14,7 @@ public class Cliente {
     private Long id;
     private String nombre;
     @Column(name = "dni", unique = true, nullable = false)
-    private String dni;
+    private Integer dni;
     private String telefono;
     private String direccion;
     @Column(name = "correo", unique = true, nullable = false)

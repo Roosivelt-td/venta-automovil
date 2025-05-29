@@ -40,9 +40,9 @@ public class AutoServiceImpl implements AutoService {
     @Override // obtener autos por id
     public AutoResponse obtenerAutoPorId(Long id) {
         Auto auto = autoRepository.findById(id).orElse(null);
-//        if (auto == null) {
-//            throw new RuntimeException("Auto no encontrado");
-//        }
+        if (auto == null) {
+            throw new RuntimeException("Auto no encontrado con ID: " + id);
+        }
         return autoMapper.toAutoToAutoResponse(auto);
     }
 
@@ -55,7 +55,7 @@ public class AutoServiceImpl implements AutoService {
     @Override //
     public void actualizarAuto(Long id, AutoRequest request) {
         Auto auto = autoRepository.findById(id).orElse(null);
-        if (auto == null) {
+        if (auto != null) {
             auto.setMarca(request.getMarca());
             auto.setModelo(request.getModelo());
             auto.setAnio(request.getAnio());
@@ -65,16 +65,21 @@ public class AutoServiceImpl implements AutoService {
             auto.setPrecio(request.getPrecio());
             auto.setDescripcion(request.getDescripcion());
             auto.setImagenUrl(request.getImagenUrl());
-            auto.setEstado("Disponible");
+            auto.setEstado(request.getEstado());
             autoRepository.save(auto);
+        }else {
+            System.out.println("Auto no encontrado");
         }
     }
 
     @Override
     public void eliminarAuto(Long id) {
         Auto auto = autoRepository.findById(id).orElse(null);
-        if (auto == null) {
+        if (auto != null) {
             autoRepository.delete(auto);
+        }else {
+            System.out.println("Auto no encontrado");
         }
     }
+
 }

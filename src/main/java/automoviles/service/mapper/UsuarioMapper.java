@@ -23,6 +23,7 @@ public class UsuarioMapper {
                 usuarioResponse.setContrasena(usuario.getContrasena());
                 usuarioResponse.setRol(usuario.getRol());
                 usuarioResponse.setEstado(usuario.getEstado());
+                listarUsuarioResponse.add(usuarioResponse);
             }
         }
         return listarUsuarioResponse;

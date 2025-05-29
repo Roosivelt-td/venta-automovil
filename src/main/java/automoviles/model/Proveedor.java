@@ -13,7 +13,7 @@ public class Proveedor {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "nombre_empresa", nullable = false)
+    @Column(name = "nombre_empresa",  nullable = false)
     private String nombreEmpresa;
 
     @Column(name = "ruc", unique = true, nullable = false)

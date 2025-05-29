@@ -16,7 +16,7 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
-    @PostMapping // crear un usuario
+    @PostMapping ("/create")// crear un usuario
     public void crearUsuario(@RequestBody UsuarioRequest request) { usuarioService.crearUsuario(request);
     }
 
@@ -25,12 +25,12 @@ public class UsuarioController {
        return ResponseEntity.ok(usuarioService.obtenerUsuarioPorId(id));
     }
 
-    @GetMapping// obtener todos los usuarios
+    @GetMapping("/todos")// obtener todos los usuarios
     public ResponseEntity<Collection<UsuarioResponse>> obtenerTodosLosUsuarios() {
        return ResponseEntity.ok(usuarioService.obtenerTodosLosUsuarios());
     }
 
-    @PutMapping("/{id}/update")// actualizar un usuario por id
+    @PutMapping("/update/{id}")// actualizar un usuario por id
     public void actualizarUsuarioId(@PathVariable Long id, @RequestBody UsuarioRequest request) {
         if (usuarioService.obtenerUsuarioPorId(id) != null) {
             usuarioService.actualizarUsuario(id, request);
@@ -39,7 +39,7 @@ public class UsuarioController {
         }
     }
 
-    @DeleteMapping("/{id}/delete") // eliminar un usuario  por id
+    @DeleteMapping("/delete/{id}") // eliminar un usuario  por id
     public void eliminarUsuarioId(@PathVariable Long id) {
         usuarioService.eliminarUsuario(id);
     }

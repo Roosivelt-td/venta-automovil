@@ -15,7 +15,7 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
-    @PostMapping // crear un cliente
+    @PostMapping ("/create")// crear un cliente
     public void crearCliente(@RequestBody ClienteRequest request) { clienteService.crearCliente(request);
     }
 
@@ -24,12 +24,12 @@ public class ClienteController {
         return ResponseEntity.ok(clienteService.obtenerClientePorId(id));
     }
 
-    @GetMapping// obtener todos los clientes
+    @GetMapping("/todos")// obtener todos los clientes
     public ResponseEntity<Collection<ClienteResponse>> obtenerTodosLosClientes() {
         return ResponseEntity.ok(clienteService.obtenerTodosLosClientes());
     }
 
-    @PutMapping("/{id}/update")// actualizar un cliente por id
+    @PutMapping("/update/{id}")// actualizar un cliente por id
     public void actualizarClienteId(@PathVariable Long id, @RequestBody ClienteRequest request) {
         if (clienteService.obtenerClientePorId(id) != null) {
             clienteService.actualizarCliente(id, request);
@@ -38,7 +38,7 @@ public class ClienteController {
         }
     }
 
-    @DeleteMapping("/{id}/delete") // eliminar un cliente  por id
+    @DeleteMapping("/delete/{id}") // eliminar un cliente  por id
     public void eliminarClienteId(@PathVariable Long id) {
         clienteService.eliminarCliente(id);
     }

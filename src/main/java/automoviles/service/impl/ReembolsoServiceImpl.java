@@ -3,6 +3,7 @@ package automoviles.service.impl;
 import automoviles.dto.request.ReembolsoRequest;
 import automoviles.dto.response.ReembolsoResponse;
 import automoviles.dto.response.UsuarioResponse;
+import automoviles.dto.response.VentaResponse;
 import automoviles.model.Reembolso;
 import automoviles.model.Usuario;
 import automoviles.model.Venta;
@@ -29,22 +30,26 @@ public class ReembolsoServiceImpl implements ReembolsoService {
     private ReembolsoMapper reembolsoMapper;
 
     @Override
+    public ReembolsoResponse obtenerReembolsoPorId(Long id) {
+        Reembolso reembolso = reembolsoRepository.findById(id).orElse(null);
+        if (reembolso == null) {
+            throw new RuntimeException("Reembolso no encontrado con ID: " + id);
+        }
+        return reembolsoMapper.toReembolsoToReembolsoResponse(reembolso);
+    }
+
+    @Override
     public Collection<ReembolsoResponse> obtenerTodosLosReembolsos() {
         Collection<Reembolso> listReembolsoResponse = reembolsoRepository.findAll();
+        if (listReembolsoResponse.isEmpty()) {
+            throw new RuntimeException("No hay reembolsos registrados");
+        }
         return reembolsoMapper.toListReembolsoToReembolsoResponse(listReembolsoResponse);
     }
 
     @Override
-    public ReembolsoResponse obtenerReembolsoPorId(Long id) {
-        Optional<Reembolso> reembolso = reembolsoRepository.findById(id);
-        return reembolso.map(reembolsoMapper::toReembolsoToReembolsoResponse)
-                .orElse(null);
-    }
-
-    @Override
     public void crearReembolso(ReembolsoRequest request) {
-        Venta venta = ventaRepository.findById(request.getIdVenta())
-                .orElseThrow(() -> new RuntimeException("Venta no encontrada con ID: " + request.getIdVenta()));
+        Venta venta = ventaRepository.findById(request.getIdVenta()).orElseThrow(() -> new RuntimeException("Venta no encontrada con ID: " + request.getIdVenta()));
 
         Reembolso reembolso = new Reembolso();
         reembolso.setVenta(venta);
@@ -57,11 +62,9 @@ public class ReembolsoServiceImpl implements ReembolsoService {
 
     @Override
     public void actualizarReembolso(Long id, ReembolsoRequest request) {
-        Reembolso reembolsoExistente = reembolsoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Reembolso no encontrado con ID: " + id));
+        Reembolso reembolsoExistente = reembolsoRepository.findById(id).orElseThrow(() -> new RuntimeException("Reembolso no encontrado con ID: " + id));
 
-        Venta venta = ventaRepository.findById(request.getIdVenta())
-                .orElseThrow(() -> new RuntimeException("Venta no encontrada con ID: " + request.getIdVenta()));
+        Venta venta = ventaRepository.findById(request.getIdVenta()).orElseThrow(() -> new RuntimeException("Venta no encontrada con ID: " + request.getIdVenta()));
 
         reembolsoExistente.setVenta(venta);
         reembolsoExistente.setMotivo(request.getMotivo());
@@ -73,6 +76,7 @@ public class ReembolsoServiceImpl implements ReembolsoService {
 
     @Override
     public void eliminarReembolso(Long id) {
+        Reembolso reembolso = reembolsoRepository.findById(id).orElse(null);
         if (!reembolsoRepository.existsById(id)) {
             throw new RuntimeException("Reembolso no encontrado con ID: " + id);
         }
