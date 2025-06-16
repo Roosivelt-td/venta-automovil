@@ -13,6 +13,7 @@ public class Cliente {
 
     private Long id;
     private String nombre;
+    private String apellidos;
     @Column(name = "dni", unique = true, nullable = false)
     private Integer dni;
     private String telefono;

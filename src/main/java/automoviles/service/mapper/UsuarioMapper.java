@@ -16,13 +16,15 @@ public class UsuarioMapper {
         if (listarUsuario != null && !listarUsuario.isEmpty()) {
             for (Usuario usuario : listarUsuario) {
                 UsuarioResponse usuarioResponse = new UsuarioResponse();
+
                 usuarioResponse.setIdentificador(usuario.getId());
                 usuarioResponse.setNombre(usuario.getNombre());
                 usuarioResponse.setApellido(usuario.getApellido());
-                usuarioResponse.setCorreo(usuario.getCorreo());
-                usuarioResponse.setContrasena(usuario.getContrasena());
-                usuarioResponse.setRol(usuario.getRol());
+                usuarioResponse.setSexo(usuario.getSexo());
+                usuarioResponse.setDireccion(usuario.getDireccion());
+                usuarioResponse.setCelular(usuario.getCelular());
                 usuarioResponse.setEstado(usuario.getEstado());
+                usuarioResponse.setIdUser(usuario.getUser().getId());
                 listarUsuarioResponse.add(usuarioResponse);
             }
         }
@@ -34,10 +36,12 @@ public class UsuarioMapper {
         if (usuario != null) {
             usuarioResponse.setNombre(usuario.getNombre());
             usuarioResponse.setApellido(usuario.getApellido());
-            usuarioResponse.setCorreo(usuario.getCorreo());
-            usuarioResponse.setContrasena(usuario.getContrasena());
-            usuarioResponse.setRol(usuario.getRol());
+            usuarioResponse.setSexo(usuario.getSexo());
+            usuarioResponse.setDireccion(usuario.getDireccion());
+            usuarioResponse.setCelular(usuario.getCelular());
             usuarioResponse.setEstado(usuario.getEstado());
+            usuarioResponse.setIdUser(usuario.getUser().getId());
+
         }
         return usuarioResponse;
     }

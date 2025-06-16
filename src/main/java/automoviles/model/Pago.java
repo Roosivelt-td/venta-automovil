@@ -16,7 +16,7 @@ public class Pago {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "iVenta", nullable = false)
+    @JoinColumn(name = "idVenta", nullable = false)
     private Venta venta;
 
     private String metodoPago;

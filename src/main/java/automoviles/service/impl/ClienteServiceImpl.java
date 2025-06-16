@@ -38,6 +38,18 @@ public class ClienteServiceImpl implements ClienteService {
         Cliente cliente = clienteRepository.findById(id).orElse(null);
         return clienteMapper.toClienteToClienteResponse(cliente);
     }
+    // buscar Cliente por dni local
+    public ClienteResponse obtenerClientePorDNI(Long dni) {
+        Cliente cliente = clienteRepository.findById(dni).orElse(null);
+        return clienteMapper.toClienteToClienteResponse(cliente);
+    }
+
+     // buscar Cliente por dni reniec
+    public ClienteResponse obtenerClientePorDniReniec(Long dni) {
+        Cliente cliente = clienteRepository.findById(dni).orElse(null);
+        return clienteMapper.toClienteToClienteResponse(cliente);
+    }
+
 
     @Override // obtener todos los clientes
     public Collection<ClienteResponse> obtenerTodosLosClientes() {

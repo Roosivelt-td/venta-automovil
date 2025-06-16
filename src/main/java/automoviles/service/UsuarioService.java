@@ -12,4 +12,6 @@ public interface UsuarioService {
     void crearUsuario(UsuarioRequest request);
     void actualizarUsuario(Long id, UsuarioRequest request);
     void eliminarUsuario(Long id);
+
+    UsuarioResponse obtenerUsuarioPorIdUser(Long user);
 }

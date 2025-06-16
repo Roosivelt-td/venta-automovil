@@ -1,10 +1,12 @@
 package automoviles.controller;
 
+import automoviles.auth.entity.User;
 import automoviles.dto.request.UsuarioRequest;
 import automoviles.dto.response.UsuarioResponse;
 import automoviles.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -42,6 +44,12 @@ public class UsuarioController {
     @DeleteMapping("/delete/{id}") // eliminar un usuario  por id
     public void eliminarUsuarioId(@PathVariable Long id) {
         usuarioService.eliminarUsuario(id);
+    }
+
+    @GetMapping("/mis-datos")
+    public ResponseEntity<UsuarioResponse> getMisDatos(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(usuarioService.obtenerUsuarioPorId(user.getId()));
     }
 
 }

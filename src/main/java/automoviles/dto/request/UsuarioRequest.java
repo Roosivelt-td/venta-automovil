@@ -9,9 +9,10 @@ public class UsuarioRequest {
     private Long id;
     private String nombre;
     private String apellido;
-    private String correo;
-    private String contrasena;
-    private String rol;
+    private String sexo;
+    private String direccion;
+    private String celular;
     private Boolean estado;
+    private Long idUser;
 
 }
