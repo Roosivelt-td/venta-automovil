@@ -12,5 +12,4 @@ public interface ClienteService {
     void crearCliente(ClienteRequest request);
     void actualizarCliente(Long id, ClienteRequest request);
     void eliminarCliente(Long id);
-
 }
