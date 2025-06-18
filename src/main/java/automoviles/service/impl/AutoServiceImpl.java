@@ -46,6 +46,18 @@ public class AutoServiceImpl implements AutoService {
         return autoMapper.toAutoToAutoResponse(auto);
     }
 
+
+    @Override
+    public Collection<AutoResponse> obtenerAutosPorMarca(String marca) {
+        Collection<Auto> autos = autoRepository.findByMarca(marca);
+        if (autos.isEmpty()) {
+            throw new RuntimeException("No se encontraron autos de la marca: " + marca);
+        }
+        return autoMapper.toListAutoToAutoResponse(autos);
+    }
+
+
+
     @Override // obtener todos los autos
     public Collection<AutoResponse> obtenerTodosLosAutos() {
         Collection<Auto> listAutoResponse = autoRepository.findAll();

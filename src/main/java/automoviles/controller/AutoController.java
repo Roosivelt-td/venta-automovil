@@ -40,4 +40,9 @@ public class AutoController {
         autoService.eliminarAuto(id);
     }
 
+    @GetMapping("/marca/{marca}")
+    public ResponseEntity<Collection<AutoResponse>> obtenerAutosPorMarca(@PathVariable String marca) {
+        return ResponseEntity.ok(autoService.obtenerAutosPorMarca(marca));
+    }
+
 }

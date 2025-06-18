@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface AutoRepository extends JpaRepository<Auto, Long> {
-    // List<Auto> findByMarca(String marca);
-
+    List<Auto> findByMarca(String marca);
+    List<Auto> findByMarcaAndModelo(String marca, String modelo);
 }

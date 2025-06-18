@@ -12,4 +12,5 @@ public interface AutoService {
     void crearAuto(AutoRequest request);
     void actualizarAuto(Long id, AutoRequest request);
     void eliminarAuto(Long id);
+    Collection<AutoResponse> obtenerAutosPorMarca(String marca);
 }
