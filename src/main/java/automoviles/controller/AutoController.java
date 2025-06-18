@@ -4,6 +4,7 @@ import automoviles.dto.request.AutoRequest;
 import automoviles.dto.response.AutoResponse;
 import automoviles.service.AutoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,7 @@ public class AutoController {
     public ResponseEntity<AutoResponse> obtenerAutoPorId(@PathVariable Long id) {
         return ResponseEntity.ok(autoService.obtenerAutoPorId(id));
     }
-    @GetMapping ("/todos")// obtener todos los autos
+    @GetMapping ("/")// obtener todos los autos
     public ResponseEntity<Collection<AutoResponse>> obtenerTodosLosAutos() {
         return ResponseEntity.ok(autoService.obtenerTodosLosAutos());
     }
@@ -43,6 +44,19 @@ public class AutoController {
     @GetMapping("/marca/{marca}")
     public ResponseEntity<Collection<AutoResponse>> obtenerAutosPorMarca(@PathVariable String marca) {
         return ResponseEntity.ok(autoService.obtenerAutosPorMarca(marca));
+    }
+
+    @GetMapping("/buscar")
+    public ResponseEntity<?> obtenerAutosPorMarcaYModelo(
+            @RequestParam String marca,
+            @RequestParam String modelo) {
+        try {
+            Collection<AutoResponse> autos = autoService.obtenerAutosPorMarcaYModelo(marca, modelo);
+            return ResponseEntity.ok(autos);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(e.getMessage());
+        }
     }
 
 }
