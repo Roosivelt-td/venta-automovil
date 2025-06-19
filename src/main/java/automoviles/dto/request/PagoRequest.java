@@ -1,17 +1,18 @@
 package automoviles.dto.request;
 
+
 import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Getter
 @Setter
-public class CompraRequest {
+@Getter
+public class PagoRequest {
     private Long id;
-    private Long idProveedor;  // ID del proveedor
-    private Long idAuto;      // ID del auto
+    private Long idVenta; // ID de la venta asociada
+    private String metodoPago;
+    private BigDecimal monto;
     private LocalDate fecha;
-    private BigDecimal precioCompra;
 }

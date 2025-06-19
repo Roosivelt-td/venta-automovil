@@ -1,11 +1,11 @@
 package automoviles.repository;
 
-import automoviles.model.Compra;
+import automoviles.model.Pago;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CompraRepository extends JpaRepository<Compra, Long> {
+public interface PagoRepository extends JpaRepository<Pago, Long> {
 
 }
