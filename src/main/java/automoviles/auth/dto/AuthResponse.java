@@ -1,6 +1,7 @@
 package automoviles.auth.dto;
 
 public class AuthResponse {
+
     private String token;
 
     // Constructor privado
@@ -20,6 +21,7 @@ public class AuthResponse {
 
     // Clase Builder
     public static class AuthResponseBuilder {
+
         private String token;
 
         public AuthResponseBuilder token(String token) {

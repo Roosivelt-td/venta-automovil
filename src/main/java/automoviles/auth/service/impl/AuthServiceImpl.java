@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
+
     private final UserRepository userRepository;
     private final UsuarioRepository usuarioRepository;
     private final JwtService jwtService;
@@ -32,8 +33,11 @@ public class AuthServiceImpl implements AuthService {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     }
+
+
     @Override
     @Transactional
+
     public AuthResponse register(RegisterRequest request) {
         var user = User.builder()
                 .username(request.getUsername())

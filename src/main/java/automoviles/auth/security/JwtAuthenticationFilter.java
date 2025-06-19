@@ -30,6 +30,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.tokenBlacklistService = tokenBlacklistService;
     }
 
+
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,

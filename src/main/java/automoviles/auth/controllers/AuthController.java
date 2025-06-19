@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
+
     private final AuthService authService;
     private final TokenBlacklistService tokenBlacklistService;
 
@@ -47,7 +48,7 @@ public class AuthController {
     @DeleteMapping("/users/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         authService.deleteUser(id);
-        return ResponseEntity.ok("Usuario eliminado exitosamente");
+        return ResponseEntity.ok("Usuario eliminado exitosamente ");
     }
 
     @PutMapping("/users/{id}")

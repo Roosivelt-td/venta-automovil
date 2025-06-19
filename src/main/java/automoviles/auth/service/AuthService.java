@@ -13,4 +13,5 @@ public interface AuthService {
     User getUserById(Long id);
     AuthResponse updateUser(Long id, UpdateUserRequest request);
     void deleteUser(Long id);
+
 }

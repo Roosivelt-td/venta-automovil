@@ -11,9 +11,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import automoviles.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
+
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
+
     private final UserRepository userRepository;
 
     @Bean
