@@ -36,7 +36,7 @@ public class AutoServiceImpl implements AutoService {
         autoNew.setImagenUrl(request.getImagenUrl());
         autoNew.setEstado("Disponible");
         autoRepository.save(autoNew);
-        
+        System.out.println("INFO: Auto creado exitosamente: " + autoNew.getMarca() + " " + autoNew.getModelo());
     }
     @Override // obtener autos por id
     public AutoResponse obtenerAutoPorId(Long id) {
