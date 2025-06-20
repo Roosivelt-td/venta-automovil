@@ -15,16 +15,16 @@ import java.util.Collection;
 @Service
 public class AutoServiceImpl implements AutoService {
 
-    @Autowired
+    @Autowired // Inyección del repositorio de autos.
     private AutoRepository autoRepository;
 
-    @Autowired
+    @Autowired // Inyección del mapeador de autos.
     private AutoMapper autoMapper;
 
     @Override // crear auto
     public void crearAuto(AutoRequest request) {
         Auto autoNew = new Auto();
-        System.out.println("Nuevo auto" + autoNew);
+        System.out.println("INFO: Iniciando la creación de un nuevo auto con datos:" + autoNew);
         autoNew.setMarca(request.getMarca());
         autoNew.setModelo(request.getModelo());
         autoNew.setAnio(request.getAnio());
@@ -36,6 +36,7 @@ public class AutoServiceImpl implements AutoService {
         autoNew.setImagenUrl(request.getImagenUrl());
         autoNew.setEstado("Disponible");
         autoRepository.save(autoNew);
+        
     }
     @Override // obtener autos por id
     public AutoResponse obtenerAutoPorId(Long id) {
