@@ -41,3 +41,8 @@ public class VentaController {
         }
     }
 
+@DeleteMapping("/delete/{id}") // eliminar un venta  por id
+    public void eliminarVentaId(@PathVariable Long id) {
+        ventaService.eliminarVenta(id);
+    }
+}
