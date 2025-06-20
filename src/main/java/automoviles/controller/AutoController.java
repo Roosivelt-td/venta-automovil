@@ -24,7 +24,7 @@ public class AutoController {
     public ResponseEntity<AutoResponse> obtenerAutoPorId(@PathVariable Long id) {
         return ResponseEntity.ok(autoService.obtenerAutoPorId(id));
     }
-    @GetMapping ("/")// obtener todos los autos
+    @GetMapping ("/")// obtener todos los autos de BD
     public ResponseEntity<Collection<AutoResponse>> obtenerTodosLosAutos() {
         return ResponseEntity.ok(autoService.obtenerTodosLosAutos());
     }
