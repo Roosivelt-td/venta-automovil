@@ -98,7 +98,7 @@ public class AutoServiceImpl implements AutoService {
         if (auto != null) {
             autoRepository.delete(auto);
         }else {
-            System.out.println("Auto no encontrado");
+            System.out.println("");
         }
     }
 
