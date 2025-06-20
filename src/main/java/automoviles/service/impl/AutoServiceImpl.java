@@ -11,7 +11,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 
-
+/**
+ * Interfaz para la lógica de negocio de automóviles.
+ * Define las operaciones disponibles.
+ */
 @Service
 public class AutoServiceImpl implements AutoService {
 
