@@ -11,3 +11,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 import java.util.List;
+
+@RestController
+@RequestMapping("/api/ventas")
+public class VentaController {
+
+    @Autowired
+    private VentaService ventaService;
+
+    @PostMapping("/create") // crear una venta de auto
+    public void crearVenta(@RequestBody VentaRequest request) { ventaService.crearVenta(request);
+    }
