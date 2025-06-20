@@ -22,3 +22,22 @@ public class VentaController {
     @PostMapping("/create") // crear una venta de auto
     public void crearVenta(@RequestBody VentaRequest request) { ventaService.crearVenta(request);
     }
+@GetMapping("/{id}") // obtener un venta por su id
+        public ResponseEntity<VentaResponse> obtenerVentaPorId(@PathVariable Long id) {
+            return ResponseEntity.ok(ventaService.obtenerVentaPorId(id));
+    }
+
+    @GetMapping("/todos")// obtener todos los ventas
+    public ResponseEntity<Collection<VentaResponse>> obtenerTodosLosVentas() {
+        return ResponseEntity.ok(ventaService.obtenerTodosLosVentas());
+    }
+
+    @PutMapping("/update/{id}")// actualizar un venta por id
+    public void actualizarVentaId(@PathVariable Long id, @RequestBody VentaRequest request) {
+        if (ventaService.obtenerVentaPorId(id) != null) {
+            ventaService.actualizarVenta(id, request);
+        } else {
+            throw new RuntimeException("No existe un venta con el id: " + id);
+        }
+    }
+
