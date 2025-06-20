@@ -20,7 +20,7 @@ public class VentaController {
     @Autowired
     private VentaService ventaService;
 
-    @PostMapping("/create") // crear un venta
+    @PostMapping("/create") // crear una venta de auto
     public void crearVenta(@RequestBody VentaRequest request) { ventaService.crearVenta(request);
     }
 
