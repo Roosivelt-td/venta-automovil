@@ -5,6 +5,10 @@ import automoviles.dto.response.AutoResponse;
 
 import java.util.Collection;
 
+/**
+ * Interfaz para la lógica de negocio de automóviles.
+ * Define las operaciones disponibles.
+ */
 public interface AutoService {
 
     Collection<AutoResponse> obtenerTodosLosAutos();
