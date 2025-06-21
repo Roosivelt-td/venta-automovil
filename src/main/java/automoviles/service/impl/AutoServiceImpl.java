@@ -15,10 +15,7 @@ import java.util.Collection;
 @Service
 public class AutoServiceImpl implements AutoService {
 
-//<<<<<<< autos
-    @Autowired // Inyección del repositorio de autos.
-//=======
-    @Autowired
+
     //Permite que Spring inyecte automáticamente una instancia de una clase (bean)
     // en otra, sin necesidad de crearla manualmente con new,
     // Se usa en campos, constructores o métodos
