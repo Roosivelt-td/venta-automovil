@@ -15,13 +15,24 @@ import java.util.Collection;
 @Service
 public class AutoServiceImpl implements AutoService {
 
+//<<<<<<< autos
     @Autowired // Inyección del repositorio de autos.
+//=======
+    @Autowired
+    //Permite que Spring inyecte automáticamente una instancia de una clase (bean)
+    // en otra, sin necesidad de crearla manualmente con new,
+    // Se usa en campos, constructores o métodos
+//>>>>>>> main
     private AutoRepository autoRepository;
 
     @Autowired // Inyección del mapeador de autos.
     private AutoMapper autoMapper;
 
-    @Override // crear auto
+    @Override
+    //Asegura que está redefiniendo un método existente (no creando uno nuevo por error).
+    // Si el método no existe en la superclase/interfaz, el compilador lanza un error.
+
+    // crear auto
     public void crearAuto(AutoRequest request) {
         Auto autoNew = new Auto();
         System.out.println("INFO: Iniciando la creación de un nuevo auto con datos:" + autoNew);
