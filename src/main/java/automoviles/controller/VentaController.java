@@ -9,7 +9,6 @@ import automoviles.service.VentaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Collection;
 import java.util.List;
 
@@ -20,13 +19,12 @@ public class VentaController {
     @Autowired
     private VentaService ventaService;
 
-    @PostMapping("/create") // crear un venta
+    @PostMapping("/create") // crear una venta de auto
     public void crearVenta(@RequestBody VentaRequest request) { ventaService.crearVenta(request);
     }
-
-    @GetMapping("/{id}") // obtener un venta por su id
-    public ResponseEntity<VentaResponse> obtenerVentaPorId(@PathVariable Long id) {
-        return ResponseEntity.ok(ventaService.obtenerVentaPorId(id));
+@GetMapping("/{id}") // obtener un venta por su id
+        public ResponseEntity<VentaResponse> obtenerVentaPorId(@PathVariable Long id) {
+            return ResponseEntity.ok(ventaService.obtenerVentaPorId(id));
     }
 
     @GetMapping("/todos")// obtener todos los ventas
@@ -43,9 +41,8 @@ public class VentaController {
         }
     }
 
-    @DeleteMapping("/delete/{id}") // eliminar un venta  por id
+@DeleteMapping("/delete/{id}") // eliminar un venta  por id
     public void eliminarVentaId(@PathVariable Long id) {
         ventaService.eliminarVenta(id);
     }
-
 }
