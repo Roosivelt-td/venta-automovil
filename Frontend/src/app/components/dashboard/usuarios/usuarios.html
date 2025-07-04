@@ -60,7 +60,8 @@
                                     <button (click)="abrirModalEdicion(usuario)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-sm mr-2">
                                         <i class="fas fa-edit"></i>
                                     </button>
-                                    <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-sm">
+                                    <button (click)="eliminarUsuario(usuario)" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-sm flex items-center" [disabled]="usuarioEliminandoId === usuario.identificador">
+                                        <span *ngIf="usuarioEliminandoId === usuario.identificador" class="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-1"></span>
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </td>
@@ -338,6 +339,54 @@
                     [disabled]="isLoading || usuarioForm.invalid">
                     <span *ngIf="isLoading" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></span>
                     {{ isLoading ? 'Actualizando...' : 'Actualizar Usuario' }}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación de Eliminación -->
+    <div *ngIf="mostrarModalConfirmacion" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50 transition-opacity duration-300">
+        <div class="relative p-5 border w-full max-w-md shadow-lg rounded-md bg-white transform transition-transform duration-300 scale-100">
+            <div class="flex justify-between items-center pb-3">
+                <h5 class="text-xl font-medium text-red-600" id="confirmModalLabel">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>Confirmar Eliminación
+                </h5>
+                <button (click)="cerrarModalConfirmacion()" type="button" class="text-gray-400 hover:text-gray-600 focus:outline-none" aria-label="Close">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="mt-2">
+                <div class="text-center">
+                    <i class="fas fa-user-times text-6xl text-red-500 mb-4"></i>
+                    <p class="text-lg font-medium text-gray-900 mb-2">
+                        ¿Eliminar usuario?
+                    </p>
+                    <p class="text-gray-600 mb-4">
+                        ¿Estás seguro de que quieres eliminar al usuario <strong>"{{ usuarioEliminando?.nombre }} {{ usuarioEliminando?.apellido }}"</strong>?
+                    </p>
+                    <p class="text-sm text-red-600 mb-6">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Esta acción no se puede deshacer.
+                    </p>
+                </div>
+            </div>
+            <div class="flex justify-end items-center pt-4">
+                <button 
+                    (click)="cerrarModalConfirmacion()" 
+                    type="button" 
+                    class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-md mr-2"
+                    [disabled]="usuarioEliminandoId !== null">
+                    Cancelar
+                </button>
+                <button 
+                    (click)="confirmarEliminacion()" 
+                    type="button" 
+                    class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md flex items-center"
+                    [disabled]="usuarioEliminandoId !== null">
+                    <span *ngIf="usuarioEliminandoId !== null" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></span>
+                    {{ usuarioEliminandoId !== null ? 'Eliminando...' : 'Eliminar Usuario' }}
                 </button>
             </div>
         </div>
