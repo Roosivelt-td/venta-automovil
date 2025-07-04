@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -39,17 +41,24 @@ public class UsuarioController {
     }
     
     @GetMapping("/users-disponibles")// obtener todos los Users disponibles
-    public ResponseEntity<List<User>> obtenerUsersDisponibles() {
-       return ResponseEntity.ok(userRepository.findAll());
+    public ResponseEntity<List<Object>> obtenerUsersDisponibles() {
+        List<User> users = userRepository.findAll();
+        List<Object> usersSimplificados = users.stream()
+            .map(user -> {
+                return Map.of(
+                    "id", user.getId(),
+                    "username", user.getUsername(),
+                    "email", user.getEmail(),
+                    "rol", user.getRol()
+                );
+            })
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(usersSimplificados);
     }
 
     @PutMapping("/update/{id}")// actualizar un usuario por id
-    public void actualizarUsuarioId(@PathVariable Long id, @RequestBody UsuarioRequest request) {
-        if (usuarioService.obtenerUsuarioPorId(id) != null) {
-            usuarioService.actualizarUsuario(id, request);
-        } else {
-            throw new RuntimeException("No existe un usuario con el id: " + id);
-        }
+    public ResponseEntity<UsuarioResponse> actualizarUsuarioId(@PathVariable Long id, @RequestBody UsuarioRequest request) {
+        return ResponseEntity.ok(usuarioService.actualizarUsuario(id, request));
     }
 
     @DeleteMapping("/delete/{id}") // eliminar un usuario  por id
