@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -41,16 +42,16 @@ public class UsuarioController {
     }
     
     @GetMapping("/users-disponibles")// obtener todos los Users disponibles
-    public ResponseEntity<List<Object>> obtenerUsersDisponibles() {
+    public ResponseEntity<List<Map<String, Object>>> obtenerUsersDisponibles() {
         List<User> users = userRepository.findAll();
-        List<Object> usersSimplificados = users.stream()
+        List<Map<String, Object>> usersSimplificados = users.stream()
             .map(user -> {
-                return Map.of(
-                    "id", user.getId(),
-                    "username", user.getUsername(),
-                    "email", user.getEmail(),
-                    "rol", user.getRol()
-                );
+                Map<String, Object> userMap = new HashMap<>();
+                userMap.put("id", user.getId());
+                userMap.put("username", user.getUsername() != null ? user.getUsername() : "");
+                userMap.put("email", user.getEmail() != null ? user.getEmail() : "");
+                userMap.put("rol", user.getRol() != null ? user.getRol().name() : "");
+                return userMap;
             })
             .collect(Collectors.toList());
         return ResponseEntity.ok(usersSimplificados);
@@ -62,8 +63,9 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/delete/{id}") // eliminar un usuario  por id
-    public void eliminarUsuarioId(@PathVariable Long id) {
+    public ResponseEntity<Void> eliminarUsuarioId(@PathVariable Long id) {
         usuarioService.eliminarUsuario(id);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/mis-datos")
