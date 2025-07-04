@@ -14,11 +14,14 @@ import { User } from '../../../models/user';
 export class UsuariosListComponent implements OnInit {
   mostrarModalRegistro: boolean = false;
   mostrarModalEdicion: boolean = false;
+  mostrarModalConfirmacion: boolean = false;
   usuarios: User[] = [];
   usersDisponibles: any[] = [];
   usuarioForm!: FormGroup;
   usuarioEditando: User | null = null;
+  usuarioEliminando: User | null = null;
   isLoading: boolean = false;
+  usuarioEliminandoId: number | null = null;
 
   private usuarioService = inject(UsuarioService);
   private fb = inject(FormBuilder);
@@ -63,6 +66,9 @@ export class UsuariosListComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error al cargar users disponibles:', error);
+        console.error('Status:', error.status);
+        console.error('StatusText:', error.statusText);
+        console.error('URL:', error.url);
         console.error('Detalles del error:', error.error);
         this.usersDisponibles = [];
         // No mostrar alerta para este error ya que no es crítico
@@ -152,6 +158,42 @@ export class UsuariosListComponent implements OnInit {
     } else {
       this.marcarCamposInvalidos();
     }
+  }
+
+  eliminarUsuario(usuario: User) {
+    this.usuarioEliminando = usuario;
+    this.mostrarModalConfirmacion = true;
+  }
+
+  confirmarEliminacion() {
+    if (this.usuarioEliminando) {
+      this.usuarioEliminandoId = this.usuarioEliminando.identificador;
+      console.log('Eliminando usuario:', this.usuarioEliminando.identificador);
+      
+      this.usuarioService.deleteUsuario(this.usuarioEliminando.identificador).subscribe({
+        next: () => {
+          console.log('Usuario eliminado exitosamente');
+          this.cargarUsuarios();
+          this.cerrarModalConfirmacion();
+          alert('Usuario eliminado exitosamente');
+        },
+        error: (error) => {
+          this.usuarioEliminandoId = null;
+          console.error('Error al eliminar usuario:', error);
+          console.error('Status:', error.status);
+          console.error('StatusText:', error.statusText);
+          console.error('URL:', error.url);
+          console.error('Detalles del error:', error.error);
+          alert('Error al eliminar usuario: ' + (error.error?.message || error.message || `Error ${error.status}: ${error.statusText}`));
+        }
+      });
+    }
+  }
+
+  cerrarModalConfirmacion() {
+    this.mostrarModalConfirmacion = false;
+    this.usuarioEliminando = null;
+    this.usuarioEliminandoId = null;
   }
 
   marcarCamposInvalidos() {
