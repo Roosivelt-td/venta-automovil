@@ -23,6 +23,10 @@ export class UsuarioService {
     return this.http.post<User>(this.apiUrl.getUrl('usuarios') + '/create', usuario);
   }
 
+  actualizarUsuario(id: number, usuario: Partial<User>): Observable<User> {
+    return this.http.put<User>(`${this.apiUrl.getUrl('usuarios')}/update/${id}`, usuario);
+  }
+
   deleteUsuario(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl.getUrl('usuarios')}/${id}`);
   }
