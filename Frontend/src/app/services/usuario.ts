@@ -15,6 +15,14 @@ export class UsuarioService {
     return this.http.get<User[]>(this.apiUrl.getUrl('usuarios') + '/todos');
   }
 
+  getUsersDisponibles(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl.getUrl('usuarios') + '/users-disponibles');
+  }
+
+  crearUsuario(usuario: Partial<User>): Observable<User> {
+    return this.http.post<User>(this.apiUrl.getUrl('usuarios') + '/create', usuario);
+  }
+
   deleteUsuario(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl.getUrl('usuarios')}/${id}`);
   }
