@@ -1,0 +1,87 @@
+<div class="container mx-auto p-6 flex-grow">
+    <div id="dashboard-section" class="content-section">
+        <h2 class="mb-4 text-2xl font-semibold text-gray-800">Dashboard General</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-white rounded-lg shadow-md p-6 metric-card">
+                <div class="flex items-center justify-between">
+                    <i class="fas fa-car text-4xl text-blue-500"></i>
+                    <div>
+                        <div class="text-3xl font-bold text-gray-900">250</div>
+                        <div class="text-sm text-gray-500">Total de Autos</div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6 metric-card">
+                <div class="flex items-center justify-between">
+                    <i class="fas fa-dollar-sign text-4xl text-green-600"></i>
+                    <div>
+                        <div class="text-3xl font-bold text-gray-900">120</div>
+                        <div class="text-sm text-gray-500">Autos Vendidos</div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6 metric-card">
+                <div class="flex items-center justify-between">
+                    <i class="fas fa-boxes text-4xl text-yellow-600"></i>
+                    <div>
+                        <div class="text-3xl font-bold text-gray-900">130</div>
+                        <div class="text-sm text-gray-500">Stock Disponible</div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6 metric-card">
+                <div class="flex items-center justify-between">
+                    <i class="fas fa-clipboard-list text-4xl text-red-600"></i>
+                    <div>
+                        <div class="text-3xl font-bold text-gray-900">15</div>
+                        <div class="text-sm text-gray-500">Órdenes Pendientes</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+            <div class="bg-white rounded-lg shadow-md">
+                <div class="bg-green-500 text-white p-4 rounded-t-lg font-semibold">
+                    Actividad Reciente
+                </div>
+                <div class="p-4">
+                    <ul class="divide-y divide-gray-200">
+                        <li class="py-3 flex justify-between items-center">
+                            <span>Nuevo auto añadido: Honda Civic 2023</span>
+                            <span class="bg-blue-500 text-white text-xs font-semibold px-2.5 py-0.5 rounded-full">Hace 5 min</span>
+                        </li>
+                        <li class="py-3 flex justify-between items-center">
+                            <span>Venta completada: Ford F-150</span>
+                            <span class="bg-green-500 text-white text-xs font-semibold px-2.5 py-0.5 rounded-full">Hace 1 hora</span>
+                        </li>
+                        <li class="py-3 flex justify-between items-center">
+                            <span>Stock actualizado: Toyota Camry (+3)</span>
+                            <span class="bg-blue-400 text-white text-xs font-semibold px-2.5 py-0.5 rounded-full">Hace 3 horas</span>
+                        </li>
+                        <li class="py-3 flex justify-between items-center">
+                            <span>Nuevo cliente registrado</span>
+                            <span class="bg-gray-500 text-white text-xs font-semibold px-2.5 py-0.5 rounded-full">Hace 1 día</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md">
+                <div class="bg-blue-400 text-white p-4 rounded-t-lg font-semibold">
+                    Acciones Rápidas
+                </div>
+                <div class="p-4 flex flex-col space-y-3">
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">
+                        <i class="fas fa-plus-circle mr-2"></i> Añadir Nuevo Auto
+                    </button>
+                    <button class="bg-transparent hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded w-full">
+                        <i class="fas fa-cogs mr-2"></i> Gestionar Autos Existentes
+                    </button>
+                    <button class="bg-transparent hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded w-full">
+                        <i class="fas fa-warehouse mr-2"></i> Ver Inventario Completo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
