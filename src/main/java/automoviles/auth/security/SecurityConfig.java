@@ -40,6 +40,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/usuarios/todos").permitAll() // Temporalmente desprotegido para pruebas
                         .requestMatchers("/api/usuarios/create").permitAll() // Temporalmente desprotegido para pruebas
                         .requestMatchers("/api/usuarios/users-disponibles").permitAll() // Temporalmente desprotegido para pruebas
+                        .requestMatchers("/api/usuarios/update/**").permitAll() // Temporalmente desprotegido para pruebas
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
