@@ -81,13 +81,15 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ usuario.idUser || 'N/A' }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <button (click)="abrirModalEdicion(usuario)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-sm mr-2">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button (click)="eliminarUsuario(usuario)" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-sm flex items-center" [disabled]="usuarioEliminandoId === usuario.identificador">
-                                        <span *ngIf="usuarioEliminandoId === usuario.identificador" class="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-1"></span>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
+                                    <div class="flex justify-end items-center space-x-2">
+                                        <button (click)="abrirModalEdicion(usuario)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-sm">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button (click)="eliminarUsuario(usuario)" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-sm" [disabled]="usuarioEliminandoId === usuario.identificador">
+                                            <span *ngIf="usuarioEliminandoId === usuario.identificador" class="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-1 align-middle"></span>
+                                            <i class="fas fa-trash-alt align-middle"></i>
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                             <tr *ngIf="usuariosFiltrados.length === 0">
