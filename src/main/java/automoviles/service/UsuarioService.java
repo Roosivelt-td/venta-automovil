@@ -7,11 +7,10 @@ import java.util.Collection;
 
 public interface UsuarioService {
 
-    Collection<UsuarioResponse> obtenerTodosLosUsuarios();
+    UsuarioResponse crearUsuario(UsuarioRequest request);
     UsuarioResponse obtenerUsuarioPorId(Long id);
-    void crearUsuario(UsuarioRequest request);
+    UsuarioResponse obtenerUsuarioPorIdUser(Long userId);
+    Collection<UsuarioResponse> obtenerTodosLosUsuarios();
     void actualizarUsuario(Long id, UsuarioRequest request);
     void eliminarUsuario(Long id);
-
-    UsuarioResponse obtenerUsuarioPorIdUser(Long user);
 }
