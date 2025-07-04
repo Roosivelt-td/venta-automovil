@@ -57,7 +57,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ usuario.idUser || 'N/A' }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-sm mr-2">
+                                    <button (click)="abrirModalEdicion(usuario)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-sm mr-2">
                                         <i class="fas fa-edit"></i>
                                     </button>
                                     <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-sm">
@@ -204,6 +204,140 @@
                     [disabled]="isLoading || usuarioForm.invalid">
                     <span *ngIf="isLoading" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></span>
                     {{ isLoading ? 'Registrando...' : 'Añadir Usuario' }}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Edición para Usuarios -->
+    <div *ngIf="mostrarModalEdicion" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50 transition-opacity duration-300">
+        <div class="relative p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white transform transition-transform duration-300 scale-100">
+            <div class="flex justify-between items-center pb-3">
+                <h5 class="text-xl font-medium" id="userEditModalLabel">Editar Usuario</h5>
+                <button (click)="cerrarModalEdicion()" type="button" class="text-gray-400 hover:text-gray-600 focus:outline-none" aria-label="Close">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="mt-2">
+                <form [formGroup]="usuarioForm" (ngSubmit)="actualizarUsuario()">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="editUserName" class="block text-sm font-medium text-gray-700 mb-1">Nombre *</label>
+                            <input 
+                                type="text" 
+                                formControlName="nombre"
+                                class="mt-1 block w-full rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                [ngClass]="esCampoInvalido('nombre') ? 'border-red-500 focus:border-red-500' : 'border-gray-300 focus:border-indigo-300'"
+                                id="editUserName" 
+                                placeholder="Nombre del usuario">
+                            <div *ngIf="esCampoInvalido('nombre')" class="text-red-500 text-xs mt-1">
+                                {{ obtenerMensajeError('nombre') }}
+                            </div>
+                        </div>
+                        <div>
+                            <label for="editUserApellido" class="block text-sm font-medium text-gray-700 mb-1">Apellido *</label>
+                            <input 
+                                type="text" 
+                                formControlName="apellido"
+                                class="mt-1 block w-full rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                [ngClass]="esCampoInvalido('apellido') ? 'border-red-500 focus:border-red-500' : 'border-gray-300 focus:border-indigo-300'"
+                                id="editUserApellido" 
+                                placeholder="Apellido del usuario">
+                            <div *ngIf="esCampoInvalido('apellido')" class="text-red-500 text-xs mt-1">
+                                {{ obtenerMensajeError('apellido') }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="editUserSexo" class="block text-sm font-medium text-gray-700 mb-1">Sexo *</label>
+                            <select 
+                                formControlName="sexo"
+                                class="mt-1 block w-full rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                [ngClass]="esCampoInvalido('sexo') ? 'border-red-500 focus:border-red-500' : 'border-gray-300 focus:border-indigo-300'"
+                                id="editUserSexo">
+                                <option value="">Seleccionar sexo</option>
+                                <option value="Masculino">Masculino</option>
+                                <option value="Femenino">Femenino</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                            <div *ngIf="esCampoInvalido('sexo')" class="text-red-500 text-xs mt-1">
+                                {{ obtenerMensajeError('sexo') }}
+                            </div>
+                        </div>
+                        <div>
+                            <label for="editUserCelular" class="block text-sm font-medium text-gray-700 mb-1">Celular *</label>
+                            <input 
+                                type="tel" 
+                                formControlName="celular"
+                                class="mt-1 block w-full rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                [ngClass]="esCampoInvalido('celular') ? 'border-red-500 focus:border-red-500' : 'border-gray-300 focus:border-indigo-300'"
+                                id="editUserCelular" 
+                                placeholder="Número de celular (9-10 dígitos)">
+                            <div *ngIf="esCampoInvalido('celular')" class="text-red-500 text-xs mt-1">
+                                {{ obtenerMensajeError('celular') }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label for="editUserDireccion" class="block text-sm font-medium text-gray-700 mb-1">Dirección *</label>
+                        <input 
+                            type="text" 
+                            formControlName="direccion"
+                            class="mt-1 block w-full rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                            [ngClass]="esCampoInvalido('direccion') ? 'border-red-500 focus:border-red-500' : 'border-gray-300 focus:border-indigo-300'"
+                            id="editUserDireccion" 
+                            placeholder="Dirección completa">
+                        <div *ngIf="esCampoInvalido('direccion')" class="text-red-500 text-xs mt-1">
+                            {{ obtenerMensajeError('direccion') }}
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <div>
+                            <label for="editUserStatus" class="block text-sm font-medium text-gray-700 mb-1">Estado *</label>
+                            <select 
+                                formControlName="estado"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                id="editUserStatus">
+                                <option [ngValue]="true">Activo</option>
+                                <option [ngValue]="false">Inactivo</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="editUserIdUser" class="block text-sm font-medium text-gray-700 mb-1">ID User (Opcional)</label>
+                            <select 
+                                formControlName="idUser"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                id="editUserIdUser">
+                                <option value="">Sin asignar (crear sin relación con User)</option>
+                                <option *ngFor="let user of usersDisponibles" [value]="user.id">
+                                    ID: {{ user.id }} - {{ user.username }} ({{ user.email }})
+                                </option>
+                            </select>
+                            <div class="text-gray-500 text-xs mt-1">
+                                Selecciona un User existente o déjalo sin asignar
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="flex justify-end items-center pt-4">
+                <button 
+                    (click)="cerrarModalEdicion()" 
+                    type="button" 
+                    class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-md mr-2"
+                    [disabled]="isLoading">
+                    Cancelar
+                </button>
+                <button 
+                    (click)="actualizarUsuario()" 
+                    type="button" 
+                    class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md flex items-center"
+                    [disabled]="isLoading || usuarioForm.invalid">
+                    <span *ngIf="isLoading" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></span>
+                    {{ isLoading ? 'Actualizando...' : 'Actualizar Usuario' }}
                 </button>
             </div>
         </div>
