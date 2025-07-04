@@ -13,9 +13,11 @@ import { User } from '../../../models/user';
 })
 export class UsuariosListComponent implements OnInit {
   mostrarModalRegistro: boolean = false;
+  mostrarModalEdicion: boolean = false;
   usuarios: User[] = [];
   usersDisponibles: any[] = [];
   usuarioForm!: FormGroup;
+  usuarioEditando: User | null = null;
   isLoading: boolean = false;
 
   private usuarioService = inject(UsuarioService);
@@ -61,7 +63,9 @@ export class UsuariosListComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error al cargar users disponibles:', error);
+        console.error('Detalles del error:', error.error);
         this.usersDisponibles = [];
+        // No mostrar alerta para este error ya que no es crítico
       }
     });
   }
@@ -76,6 +80,28 @@ export class UsuariosListComponent implements OnInit {
     this.usuarioForm.reset();
   }
 
+  abrirModalEdicion(usuario: User) {
+    this.usuarioEditando = usuario;
+    this.mostrarModalEdicion = true;
+    
+    // Cargar los datos del usuario en el formulario
+    this.usuarioForm.patchValue({
+      nombre: usuario.nombre,
+      apellido: usuario.apellido,
+      sexo: usuario.sexo,
+      direccion: usuario.direccion,
+      celular: usuario.celular,
+      estado: usuario.estado,
+      idUser: usuario.idUser
+    });
+  }
+
+  cerrarModalEdicion() {
+    this.mostrarModalEdicion = false;
+    this.usuarioEditando = null;
+    this.usuarioForm.reset();
+  }
+
   registrarUsuario() {
     if (this.usuarioForm.valid) {
       this.isLoading = true;
@@ -83,6 +109,7 @@ export class UsuariosListComponent implements OnInit {
       
       this.usuarioService.crearUsuario(nuevoUsuario).subscribe({
         next: (usuario) => {
+          // Recargar la lista completa en lugar de solo agregar
           this.cargarUsuarios();
           this.cerrarModalRegistro();
           this.isLoading = false;
@@ -93,6 +120,33 @@ export class UsuariosListComponent implements OnInit {
           this.isLoading = false;
           console.error('Error al registrar usuario:', error);
           alert('Error al registrar usuario. Por favor, inténtalo de nuevo.');
+        }
+      });
+    } else {
+      this.marcarCamposInvalidos();
+    }
+  }
+
+  actualizarUsuario() {
+    if (this.usuarioForm.valid && this.usuarioEditando) {
+      this.isLoading = true;
+      const usuarioActualizado = this.usuarioForm.value;
+      
+      console.log('Actualizando usuario:', this.usuarioEditando.identificador, usuarioActualizado);
+      
+      this.usuarioService.actualizarUsuario(this.usuarioEditando.identificador, usuarioActualizado).subscribe({
+        next: (usuario) => {
+          console.log('Usuario actualizado exitosamente:', usuario);
+          this.cargarUsuarios();
+          this.cerrarModalEdicion();
+          this.isLoading = false;
+          alert('Usuario actualizado exitosamente');
+        },
+        error: (error) => {
+          this.isLoading = false;
+          console.error('Error al actualizar usuario:', error);
+          console.error('Detalles del error:', error.error);
+          alert('Error al actualizar usuario: ' + (error.error?.message || error.message || 'Error desconocido'));
         }
       });
     } else {
