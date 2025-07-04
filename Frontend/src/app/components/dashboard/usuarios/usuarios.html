@@ -27,7 +27,31 @@
                     </button>
                 </div>
                 <div class="mb-4">
-                    <input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="Buscar por nombre, correo, rol...">
+                    <div class="relative">
+                        <input 
+                            type="text" 
+                            (input)="onBusquedaChange($event)"
+                            [value]="terminoBusqueda"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 pr-10" 
+                            placeholder="Buscar por nombre, apellido, celular, dirección, sexo, ID...">
+                        <button 
+                            *ngIf="terminoBusqueda.trim()"
+                            (click)="limpiarBusqueda()"
+                            type="button"
+                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="mt-2 text-sm text-gray-600">
+                        <span *ngIf="terminoBusqueda.trim()">
+                            <i class="fas fa-search mr-1"></i>
+                            {{ usuariosFiltrados.length }} de {{ usuarios.length }} usuarios encontrados
+                        </span>
+                        <span *ngIf="!terminoBusqueda.trim()">
+                            <i class="fas fa-users mr-1"></i>
+                            {{ usuarios.length }} usuarios en total
+                        </span>
+                    </div>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
@@ -45,7 +69,7 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            <tr *ngFor="let usuario of usuarios">
+                            <tr *ngFor="let usuario of usuariosFiltrados">
                                 <td class="px-6 py-4 whitespace-nowrap">{{ usuario.identificador }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ usuario.nombre }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ usuario.apellido }}</td>
@@ -66,9 +90,17 @@
                                     </button>
                                 </td>
                             </tr>
-                            <tr *ngIf="usuarios.length === 0">
+                            <tr *ngIf="usuariosFiltrados.length === 0">
                                 <td colspan="9" class="px-6 py-4 text-center text-gray-500">
-                                    No hay usuarios registrados
+                                    <div *ngIf="terminoBusqueda.trim()">
+                                        <i class="fas fa-search text-2xl mb-2"></i>
+                                        <p>No se encontraron usuarios que coincidan con "{{ terminoBusqueda }}"</p>
+                                        <p class="text-sm mt-1">Intenta con otros términos de búsqueda</p>
+                                    </div>
+                                    <div *ngIf="!terminoBusqueda.trim()">
+                                        <i class="fas fa-users text-2xl mb-2"></i>
+                                        <p>No hay usuarios registrados</p>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
