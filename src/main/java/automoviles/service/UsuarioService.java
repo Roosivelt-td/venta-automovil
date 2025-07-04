@@ -11,6 +11,6 @@ public interface UsuarioService {
     UsuarioResponse obtenerUsuarioPorId(Long id);
     UsuarioResponse obtenerUsuarioPorIdUser(Long userId);
     Collection<UsuarioResponse> obtenerTodosLosUsuarios();
-    void actualizarUsuario(Long id, UsuarioRequest request);
+    UsuarioResponse actualizarUsuario(Long id, UsuarioRequest request);
     void eliminarUsuario(Long id);
 }
