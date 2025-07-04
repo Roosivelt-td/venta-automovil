@@ -16,12 +16,14 @@ export class UsuariosListComponent implements OnInit {
   mostrarModalEdicion: boolean = false;
   mostrarModalConfirmacion: boolean = false;
   usuarios: User[] = [];
+  usuariosFiltrados: User[] = [];
   usersDisponibles: any[] = [];
   usuarioForm!: FormGroup;
   usuarioEditando: User | null = null;
   usuarioEliminando: User | null = null;
   isLoading: boolean = false;
   usuarioEliminandoId: number | null = null;
+  terminoBusqueda: string = '';
 
   private usuarioService = inject(UsuarioService);
   private fb = inject(FormBuilder);
@@ -49,10 +51,13 @@ export class UsuariosListComponent implements OnInit {
       next: (data: User[]) => {
         console.log('Usuarios cargados:', data);
         this.usuarios = data;
+        this.usuariosFiltrados = data;
+        this.filtrarUsuarios();
       },
       error: (error) => {
         console.error('Error al cargar usuarios:', error);
         this.usuarios = [];
+        this.usuariosFiltrados = [];
         alert('Error al cargar usuarios. Por favor, recarga la página.');
       }
     });
@@ -218,5 +223,32 @@ export class UsuariosListComponent implements OnInit {
       if (control.errors['pattern']) return 'Formato inválido';
     }
     return '';
+  }
+
+  filtrarUsuarios() {
+    if (!this.terminoBusqueda.trim()) {
+      this.usuariosFiltrados = this.usuarios;
+    } else {
+      const termino = this.terminoBusqueda.toLowerCase().trim();
+      this.usuariosFiltrados = this.usuarios.filter(usuario => 
+        usuario.nombre?.toLowerCase().includes(termino) ||
+        usuario.apellido?.toLowerCase().includes(termino) ||
+        usuario.celular?.includes(termino) ||
+        usuario.direccion?.toLowerCase().includes(termino) ||
+        usuario.sexo?.toLowerCase().includes(termino) ||
+        (usuario.identificador?.toString().includes(termino)) ||
+        (usuario.idUser?.toString().includes(termino))
+      );
+    }
+  }
+
+  onBusquedaChange(event: any) {
+    this.terminoBusqueda = event.target.value;
+    this.filtrarUsuarios();
+  }
+
+  limpiarBusqueda() {
+    this.terminoBusqueda = '';
+    this.filtrarUsuarios();
   }
 } 
