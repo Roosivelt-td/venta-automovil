@@ -28,7 +28,7 @@ export class UsuarioService {
   }
 
   deleteUsuario(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl.getUrl('usuarios')}/${id}`);
+    return this.http.delete<void>(`${this.apiUrl.getUrl('usuarios')}/delete/${id}`);
   }
 
   updateEstado(id: number, estado: boolean): Observable<User> {
