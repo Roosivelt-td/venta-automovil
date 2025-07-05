@@ -5,6 +5,7 @@ import automoviles.dto.response.CompraResponse;
 import automoviles.dto.response.VentaResponse;
 import automoviles.model.*;
 import automoviles.repository.*;
+import automoviles.service.AutoService;
 import automoviles.service.VentaService;
 import automoviles.service.mapper.VentaMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ public class VentaServiceImpl implements VentaService {
 
     @Autowired
     private PagoRepository pagoRepository;
+
+    @Autowired
+    private AutoService autoService;
 
     @Override
     public VentaResponse obtenerVentaPorId(Long id) {
@@ -69,6 +73,9 @@ public class VentaServiceImpl implements VentaService {
 
         ventaRepository.save(venta);
 
+        // Actualizar el stock del auto vendido (reducir en 1)
+        autoService.actualizarStock(request.getIdAuto(), 1);
+
         // Registrar el pago asociado a la venta
         Pago pago = new Pago();
         pago.setVenta(venta);
@@ -81,6 +88,17 @@ public class VentaServiceImpl implements VentaService {
     @Override
     public void actualizarVenta(Long id, VentaRequest request) {
         Venta ventaExistente = ventaRepository.findById(id).orElseThrow(() -> new RuntimeException("Venta no encontrada con ID: " + id));
+
+        // Obtener el auto anterior de la venta para restaurar su stock
+        Auto autoAnterior = ventaExistente.getAuto();
+        if (autoAnterior != null) {
+            // Restaurar el stock del auto anterior (sumar 1)
+            autoAnterior.setStock(autoAnterior.getStock() + 1);
+            if (autoAnterior.getStock() > 0 && "Vendido".equals(autoAnterior.getEstado())) {
+                autoAnterior.setEstado("Disponible");
+            }
+            autoRepository.save(autoAnterior);
+        }
 
         // Cargar las entidades relacionadas
         Cliente cliente = clienteRepository.findById(request.getIdCliente()).orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + request.getIdCliente()));
@@ -95,6 +113,9 @@ public class VentaServiceImpl implements VentaService {
         ventaExistente.setPrecioVenta(request.getPrecioVenta());
 
         ventaRepository.save(ventaExistente);
+
+        // Actualizar el stock del nuevo auto (reducir en 1)
+        autoService.actualizarStock(request.getIdAuto(), 1);
     }
 
     @Override
@@ -103,6 +124,18 @@ public class VentaServiceImpl implements VentaService {
         if (!ventaRepository.existsById(id)) {
             throw new RuntimeException("Venta no encontrada con ID: " + id);
         }
+        
+        // Restaurar el stock del auto cuando se elimina la venta
+        if (venta != null && venta.getAuto() != null) {
+            Auto auto = venta.getAuto();
+            auto.setStock(auto.getStock() + 1);
+            if (auto.getStock() > 0 && "Vendido".equals(auto.getEstado())) {
+                auto.setEstado("Disponible");
+            }
+            autoRepository.save(auto);
+            System.out.println("INFO: Stock restaurado para auto ID " + auto.getId() + " al eliminar venta ID " + id);
+        }
+        
         ventaRepository.deleteById(id);
     }
 }
