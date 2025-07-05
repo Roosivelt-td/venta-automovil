@@ -5,11 +5,12 @@ import { FormsModule } from '@angular/forms';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter, debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { ProveedorService, Proveedor } from '../../../../services/proveedor.service';
+import { EditarProveedorComponent } from '../editar-proveedor/editar-proveedor';
 
 @Component({
   selector: 'app-proveedores-list',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, FormsModule],
+  imports: [CommonModule, HttpClientModule, FormsModule, EditarProveedorComponent],
   templateUrl: './proveedores-list.html',
   styleUrl: './proveedores-list.css'
 })
@@ -21,6 +22,8 @@ export class ProveedoresListComponent implements OnInit {
   errorMessage = '';
   terminoBusqueda = '';
   private searchSubject = new Subject<string>();
+  mostrarModalEditar = false;
+  proveedorSeleccionado: Proveedor | null = null;
 
   constructor(
     private proveedorService: ProveedorService,
@@ -122,7 +125,21 @@ export class ProveedoresListComponent implements OnInit {
 
   editarProveedor(identificador: number): void {
     console.log('Editar proveedor con ID:', identificador);
-    // Aquí iría la lógica para editar
+    const proveedor = this.proveedores.find(p => p.identificador === identificador);
+    if (proveedor) {
+      this.proveedorSeleccionado = proveedor;
+      this.mostrarModalEditar = true;
+      console.log('Abriendo modal para editar proveedor:', proveedor);
+    }
+  }
+
+  cerrarModalEditar(): void {
+    this.mostrarModalEditar = false;
+    this.proveedorSeleccionado = null;
+  }
+
+  actualizarLista(): void {
+    this.cargarProveedores(); // Recargar la lista después de editar
   }
 
   // Método para limpiar la búsqueda
