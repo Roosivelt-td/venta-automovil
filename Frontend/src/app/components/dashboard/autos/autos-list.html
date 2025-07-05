@@ -32,14 +32,14 @@
               <td class="px-4 py-2">{{ auto.color }}</td>
               <td class="px-4 py-2">{{ auto.descripcion }}</td>
               <td class="px-4 py-2">{{ auto.estado }}</td>
-              <td class="px-4 py-2"><img [src]="auto.imagen_url" alt="auto" class="h-12 w-20 object-cover rounded"></td>
+              <td class="px-4 py-2"><img [src]="auto.imagenUrl" alt="auto" class="h-12 w-20 object-cover rounded"></td>
               <td class="px-4 py-2">{{ auto.kilometraje }}</td>
               <td class="px-4 py-2">{{ auto.marca }}</td>
               <td class="px-4 py-2">{{ auto.modelo }}</td>
               <td class="px-4 py-2">${{ auto.precio | number:'1.2-2' }}</td>
-              <td class="px-4 py-2">{{ auto.tipo }}</td>
+              <td class="px-4 py-2">{{ auto.tipoCombustible }}</td>
               <td class="px-4 py-2">
-                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-sm mr-2">
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-sm mr-2" (click)="abrirModalEditar(auto)">
                   <i class="fas fa-edit"></i>
                 </button>
                 <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-sm">
@@ -52,4 +52,12 @@
       </div>
     </div>
   </div>
-</main> 
+</main>
+
+<!-- Modal de edición de auto -->
+<app-editar-auto
+  [auto]="autoSeleccionado"
+  [mostrarModal]="mostrarModalEditar"
+  (cerrar)="cerrarModalEditar()"
+  (actualizado)="actualizarLista()">
+</app-editar-auto> 
