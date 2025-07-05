@@ -75,7 +75,16 @@ export class RegistrarVentaComponent {
   cargarAutos() {
     this.autoService.obtenerTodosLosAutos().subscribe({
       next: (autos) => {
+        console.log('Todos los autos cargados:', autos);
+        // Temporalmente mostrar todos los autos para debug
         this.autos = autos;
+        console.log('Autos disponibles (todos):', this.autos);
+        console.log('Cantidad de autos:', this.autos.length);
+        
+        // Mostrar información de stock de cada auto
+        this.autos.forEach(auto => {
+          console.log(`Auto ID ${auto.id}: ${auto.marca} ${auto.modelo} - Stock: ${auto.stock}`);
+        });
       },
       error: (error) => {
         console.error('Error al cargar autos:', error);
@@ -158,11 +167,45 @@ export class RegistrarVentaComponent {
     });
 
     if (this.ventaForm.valid) {
+      // Verificar que hay autos disponibles
+      if (this.autos.length === 0) {
+        alert('Error: No hay autos con stock disponible para vender.');
+        return;
+      }
+      
+      // Verificar que el auto seleccionado tenga stock disponible
+      const autoId = this.ventaForm.get('autoId')?.value;
+      console.log('Auto ID del formulario:', autoId, 'Tipo:', typeof autoId);
+      console.log('Autos disponibles:', this.autos);
+      
+      if (!autoId) {
+        alert('Error: Por favor, seleccione un auto.');
+        return;
+      }
+      
+      // Convertir a number para comparación consistente
+      const autoIdNumber = Number(autoId);
+      const autoSeleccionado = this.autos.find(auto => auto.id === autoIdNumber);
+      
+      console.log('Auto ID convertido a number:', autoIdNumber);
+      console.log('Auto seleccionado encontrado:', autoSeleccionado);
+      
+      if (!autoSeleccionado) {
+        alert('Error: Auto no encontrado. Por favor, seleccione un auto válido.');
+        console.error('No se encontró auto con ID:', autoIdNumber);
+        console.error('Autos disponibles:', this.autos.map(a => ({ id: a.id, marca: a.marca, modelo: a.modelo })));
+        return;
+      }
+      
+      if (autoSeleccionado.stock <= 0) {
+        alert('Error: El auto seleccionado no tiene stock disponible');
+        return;
+      }
       this.loading = true;
       
       const ventaData: VentaRequest = {
-        idCliente: this.ventaForm.get('clienteId')?.value,
-        idAuto: this.ventaForm.get('autoId')?.value,
+        idCliente: Number(this.ventaForm.get('clienteId')?.value),
+        idAuto: Number(this.ventaForm.get('autoId')?.value),
         idUsuario: 1, // TODO: Obtener el ID del usuario logueado
         fecha: this.ventaForm.get('fechaVenta')?.value,
         precioVenta: this.ventaForm.get('precioVenta')?.value,
@@ -175,8 +218,11 @@ export class RegistrarVentaComponent {
         next: () => {
           this.loading = false;
           // Mostrar mensaje de éxito
-          this.mensajeExito = '¡Venta registrada exitosamente!';
+          this.mensajeExito = '¡Venta registrada exitosamente! El stock del auto ha sido actualizado.';
           this.mostrarMensajeExito = true;
+          
+          // Recargar la lista de autos para reflejar los cambios en el stock
+          this.cargarAutos();
           
           // Ocultar mensaje después de 3 segundos y redirigir
           setTimeout(() => {
