@@ -6,6 +6,9 @@ export interface ApiConfig {
     auth: string;
     usuarios: string;
     compras: string;
+    clientes: string;
+    ventas: string;
+    autos: string;
     // Se agrega aquí más endpoints según se necesita
   };
 }
@@ -16,7 +19,10 @@ export const API_CONFIG = new InjectionToken<ApiConfig>('api.config', {
     endpoints: {
       auth: '/auth',
       usuarios: '/usuarios',
-      compras: '/compras'
+      compras: '/compras',
+      clientes: '/clientes',
+      ventas: '/ventas',
+      autos: '/autos'
     }
   })
 });
