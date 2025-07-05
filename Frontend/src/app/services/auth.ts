@@ -15,6 +15,38 @@ export class AuthService {
   private router = inject(Router);
   private apiUrl = inject(ApiUrlService);
 
+  // Método para registrar usuarios
+  register(userData: {
+    username: string;
+    password: string;
+    email: string;
+    nombre: string;
+    apellido: string;
+    sexo: string;
+    direccion: string;
+    celular: string;
+  }): Observable<any> {
+    const headers = new HttpHeaders()
+      .set('Content-Type', 'application/json')
+      .set('Accept', 'application/json');
+
+    return this.http.post<any>(
+      `${this.apiUrl.getUrl('auth')}/register`,
+      userData,
+      {
+        headers: headers,
+        withCredentials: true
+      }
+    ).pipe(
+      tap(response => {
+        console.log('Usuario registrado exitosamente:', response);
+      }),
+      catchError(error => {
+        console.error('Error en el registro:', error);
+        throw error;
+      })
+    );
+  }
 
   login(credentials: { username: string, password: string }): Observable<any> {
     const headers = new HttpHeaders()
@@ -44,8 +76,6 @@ export class AuthService {
     );
   }
 
-
-
   isLoggedIn(): boolean {
     return !!this.getToken();
   }
@@ -54,7 +84,6 @@ export class AuthService {
     localStorage.removeItem('auth_token');
     this.router.navigate(['/login']);
   }
-
 
   getToken(): string | null {
     return localStorage.getItem('auth_token');
@@ -89,6 +118,4 @@ export class AuthService {
       })
     );
   }
-
-
 }
