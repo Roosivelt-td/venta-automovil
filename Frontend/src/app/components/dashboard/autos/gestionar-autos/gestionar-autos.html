@@ -184,4 +184,11 @@
   [mostrarModal]="mostrarModalEditar"
   (cerrar)="cerrarModalEditar()"
   (actualizado)="actualizarLista()">
-</app-editar-auto> 
+</app-editar-auto>
+
+<!-- Modal de visualización de auto -->
+<app-ver-auto
+  [auto]="autoParaVer"
+  [mostrarModal]="mostrarModalVer"
+  (cerrar)="cerrarModalVer()">
+</app-ver-auto> 
