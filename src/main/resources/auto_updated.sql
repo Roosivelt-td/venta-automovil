@@ -49,4 +49,10 @@ SELECT
     COLUMN_DEFAULT
 FROM INFORMATION_SCHEMA.COLUMNS 
 WHERE TABLE_NAME = 'autos' 
-ORDER BY ORDINAL_POSITION; 
+ORDER BY ORDINAL_POSITION;
+
+-- Actualizar la tabla clientes para agregar la columna apellidos
+ALTER TABLE clientes ADD COLUMN apellidos VARCHAR(100) AFTER nombre;
+
+-- Verificar la estructura actualizada
+DESCRIBE clientes; 
