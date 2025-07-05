@@ -124,4 +124,26 @@ public class AutoServiceImpl implements AutoService {
         }
     }
 
+    @Override
+    public void actualizarStock(Long idAuto, Integer cantidadVendida) {
+        Auto auto = autoRepository.findById(idAuto).orElseThrow(() -> 
+            new RuntimeException("Auto no encontrado con ID: " + idAuto));
+        
+        Integer stockActual = auto.getStock();
+        if (stockActual < cantidadVendida) {
+            throw new RuntimeException("Stock insuficiente. Stock actual: " + stockActual + ", Cantidad solicitada: " + cantidadVendida);
+        }
+        
+        Integer nuevoStock = stockActual - cantidadVendida;
+        auto.setStock(nuevoStock);
+        
+        // Si el stock llega a 0, cambiar el estado a "Vendido"
+        if (nuevoStock == 0) {
+            auto.setEstado("Vendido");
+        }
+        
+        autoRepository.save(auto);
+        System.out.println("INFO: Stock actualizado para auto ID " + idAuto + ". Stock anterior: " + stockActual + ", Stock nuevo: " + nuevoStock);
+    }
+
 }
