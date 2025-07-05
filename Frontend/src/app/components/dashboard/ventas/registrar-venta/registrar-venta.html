@@ -180,13 +180,16 @@
                   formControlName="autoId"
                   [class.is-invalid]="ventaForm.get('autoId')?.invalid && ventaForm.get('autoId')?.touched">
                   <option value="">Seleccionar auto</option>
-                  <option *ngFor="let auto of autos" [value]="auto.id">
-                    {{ auto.marca }} {{ auto.modelo }} - {{ auto.anio }}
+                  <option *ngFor="let auto of autos" [value]="auto.id" [disabled]="auto.stock <= 0">
+                    {{ auto.marca }} {{ auto.modelo }} - {{ auto.anio }} (Stock: {{ auto.stock }})
                   </option>
                 </select>
                 <div class="invalid-feedback" *ngIf="ventaForm.get('autoId')?.invalid && ventaForm.get('autoId')?.touched">
                   Por favor seleccione un auto.
                 </div>
+                <small class="form-text text-muted">
+                  Solo se muestran autos con stock disponible
+                </small>
               </div>
 
               <!-- Fecha de Venta -->
