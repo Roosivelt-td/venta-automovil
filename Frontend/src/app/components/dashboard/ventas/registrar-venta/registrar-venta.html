@@ -1,0 +1,288 @@
+<div class="container-fluid">
+  <!-- Mensaje de éxito -->
+  <div *ngIf="mostrarMensajeExito" class="alert alert-success alert-dismissible fade show" role="alert">
+    <i class="fas fa-check-circle me-2"></i>
+    {{ mensajeExito }}
+    <button type="button" class="btn-close" (click)="mostrarMensajeExito = false"></button>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Registrar Nueva Venta</h4>
+        </div>
+        <div class="card-body">
+          <!-- Formulario de búsqueda de cliente por DNI -->
+          <div class="row mb-4" *ngIf="!clienteSeleccionado">
+            <div class="col-12">
+              <div class="card border-primary">
+                <div class="card-header bg-primary text-white">
+                  <h5 class="mb-0">Buscar Cliente por DNI</h5>
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-8">
+                      <label for="dniBusqueda" class="form-label">DNI del Cliente</label>
+                      <input 
+                        type="number" 
+                        id="dniBusqueda" 
+                        class="form-control" 
+                        [(ngModel)]="dniBusqueda"
+                        placeholder="Ingrese el DNI del cliente">
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                      <button 
+                        type="button" 
+                        class="btn btn-primary me-2" 
+                        (click)="buscarClientePorDni()"
+                        [disabled]="!dniBusqueda">
+                        Buscar Cliente
+                      </button>
+                      <button 
+                        type="button" 
+                        class="btn btn-success" 
+                        (click)="mostrarFormularioNuevoCliente()">
+                        Nuevo Cliente
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Formulario de registro de nuevo cliente -->
+          <div class="row mb-4" *ngIf="mostrarFormularioCliente">
+            <div class="col-12">
+              <div class="card border-success">
+                <div class="card-header bg-success text-white">
+                  <h5 class="mb-0">Registrar Nuevo Cliente</h5>
+                </div>
+                <div class="card-body">
+                  <form [formGroup]="clienteForm" (ngSubmit)="registrarCliente()">
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <label for="nombre" class="form-label">Nombre *</label>
+                        <input 
+                          type="text" 
+                          id="nombre" 
+                          class="form-control" 
+                          formControlName="nombre"
+                          [class.is-invalid]="clienteForm.get('nombre')?.invalid && clienteForm.get('nombre')?.touched">
+                        <div class="invalid-feedback" *ngIf="clienteForm.get('nombre')?.invalid && clienteForm.get('nombre')?.touched">
+                          Por favor ingrese el nombre.
+                        </div>
+                      </div>
+                      <!-- Campo apellidos removido porque no existe en la BD -->
+                      <div class="col-md-6 mb-3">
+                        <label for="dni" class="form-label">DNI *</label>
+                        <input 
+                          type="number" 
+                          id="dni" 
+                          class="form-control" 
+                          formControlName="dni"
+                          [class.is-invalid]="clienteForm.get('dni')?.invalid && clienteForm.get('dni')?.touched">
+                        <div class="invalid-feedback" *ngIf="clienteForm.get('dni')?.invalid && clienteForm.get('dni')?.touched">
+                          Por favor ingrese un DNI válido (8 dígitos).
+                        </div>
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <label for="telefono" class="form-label">Teléfono *</label>
+                        <input 
+                          type="text" 
+                          id="telefono" 
+                          class="form-control" 
+                          formControlName="telefono"
+                          [class.is-invalid]="clienteForm.get('telefono')?.invalid && clienteForm.get('telefono')?.touched">
+                        <div class="invalid-feedback" *ngIf="clienteForm.get('telefono')?.invalid && clienteForm.get('telefono')?.touched">
+                          Por favor ingrese el teléfono.
+                        </div>
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <label for="direccion" class="form-label">Dirección *</label>
+                        <input 
+                          type="text" 
+                          id="direccion" 
+                          class="form-control" 
+                          formControlName="direccion"
+                          [class.is-invalid]="clienteForm.get('direccion')?.invalid && clienteForm.get('direccion')?.touched">
+                        <div class="invalid-feedback" *ngIf="clienteForm.get('direccion')?.invalid && clienteForm.get('direccion')?.touched">
+                          Por favor ingrese la dirección.
+                        </div>
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <label for="correo" class="form-label">Correo Electrónico *</label>
+                        <input 
+                          type="email" 
+                          id="correo" 
+                          class="form-control" 
+                          formControlName="correo"
+                          [class.is-invalid]="clienteForm.get('correo')?.invalid && clienteForm.get('correo')?.touched">
+                        <div class="invalid-feedback" *ngIf="clienteForm.get('correo')?.invalid && clienteForm.get('correo')?.touched">
+                          Por favor ingrese un correo válido.
+                        </div>
+                      </div>
+                    </div>
+                    <div class="d-flex justify-content-end gap-2">
+                      <button 
+                        type="button" 
+                        class="btn btn-secondary" 
+                        (click)="mostrarFormularioCliente = false">
+                        Cancelar
+                      </button>
+                      <button 
+                        type="submit" 
+                        class="btn btn-success" 
+                        [disabled]="clienteForm.invalid">
+                        Registrar Cliente
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cliente seleccionado -->
+          <div class="row mb-4" *ngIf="clienteSeleccionado">
+            <div class="col-12">
+              <div class="alert alert-info">
+                <strong>Cliente seleccionado:</strong> {{ clienteSeleccionado.nombre }} - DNI: {{ clienteSeleccionado.dni }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Formulario de venta -->
+          <form [formGroup]="ventaForm" (ngSubmit)="onSubmit()" *ngIf="clienteSeleccionado">
+            <div class="row">
+              <!-- Cliente seleccionado (visible) -->
+              <div class="col-12 mb-3">
+                <label class="form-label">Cliente Seleccionado *</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  [value]="clienteSeleccionado.nombre + ' - DNI: ' + clienteSeleccionado.dni"
+                  readonly>
+                <input 
+                  type="text" 
+                  class="form-control d-none" 
+                  formControlName="clienteId"
+                  [value]="clienteSeleccionado.identificador">
+              </div>
+
+              <!-- Auto -->
+              <div class="col-md-6 mb-3">
+                <label for="autoId" class="form-label">Auto *</label>
+                <select 
+                  id="autoId" 
+                  class="form-select" 
+                  formControlName="autoId"
+                  [class.is-invalid]="ventaForm.get('autoId')?.invalid && ventaForm.get('autoId')?.touched">
+                  <option value="">Seleccionar auto</option>
+                  <option *ngFor="let auto of autos" [value]="auto.id">
+                    {{ auto.marca }} {{ auto.modelo }} - {{ auto.anio }}
+                  </option>
+                </select>
+                <div class="invalid-feedback" *ngIf="ventaForm.get('autoId')?.invalid && ventaForm.get('autoId')?.touched">
+                  Por favor seleccione un auto.
+                </div>
+              </div>
+
+              <!-- Fecha de Venta -->
+              <div class="col-md-6 mb-3">
+                <label for="fechaVenta" class="form-label">Fecha de Venta *</label>
+                <input 
+                  type="date" 
+                  id="fechaVenta" 
+                  class="form-control" 
+                  formControlName="fechaVenta"
+                  [class.is-invalid]="ventaForm.get('fechaVenta')?.invalid && ventaForm.get('fechaVenta')?.touched">
+                <div class="invalid-feedback" *ngIf="ventaForm.get('fechaVenta')?.invalid && ventaForm.get('fechaVenta')?.touched">
+                  Por favor ingrese la fecha de venta.
+                </div>
+              </div>
+
+              <!-- Precio de Venta -->
+              <div class="col-md-6 mb-3">
+                <label for="precioVenta" class="form-label">Precio de Venta *</label>
+                <div class="input-group">
+                  <span class="input-group-text">S/</span>
+                  <input 
+                    type="number" 
+                    id="precioVenta" 
+                    class="form-control" 
+                    formControlName="precioVenta"
+                    placeholder="0.00"
+                    step="0.01"
+                    [class.is-invalid]="ventaForm.get('precioVenta')?.invalid && ventaForm.get('precioVenta')?.touched">
+                </div>
+                <div class="invalid-feedback" *ngIf="ventaForm.get('precioVenta')?.invalid && ventaForm.get('precioVenta')?.touched">
+                  Por favor ingrese un precio válido.
+                </div>
+              </div>
+
+              <!-- Método de Pago -->
+              <div class="col-md-6 mb-3">
+                <label for="metodoPago" class="form-label">Método de Pago *</label>
+                <select 
+                  id="metodoPago" 
+                  class="form-select" 
+                  formControlName="metodoPago"
+                  [class.is-invalid]="ventaForm.get('metodoPago')?.invalid && ventaForm.get('metodoPago')?.touched">
+                  <option value="">Seleccionar método de pago</option>
+                  <option value="efectivo">Efectivo</option>
+                  <option value="tarjeta">Tarjeta de Crédito/Débito</option>
+                  <option value="transferencia">Transferencia Bancaria</option>
+                  <option value="cheque">Cheque</option>
+                </select>
+                <div class="invalid-feedback" *ngIf="ventaForm.get('metodoPago')?.invalid && ventaForm.get('metodoPago')?.touched">
+                  Por favor seleccione un método de pago.
+                </div>
+              </div>
+
+              <!-- Observaciones -->
+              <div class="col-md-6 mb-3">
+                <label for="observaciones" class="form-label">Observaciones</label>
+                <textarea 
+                  id="observaciones" 
+                  class="form-control" 
+                  formControlName="observaciones"
+                  rows="3"
+                  placeholder="Observaciones adicionales..."></textarea>
+              </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="row mt-4">
+              <div class="col-12">
+                <div class="d-flex justify-content-end gap-2">
+                  <button 
+                    type="button" 
+                    class="btn btn-secondary" 
+                    (click)="cancelar()"
+                    [disabled]="loading">
+                    Cancelar
+                  </button>
+                  <button 
+                    type="button" 
+                    class="btn btn-warning me-2" 
+                    (click)="debugFormulario()">
+                    Debug Form
+                  </button>
+                  <button 
+                    type="submit" 
+                    class="btn btn-primary" 
+                    [disabled]="ventaForm.invalid || loading">
+                    <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status"></span>
+                    {{ loading ? 'Registrando...' : 'Registrar Venta' }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 
