@@ -4,11 +4,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AutoService, Auto } from '../../../../services/auto.service';
 import { EditarAutoComponent } from '../editar-auto/editar-auto';
+import { VerAutoComponent } from '../ver-auto/ver-auto';
 
 @Component({
   selector: 'app-gestionar-autos',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, EditarAutoComponent],
+  imports: [CommonModule, HttpClientModule, EditarAutoComponent, VerAutoComponent],
   templateUrl: './gestionar-autos.html',
   styleUrls: ['./gestionar-autos.css']
 })
@@ -19,6 +20,8 @@ export class GestionarAutosComponent implements OnInit {
   errorMessage = '';
   mostrarModalEditar = false;
   autoSeleccionado: Auto | null = null;
+  mostrarModalVer = false;
+  autoParaVer: Auto | null = null;
 
   constructor(
     private router: Router,
@@ -105,6 +108,19 @@ export class GestionarAutosComponent implements OnInit {
 
   verDetalles(id: number): void {
     console.log('Ver detalles del auto con ID:', id);
-    // Aquí iría la lógica para ver detalles
+    const auto = this.autos.find(a => a.id === id);
+    if (auto) {
+      console.log('Auto encontrado para ver:', auto);
+      console.log('imagenUrl del auto:', auto.imagenUrl);
+      console.log('Tipo de imagenUrl:', typeof auto.imagenUrl);
+      this.autoParaVer = auto;
+      this.mostrarModalVer = true;
+      console.log('Abriendo modal para ver auto:', auto);
+    }
+  }
+
+  cerrarModalVer(): void {
+    this.mostrarModalVer = false;
+    this.autoParaVer = null;
   }
 } 
