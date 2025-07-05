@@ -33,16 +33,22 @@ public class AutoServiceImpl implements AutoService {
     public void crearAuto(AutoRequest request) {
         Auto autoNew = new Auto();
         System.out.println("INFO: Iniciando la creación de un nuevo auto con datos:" + autoNew);
+        
         autoNew.setMarca(request.getMarca());
         autoNew.setModelo(request.getModelo());
         autoNew.setAnio(request.getAnio());
         autoNew.setColor(request.getColor());
         autoNew.setKilometraje(request.getKilometraje());
-        autoNew.setTipo(request.getTipo());
+        autoNew.setTipoCombustible(request.getTipoCombustible());
+        autoNew.setTransmision(request.getTransmision());
+        autoNew.setCilindrada(request.getCilindrada());
+        autoNew.setPotencia(request.getPotencia());
+        autoNew.setStock(request.getStock());
         autoNew.setPrecio(request.getPrecio());
         autoNew.setDescripcion(request.getDescripcion());
         autoNew.setImagenUrl(request.getImagenUrl());
-        autoNew.setEstado("Disponible");
+        autoNew.setEstado(request.getEstado() != null ? request.getEstado() : "Disponible");
+        
         autoRepository.save(autoNew);
         System.out.println("INFO: Auto creado exitosamente: " + autoNew.getMarca() + " " + autoNew.getModelo());
     }
@@ -90,13 +96,18 @@ public class AutoServiceImpl implements AutoService {
             auto.setAnio(request.getAnio());
             auto.setColor(request.getColor());
             auto.setKilometraje(request.getKilometraje());
-            auto.setTipo(request.getTipo());
+            auto.setTipoCombustible(request.getTipoCombustible());
+            auto.setTransmision(request.getTransmision());
+            auto.setCilindrada(request.getCilindrada());
+            auto.setPotencia(request.getPotencia());
+            auto.setStock(request.getStock());
             auto.setPrecio(request.getPrecio());
             auto.setDescripcion(request.getDescripcion());
             auto.setImagenUrl(request.getImagenUrl());
             auto.setEstado(request.getEstado());
             autoRepository.save(auto);
-        }else {
+            System.out.println("INFO: Auto actualizado exitosamente: " + auto.getMarca() + " " + auto.getModelo());
+        } else {
             System.out.println("Auto no encontrado");
         }
     }
@@ -106,7 +117,8 @@ public class AutoServiceImpl implements AutoService {
         Auto auto = autoRepository.findById(id).orElse(null);
         if (auto != null) {
             autoRepository.delete(auto);
-        }else {
+            System.out.println("INFO: Auto eliminado exitosamente: " + auto.getMarca() + " " + auto.getModelo());
+        } else {
             System.out.println("Auto no encontrado");
         }
     }
