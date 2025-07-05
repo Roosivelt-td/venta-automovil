@@ -9,7 +9,6 @@ import { DashboardComponent } from './components/dashboard/dashboard/dashboard';
 import { ComprasListComponent } from './components/dashboard/compras/compras-list/compras-list';
 import { AuthGuard } from './guards/auth.guard';
 import { UsuarioList } from './components/dashboard/usuario-list/usuario-list';
-import { InventarioListComponent } from './components/dashboard/inventario/inventario-list/inventario-list';
 import { VentasListComponent } from './components/dashboard/ventas/ventas-list/ventas-list';
 import { ClientesListComponent } from './components/dashboard/clientes/clientes-list/clientes-list';
 import { ProveedoresListComponent } from './components/dashboard/proveedores/proveedores-list/proveedores-list';
@@ -39,7 +38,6 @@ export const routes: Routes = [
         { path: 'usuarios', component: UsuariosListComponent },
         { path: 'compras', component: ComprasListComponent },
         { path: 'compra', redirectTo: 'compras' },
-        { path: 'inventario', component: InventarioListComponent },
         { path: 'ventas', component: VentasListComponent },
         { path: 'ventas/registrar', component: RegistrarVentaComponent },
         { path: 'clientes', component: ClientesListComponent },
