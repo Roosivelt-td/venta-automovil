@@ -44,6 +44,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/usuarios/delete/**").permitAll() // Temporalmente desprotegido para pruebas
                         .requestMatchers("/api/usuarios/{id}").permitAll() // Temporalmente desprotegido para pruebas
                         .requestMatchers("/api/autos/**").permitAll() // Permitir acceso público a autos
+                        .requestMatchers("/api/proveedores/**").permitAll() // Permitir acceso público a proveedores
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
