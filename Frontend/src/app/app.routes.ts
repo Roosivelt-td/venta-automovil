@@ -19,6 +19,7 @@ import { UsuariosListComponent } from './components/dashboard/usuarios/usuarios'
 import { AgregarAutoComponent } from './components/dashboard/autos/agregar-auto/agregar-auto';
 import { GestionarAutosComponent } from './components/dashboard/autos/gestionar-autos/gestionar-autos';
 import { AgregarProveedorComponent } from './components/dashboard/proveedores/agregar-proveedor/agregar-proveedor';
+import { RegistrarVentaComponent } from './components/dashboard/ventas/registrar-venta/registrar-venta';
 
 export const routes: Routes = [
     // Rutas públicas (sin layout)
@@ -40,6 +41,7 @@ export const routes: Routes = [
         { path: 'compra', redirectTo: 'compras' },
         { path: 'inventario', component: InventarioListComponent },
         { path: 'ventas', component: VentasListComponent },
+        { path: 'ventas/registrar', component: RegistrarVentaComponent },
         { path: 'clientes', component: ClientesListComponent },
         { path: 'proveedores', component: ProveedoresListComponent },
         { path: 'proveedores/agregar', component: AgregarProveedorComponent },
