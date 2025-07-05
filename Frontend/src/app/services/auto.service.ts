@@ -62,4 +62,9 @@ export class AutoService {
   buscarAutosPorMarcaYModelo(marca: string, modelo: string): Observable<Auto[]> {
     return this.http.get<Auto[]>(`${this.apiUrl}/buscar?marca=${marca}&modelo=${modelo}`);
   }
+
+  // Actualizar stock de un auto
+  actualizarStock(id: number, cantidad: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}/stock?cantidad=${cantidad}`, {});
+  }
 } 
