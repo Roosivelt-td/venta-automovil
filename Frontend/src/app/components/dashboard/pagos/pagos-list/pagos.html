@@ -1,67 +1,156 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Pagos</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6; /* bg-gray-100 */
-        }
-    </style>
-</head>
-<body class="min-h-screen flex flex-col">
+<main class="container mx-auto p-6 flex-grow">
+    <div id="payments-section" class="content-section p-6">
+        <h2 class="mb-4 text-2xl font-semibold text-gray-800">Gestión de Pagos</h2>
+        
+        <!-- Mensaje de error -->
+        <div *ngIf="errorMessage" class="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+            <i class="fas fa-exclamation-circle mr-2"></i>
+            {{ errorMessage }}
+        </div>
 
-    <!-- Contenido principal dinámico -->
-    <main class="container mx-auto p-6 flex-grow">
-        <div id="payments-section" class="content-section p-6">
-            <h2 class="mb-4 text-2xl font-semibold text-gray-800">Gestión de Pagos</h2>
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="flex justify-end mb-4">
-                    <button (click)="abrirModalRegistro()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition duration-150 ease-in-out">
-                        <i class="fas fa-receipt mr-2"></i> Registrar Nuevo Pago
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <!-- Botones de acción -->
+            <div class="flex justify-between mb-4">
+                <button (click)="cargarPagos()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md transition duration-150 ease-in-out">
+                    <i class="fas fa-refresh mr-2"></i> Actualizar Lista
+                </button>
+                <button (click)="abrirModalRegistro()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition duration-150 ease-in-out">
+                    <i class="fas fa-receipt mr-2"></i> Registrar Nuevo Pago
+                </button>
+            </div>
+
+            <!-- Barra de búsqueda -->
+            <div class="mb-4">
+                <div class="flex gap-2">
+                    <div class="flex-1">
+                        <input 
+                            type="text" 
+                            [(ngModel)]="filtroPagos" 
+                            (input)="buscarPago()" 
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" 
+                            placeholder="Buscar por ID, venta, método, fecha, monto...">
+                    </div>
+                    <button 
+                        *ngIf="filtroPagos" 
+                        (click)="limpiarFiltro()" 
+                        class="mt-1 bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-md transition duration-150 ease-in-out">
+                        <i class="fas fa-times mr-2"></i> Limpiar
                     </button>
                 </div>
-                <div class="mb-4">
-                    <input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="Buscar por venta, método, fecha...">
+                
+                <!-- Información de búsqueda -->
+                <div class="mt-2 text-sm text-gray-600">
+                    <span *ngIf="filtroPagos.trim()">
+                        <i class="fas fa-search mr-1"></i>
+                        {{ pagosFiltradosCount }} de {{ totalPagos }} pagos encontrados
+                    </span>
+                    <span *ngIf="!filtroPagos.trim()">
+                        <i class="fas fa-credit-card mr-1"></i>
+                        {{ totalPagos }} pagos en total
+                    </span>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID Pago</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID Venta</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Método de Pago</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Monto</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            <!-- Datos de ejemplo, a ser llenados dinámicamente -->
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">3001</td>
-                                <td class="px-6 py-4 whitespace-nowrap">1001</td>
-                                <td class="px-6 py-4 whitespace-nowrap">Tarjeta Crédito</td>
-                                <td class="px-6 py-4 whitespace-nowrap">$14,250.00</td>
-                                <td class="px-6 py-4 whitespace-nowrap">2024-05-10</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-sm mr-2">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-sm">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <!-- Más filas -->
-                        </tbody>
-                    </table>
+            </div>
+
+            <!-- Estadísticas rápidas -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div class="bg-blue-50 rounded-lg p-4">
+                    <div class="flex items-center">
+                        <i class="fas fa-credit-card text-2xl text-blue-600 mr-3"></i>
+                        <div>
+                            <div class="text-lg font-semibold text-blue-900">
+                                {{ filtroPagos ? pagosFiltradosCount : totalPagos }}
+                            </div>
+                            <div class="text-sm text-blue-600">
+                                {{ filtroPagos ? 'Pagos encontrados' : 'Total de pagos' }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                <div class="bg-green-50 rounded-lg p-4">
+                    <div class="flex items-center">
+                        <i class="fas fa-dollar-sign text-2xl text-green-600 mr-3"></i>
+                        <div>
+                            <div class="text-lg font-semibold text-green-900">
+                                S/ {{ (filtroPagos ? montoFiltrado : totalMonto) | number:'1.2-2' }}
+                            </div>
+                            <div class="text-sm text-green-600">
+                                {{ filtroPagos ? 'Monto filtrado' : 'Total de montos' }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-purple-50 rounded-lg p-4">
+                    <div class="flex items-center">
+                        <i class="fas fa-chart-line text-2xl text-purple-600 mr-3"></i>
+                        <div>
+                            <div class="text-lg font-semibold text-purple-900">
+                                {{ totalPagos > 0 ? ((totalMonto / totalPagos) | number:'1.2-2') : '0.00' }}
+                            </div>
+                            <div class="text-sm text-purple-600">
+                                Promedio por pago
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <!-- Loading spinner -->
+                <div *ngIf="loading" class="flex justify-center items-center py-8">
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                    <span class="ml-2">Cargando pagos...</span>
+                </div>
+
+                <!-- Tabla de pagos -->
+                <table *ngIf="!loading" class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID Pago</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID Venta</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Método de Pago</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Monto</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <!-- Mensaje cuando no hay pagos -->
+                        <tr *ngIf="pagosFiltrados.length === 0">
+                            <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                {{ filtroPagos ? 'No se encontraron pagos con el filtro aplicado' : 'No hay pagos registrados' }}
+                            </td>
+                        </tr>
+                        
+                        <!-- Pagos reales -->
+                        <tr *ngFor="let pago of pagosFiltrados" class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ pago.identificador }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ pago.idVenta }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                    {{ pago.metodoPago }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                S/ {{ pago.monto | number:'1.2-2' }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {{ pago.fecha | date:'dd/MM/yyyy' }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <button 
+                                    (click)="editarPago(pago.identificador || 0)" 
+                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-sm mr-2">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button 
+                                    (click)="eliminarPago(pago.identificador || 0)" 
+                                    class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-sm">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             </div>
         </div>
     </main>
@@ -78,38 +167,79 @@
                 </button>
             </div>
             <div class="mt-2">
-                <form>
+                <form (ngSubmit)="registrarPago()">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div>
-                            <label for="paymentSaleId" class="block text-sm font-medium text-gray-700 mb-1">ID Venta</label>
-                            <input type="number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="paymentSaleId" placeholder="Ej: 1001" required>
+                            <label for="paymentSaleId" class="block text-sm font-medium text-gray-700 mb-1">ID Venta *</label>
+                            <input 
+                                type="number" 
+                                [(ngModel)]="nuevoPago.idVenta" 
+                                name="idVenta"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" 
+                                placeholder="Ej: 1001" 
+                                required>
                         </div>
                         <div>
-                            <label for="paymentMethod" class="block text-sm font-medium text-gray-700 mb-1">Método de Pago</label>
-                            <input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="paymentMethod" placeholder="Ej: Tarjeta Crédito" required>
+                            <label for="paymentMethod" class="block text-sm font-medium text-gray-700 mb-1">Método de Pago *</label>
+                            <select 
+                                [(ngModel)]="nuevoPago.metodoPago" 
+                                name="metodoPago"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" 
+                                required>
+                                <option value="">Seleccionar método</option>
+                                <option value="Efectivo">Efectivo</option>
+                                <option value="Tarjeta de Crédito">Tarjeta de Crédito</option>
+                                <option value="Tarjeta de Débito">Tarjeta de Débito</option>
+                                <option value="Transferencia Bancaria">Transferencia Bancaria</option>
+                                <option value="Cheque">Cheque</option>
+                                <option value="Otro">Otro</option>
+                            </select>
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                         <div>
-                            <label for="paymentAmount" class="block text-sm font-medium text-gray-700 mb-1">Monto ($)</label>
-                            <input type="number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="paymentAmount" step="0.01" min="0" required>
+                            <label for="paymentAmount" class="block text-sm font-medium text-gray-700 mb-1">Monto (S/) *</label>
+                            <input 
+                                type="number" 
+                                [(ngModel)]="nuevoPago.monto" 
+                                name="monto"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" 
+                                step="0.01" 
+                                min="0" 
+                                placeholder="0.00"
+                                required>
                         </div>
                         <div>
-                            <label for="paymentDate" class="block text-sm font-medium text-gray-700 mb-1">Fecha</label>
-                            <input type="date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="paymentDate" required>
+                            <label for="paymentDate" class="block text-sm font-medium text-gray-700 mb-1">Fecha *</label>
+                            <input 
+                                type="date" 
+                                [(ngModel)]="nuevoPago.fecha" 
+                                name="fecha"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" 
+                                required>
                         </div>
                     </div>
+                    
+                    <div class="flex justify-end items-center pt-4">
+                        <button 
+                            type="button" 
+                            (click)="cerrarModalRegistro()" 
+                            class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-md mr-2">
+                            Cancelar
+                        </button>
+                        <button 
+                            type="submit" 
+                            [disabled]="loading"
+                            class="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-bold py-2 px-4 rounded-md">
+                            <span *ngIf="loading" class="inline-flex items-center">
+                                <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                                Registrando...
+                            </span>
+                            <span *ngIf="!loading">Registrar Pago</span>
+                        </button>
+                    </div>
                 </form>
-            </div>
-            <div class="flex justify-end items-center pt-4">
-                <button (click)="cerrarModalRegistro()" type="button" class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-md mr-2">Cancelar</button>
-                <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md">
-                    Registrar Pago
-                </button>
             </div>
         </div>
     </div>
 
-
-</body>
-</html>
