@@ -48,7 +48,8 @@ export const routes: Routes = [
         { path: 'pagos', component: PagosListComponent },
         { path: 'reembolsos', component: ReembolsosListComponent },
         { path: 'autos/agregar', component: AgregarAutoComponent },
-        { path: 'autos/gestionar', component: GestionarAutosComponent }
+        { path: 'autos/gestionar', component: GestionarAutosComponent },
+        { path: 'autos/compras', component: ComprasListComponent }
       ]
     },
 
