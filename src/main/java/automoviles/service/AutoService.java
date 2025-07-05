@@ -18,4 +18,5 @@ public interface AutoService {
     void eliminarAuto(Long id);
     Collection<AutoResponse> obtenerAutosPorMarca(String marca);
     Collection<AutoResponse> obtenerAutosPorMarcaYModelo(String marca, String modelo);
+    void actualizarStock(Long idAuto, Integer cantidadVendida);
 }
