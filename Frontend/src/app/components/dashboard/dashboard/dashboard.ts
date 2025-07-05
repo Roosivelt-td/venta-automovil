@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { interval, Subscription } from 'rxjs';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 
 // Interfaces temporales
 interface DashboardStats {
@@ -62,7 +62,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private refreshSubscription?: Subscription;
 
   constructor(
-    // private dashboardService: DashboardService,
+    private http: HttpClient,
     private router: Router
   ) { }
 
@@ -85,64 +85,166 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.errorMessage = '';
 
-    // Datos temporales para que compile
-    this.stats = {
-      totalAutos: 25,
-      autosVendidos: 12,
-      stockDisponible: 13,
-      totalClientes: 8,
-      totalVentas: 12,
-      totalPagos: 12,
-      totalProveedores: 3,
-      totalCompras: 5,
-      totalReembolsos: 1,
-      ingresosTotales: 150000,
-      promedioVenta: 12500,
-      autosSinStock: 2
-    };
+    const apiUrl = 'http://localhost:8080/api';
 
-    this.actividades = [
-      {
-        id: 1,
-        tipo: 'auto',
-        descripcion: 'Auto agregado: Honda Civic 2023',
-        fecha: new Date().toISOString(),
-        icono: 'fas fa-car',
-        color: 'blue'
-      },
-      {
-        id: 2,
-        tipo: 'venta',
-        descripcion: 'Venta completada: Toyota Camry',
-        fecha: new Date(Date.now() - 3600000).toISOString(),
-        icono: 'fas fa-dollar-sign',
-        color: 'green'
+    // Obtener datos reales de la base de datos
+    Promise.all([
+      this.http.get<any[]>(`${apiUrl}/autos/`).toPromise().catch(() => []),
+      this.http.get<any[]>(`${apiUrl}/ventas/todos`).toPromise().catch(() => []),
+      this.http.get<any[]>(`${apiUrl}/clientes/todos`).toPromise().catch(() => []),
+      this.http.get<any[]>(`${apiUrl}/pagos/todos`).toPromise().catch(() => []),
+      this.http.get<any[]>(`${apiUrl}/proveedores/todos`).toPromise().catch(() => []),
+      this.http.get<any[]>(`${apiUrl}/compras/todos`).toPromise().catch(() => []),
+      this.http.get<any[]>(`${apiUrl}/reembolsos/todos`).toPromise().catch(() => [])
+    ]).then(([autos, ventas, clientes, pagos, proveedores, compras, reembolsos]) => {
+      // Asegurar que los arrays no sean undefined
+      const autosArray = autos || [];
+      const ventasArray = ventas || [];
+      const clientesArray = clientes || [];
+      const pagosArray = pagos || [];
+      const proveedoresArray = proveedores || [];
+      const comprasArray = compras || [];
+      const reembolsosArray = reembolsos || [];
+
+      // Debug: Ver qué datos se están recibiendo
+      console.log('Autos recibidos:', autosArray);
+      console.log('Primer auto:', autosArray[0]);
+
+      // Calcular estadísticas
+      const totalAutos = autosArray.length;
+      const autosVendidos = ventasArray.length;
+      const stockDisponible = autosArray.reduce((sum, auto) => {
+        const stock = auto.stock || 0;
+        console.log(`Auto ${auto.marca} ${auto.modelo}: stock = ${stock}`);
+        return sum + stock;
+      }, 0);
+      const autosSinStock = autosArray.filter(auto => (auto.stock || 0) === 0).length;
+      const totalClientes = clientesArray.length;
+      const totalVentas = ventasArray.length;
+      const totalPagos = pagosArray.length;
+      const totalProveedores = proveedoresArray.length;
+      const totalCompras = comprasArray.length;
+      const totalReembolsos = reembolsosArray.length;
+
+      // Debug: Mostrar resultados de cálculos
+      console.log('Resultados de cálculos:');
+      console.log('- Total autos:', totalAutos);
+      console.log('- Stock disponible:', stockDisponible);
+      console.log('- Autos sin stock:', autosSinStock);
+      
+      // Calcular ingresos totales
+      const ingresosTotales = pagosArray.reduce((sum, pago) => sum + (pago.monto || 0), 0);
+      
+      // Calcular promedio de venta
+      const promedioVenta = totalVentas > 0 ? ingresosTotales / totalVentas : 0;
+
+      this.stats = {
+        totalAutos,
+        autosVendidos,
+        stockDisponible,
+        totalClientes,
+        totalVentas,
+        totalPagos,
+        totalProveedores,
+        totalCompras,
+        totalReembolsos,
+        ingresosTotales,
+        promedioVenta,
+        autosSinStock
+      };
+
+      // Generar actividad reciente
+      this.actividades = [];
+      
+      // Agregar autos recientes
+      autosArray.slice(0, 3).forEach(auto => {
+        this.actividades.push({
+          id: auto.id,
+          tipo: 'auto',
+          descripcion: `Auto agregado: ${auto.marca} ${auto.modelo} ${auto.anio}`,
+          fecha: auto.fechaCreacion || new Date().toISOString(),
+          icono: 'fas fa-car',
+          color: 'blue'
+        });
+      });
+
+      // Agregar ventas recientes
+      ventasArray.slice(0, 3).forEach(venta => {
+        this.actividades.push({
+          id: venta.id,
+          tipo: 'venta',
+          descripcion: `Venta completada: ${venta.auto?.marca} ${venta.auto?.modelo}`,
+          fecha: venta.fecha,
+          icono: 'fas fa-dollar-sign',
+          color: 'green'
+        });
+      });
+
+      // Agregar clientes recientes
+      clientesArray.slice(0, 2).forEach(cliente => {
+        this.actividades.push({
+          id: cliente.id,
+          tipo: 'cliente',
+          descripcion: `Cliente registrado: ${cliente.nombre} ${cliente.apellido}`,
+          fecha: cliente.fechaRegistro || new Date().toISOString(),
+          icono: 'fas fa-user',
+          color: 'purple'
+        });
+      });
+
+      // Agregar pagos recientes
+      pagosArray.slice(0, 2).forEach(pago => {
+        this.actividades.push({
+          id: pago.id,
+          tipo: 'pago',
+          descripcion: `Pago registrado: S/ ${pago.monto}`,
+          fecha: pago.fecha,
+          icono: 'fas fa-credit-card',
+          color: 'orange'
+        });
+      });
+
+      // Ordenar por fecha (más recientes primero) y tomar los últimos 8
+      this.actividades = this.actividades
+        .sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime())
+        .slice(0, 8);
+
+      // Generar alertas
+      this.alertas = [];
+      if (autosSinStock > 0) {
+        this.alertas.push({
+          tipo: 'warning',
+          titulo: 'Stock Bajo',
+          mensaje: `${autosSinStock} auto(s) con stock bajo (≤2 unidades)`,
+          icono: 'fas fa-exclamation-triangle'
+        });
       }
-    ];
 
-    this.alertas = [
-      {
-        tipo: 'warning',
-        titulo: 'Stock Bajo',
-        mensaje: '2 auto(s) con stock bajo (≤2 unidades)',
-        icono: 'fas fa-exclamation-triangle'
-      }
-    ];
+      // Generar top autos vendidos
+      const autosCount: { [key: string]: any } = {};
+      ventasArray.forEach(venta => {
+        const autoKey = `${venta.auto?.marca} ${venta.auto?.modelo}`;
+        if (!autosCount[autoKey]) {
+          autosCount[autoKey] = {
+            nombre: autoKey,
+            ventas: 0,
+            ingresos: 0
+          };
+        }
+        autosCount[autoKey].ventas++;
+        autosCount[autoKey].ingresos += venta.precioVenta || 0;
+      });
 
-    this.topAutosVendidos = [
-      {
-        nombre: 'Honda Civic',
-        ventas: 3,
-        ingresos: 45000
-      },
-      {
-        nombre: 'Toyota Camry',
-        ventas: 2,
-        ingresos: 35000
-      }
-    ];
+      this.topAutosVendidos = Object.values(autosCount)
+        .sort((a: any, b: any) => b.ventas - a.ventas)
+        .slice(0, 5);
 
-    this.loading = false;
+      this.loading = false;
+    }).catch(error => {
+      console.error('Error al cargar datos del dashboard:', error);
+      this.errorMessage = 'Error al cargar los datos del dashboard';
+      this.loading = false;
+    });
   }
 
   // Navegación a diferentes secciones
