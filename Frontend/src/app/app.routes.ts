@@ -16,6 +16,8 @@ import { ProveedoresListComponent } from './components/dashboard/proveedores/pro
 import { PagosListComponent } from './components/dashboard/pagos/pagos-list/pagos-list';
 import { ReembolsosListComponent } from './components/dashboard/reembolsos/reembolsos-list/reembolsos-list';
 import { UsuariosListComponent } from './components/dashboard/usuarios/usuarios';
+import { AgregarAutoComponent } from './components/dashboard/autos/agregar-auto/agregar-auto';
+import { GestionarAutosComponent } from './components/dashboard/autos/gestionar-autos/gestionar-autos';
 
 export const routes: Routes = [
     // Rutas públicas (sin layout)
@@ -40,7 +42,9 @@ export const routes: Routes = [
         { path: 'clientes', component: ClientesListComponent },
         { path: 'proveedores', component: ProveedoresListComponent },
         { path: 'pagos', component: PagosListComponent },
-        { path: 'reembolsos', component: ReembolsosListComponent }
+        { path: 'reembolsos', component: ReembolsosListComponent },
+        { path: 'autos/agregar', component: AgregarAutoComponent },
+        { path: 'autos/gestionar', component: GestionarAutosComponent }
       ]
     },
 
