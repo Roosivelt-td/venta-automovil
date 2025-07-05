@@ -20,6 +20,7 @@ public class AutoServiceImpl implements AutoService {
     // en otra, sin necesidad de crearla manualmente con new,
     // Se usa en campos, constructores o métodos
 //>>>>>>> main
+    @Autowired
     private AutoRepository autoRepository;
 
     @Autowired // Inyección del mapeador de autos.
