@@ -17,6 +17,7 @@ export class PagosListComponent implements OnInit {
   loading = false;
   errorMessage = '';
   mostrarModalRegistro: boolean = false;
+  mostrarModalEditar: boolean = false;
 
   // Formulario para nuevo pago
   nuevoPago: PagoRequest = {
@@ -25,6 +26,15 @@ export class PagosListComponent implements OnInit {
     monto: 0,
     fecha: ''
   };
+
+  // Formulario para editar pago
+  pagoEditando: PagoRequest = {
+    idVenta: 0,
+    metodoPago: '',
+    monto: 0,
+    fecha: ''
+  };
+  pagoSeleccionado: Pago | null = null;
 
   constructor(private pagoService: PagoService) { }
 
@@ -132,9 +142,47 @@ export class PagosListComponent implements OnInit {
     }
   }
 
-  editarPago(id: number): void {
-    console.log('Editar pago:', id);
-    // TODO: Implementar edición de pago
+  editarPago(pago: Pago): void {
+    this.pagoSeleccionado = pago;
+    this.pagoEditando = {
+      idVenta: pago.idVenta,
+      metodoPago: pago.metodoPago,
+      monto: pago.monto,
+      fecha: pago.fecha
+    };
+    this.mostrarModalEditar = true;
+  }
+
+  cerrarModalEditar(): void {
+    this.mostrarModalEditar = false;
+    this.pagoSeleccionado = null;
+    this.pagoEditando = {
+      idVenta: 0,
+      metodoPago: '',
+      monto: 0,
+      fecha: ''
+    };
+  }
+
+  actualizarPago(): void {
+    if (this.pagoSeleccionado && this.pagoEditando.idVenta && this.pagoEditando.metodoPago && this.pagoEditando.monto > 0 && this.pagoEditando.fecha) {
+      this.loading = true;
+      this.pagoService.actualizarPago(this.pagoSeleccionado.identificador || 0, this.pagoEditando).subscribe({
+        next: () => {
+          this.loading = false;
+          this.cerrarModalEditar();
+          this.cargarPagos(); // Recargar la lista
+          alert('Pago actualizado exitosamente');
+        },
+        error: (error) => {
+          console.error('Error al actualizar pago:', error);
+          this.loading = false;
+          alert('Error al actualizar el pago: ' + (error.error?.message || error.message || 'Error desconocido'));
+        }
+      });
+    } else {
+      alert('Por favor, complete todos los campos requeridos');
+    }
   }
 
   eliminarPago(id: number): void {
