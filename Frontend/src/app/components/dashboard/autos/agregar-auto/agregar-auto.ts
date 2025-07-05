@@ -1,18 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { AutoService, Auto } from '../../../../services/auto.service';
 
 @Component({
   selector: 'app-agregar-auto',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, HttpClientModule],
   templateUrl: './agregar-auto.html',
   styleUrls: ['./agregar-auto.css']
 })
 export class AgregarAutoComponent implements OnInit {
   mostrarModal = false;
   autoForm: FormGroup;
+  isLoading = false;
+  errorMessage = '';
+  successMessage = '';
+  
   marcas = [
     'Toyota', 'Honda', 'Ford', 'Chevrolet', 'Nissan', 'BMW', 'Mercedes-Benz', 
     'Audi', 'Volkswagen', 'Hyundai', 'Kia', 'Mazda', 'Subaru', 'Lexus', 
@@ -34,12 +40,13 @@ export class AgregarAutoComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private autoService: AutoService
   ) {
     this.autoForm = this.fb.group({
       marca: ['', Validators.required],
       modelo: ['', Validators.required],
-      año: ['', [Validators.required, Validators.min(1900), Validators.max(new Date().getFullYear() + 1)]],
+      anio: ['', [Validators.required, Validators.min(1900), Validators.max(new Date().getFullYear() + 1)]],
       color: ['', Validators.required],
       precio: ['', [Validators.required, Validators.min(0)]],
       kilometraje: ['', [Validators.required, Validators.min(0)]],
@@ -49,7 +56,7 @@ export class AgregarAutoComponent implements OnInit {
       potencia: ['', [Validators.required, Validators.min(0)]],
       stock: ['', [Validators.required, Validators.min(0)]],
       descripcion: ['', Validators.maxLength(500)],
-      imagen: ['']
+      imagenUrl: ['']
     });
   }
 
@@ -69,12 +76,47 @@ export class AgregarAutoComponent implements OnInit {
 
   onSubmit(): void {
     if (this.autoForm.valid) {
-      console.log('Datos del auto:', this.autoForm.value);
-      // Aquí iría la lógica para enviar los datos al backend
-      
-      // Simular envío exitoso
-      alert('Auto añadido exitosamente');
-      this.cerrarModal();
+      this.isLoading = true;
+      this.errorMessage = '';
+      this.successMessage = '';
+
+      const autoData: Auto = {
+        marca: this.autoForm.value.marca,
+        modelo: this.autoForm.value.modelo,
+        anio: this.autoForm.value.anio,
+        color: this.autoForm.value.color,
+        precio: this.autoForm.value.precio,
+        kilometraje: this.autoForm.value.kilometraje,
+        tipoCombustible: this.autoForm.value.tipoCombustible,
+        transmision: this.autoForm.value.transmision,
+        cilindrada: this.autoForm.value.cilindrada,
+        potencia: this.autoForm.value.potencia,
+        stock: this.autoForm.value.stock,
+        descripcion: this.autoForm.value.descripcion,
+        imagenUrl: this.autoForm.value.imagenUrl,
+        estado: 'Disponible'
+      };
+
+      this.autoService.crearAuto(autoData).subscribe({
+        next: (response: any) => {
+          this.isLoading = false;
+          this.successMessage = 'Auto registrado exitosamente en la base de datos';
+          console.log('Auto creado:', response);
+          
+          // Limpiar formulario
+          this.autoForm.reset();
+          
+          // Redirigir después de 2 segundos
+          setTimeout(() => {
+            this.cerrarModal();
+          }, 2000);
+        },
+        error: (error: any) => {
+          this.isLoading = false;
+          this.errorMessage = 'Error al registrar el auto: ' + (error.error?.message || error.message || 'Error desconocido');
+          console.error('Error al crear auto:', error);
+        }
+      });
     } else {
       this.marcarCamposInvalidos();
     }
