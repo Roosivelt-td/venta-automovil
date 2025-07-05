@@ -45,6 +45,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/usuarios/{id}").permitAll() // Temporalmente desprotegido para pruebas
                         .requestMatchers("/api/autos/**").permitAll() // Permitir acceso público a autos
                         .requestMatchers("/api/proveedores/**").permitAll() // Permitir acceso público a proveedores
+                        .requestMatchers("/api/clientes/**").permitAll() // Permitir acceso público a clientes
+                        .requestMatchers("/api/ventas/**").permitAll() // Permitir acceso público a ventas
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
