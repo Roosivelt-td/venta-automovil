@@ -22,15 +22,24 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override //registro de cliente
     public void crearCliente(ClienteRequest request) {
+        System.out.println("=== DATOS RECIBIDOS DEL FRONTEND ===");
+        System.out.println("Nombre: " + request.getNombre());
+        System.out.println("DNI: " + request.getDni());
+        System.out.println("Teléfono: " + request.getTelefono());
+        System.out.println("Dirección: " + request.getDireccion());
+        System.out.println("Correo: " + request.getCorreo());
+        System.out.println("=====================================");
+        
         Cliente clienteNew = new Cliente();
-        System.out.println("Nuevo Cliente" + clienteNew);
         clienteNew.setNombre(request.getNombre());
         clienteNew.setDni(request.getDni());
         clienteNew.setTelefono(request.getTelefono());
         clienteNew.setDireccion(request.getDireccion());
         clienteNew.setCorreo(request.getCorreo());
-        clienteRepository.save(clienteNew);
-
+        
+        System.out.println("Cliente a guardar: " + clienteNew);
+        Cliente clienteGuardado = clienteRepository.save(clienteNew);
+        System.out.println("Cliente guardado exitosamente con ID: " + clienteGuardado.getId());
     }
 
     @Override // buscar Cliente por id
@@ -76,5 +85,11 @@ public class ClienteServiceImpl implements ClienteService {
         if (cliente != null) {
             clienteRepository.delete(cliente);
         }
+    }
+
+    @Override // buscar clientes por DNI
+    public Collection<ClienteResponse> buscarClientesPorDni(Integer dni) {
+        Collection<Cliente> clientes = clienteRepository.findByDni(dni);
+        return clienteMapper.toListClienteToClienteResponse(clientes);
     }
 }
