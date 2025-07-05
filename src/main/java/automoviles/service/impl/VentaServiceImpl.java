@@ -30,6 +30,9 @@ public class VentaServiceImpl implements VentaService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private PagoRepository pagoRepository;
+
     @Override
     public VentaResponse obtenerVentaPorId(Long id) {
         Venta venta = ventaRepository.findById(id).orElse(null);
@@ -65,6 +68,14 @@ public class VentaServiceImpl implements VentaService {
         venta.setPrecioVenta(request.getPrecioVenta());
 
         ventaRepository.save(venta);
+
+        // Registrar el pago asociado a la venta
+        Pago pago = new Pago();
+        pago.setVenta(venta);
+        pago.setMetodoPago(request.getMetodoPago());
+        pago.setMonto(request.getPrecioVenta());
+        pago.setFecha(request.getFecha());
+        pagoRepository.save(pago);
     }
 
     @Override
