@@ -176,4 +176,12 @@
       </div>
     </div>
   </div>
-</div> 
+</div>
+
+<!-- Modal de edición de auto -->
+<app-editar-auto
+  [auto]="autoSeleccionado"
+  [mostrarModal]="mostrarModalEditar"
+  (cerrar)="cerrarModalEditar()"
+  (actualizado)="actualizarLista()">
+</app-editar-auto> 
