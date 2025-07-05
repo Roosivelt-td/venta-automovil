@@ -1,13 +1,14 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { UsuarioService } from '../../../services/usuario';
+import { AuthService } from '../../../services/auth';
 import { User } from '../../../models/user';
 
 @Component({
   selector: 'app-usuarios-list',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './usuarios.html',
   styleUrls: ['./usuarios.css']
 })
@@ -24,8 +25,10 @@ export class UsuariosListComponent implements OnInit {
   isLoading: boolean = false;
   usuarioEliminandoId: number | null = null;
   terminoBusqueda: string = '';
+  crearCredenciales: boolean = true; // Controla si se crean credenciales de acceso
 
   private usuarioService = inject(UsuarioService);
+  private authService = inject(AuthService);
   private fb = inject(FormBuilder);
 
   ngOnInit() {
@@ -36,13 +39,42 @@ export class UsuariosListComponent implements OnInit {
 
   inicializarFormulario() {
     this.usuarioForm = this.fb.group({
+      // Datos personales (tabla usuarios)
       nombre: ['', [Validators.required, Validators.minLength(2)]],
       apellido: ['', [Validators.required, Validators.minLength(2)]],
       sexo: ['', Validators.required],
       direccion: ['', [Validators.required, Validators.minLength(5)]],
       celular: ['', [Validators.required, Validators.pattern(/^[0-9]{9,10}$/)]],
       estado: [true, Validators.required],
+      
+      // Datos de autenticación (tabla user) - opcionales
+      username: [''],
+      email: ['', [Validators.email]],
+      password: [''],
+      confirmPassword: [''],
+      
+      // Relación con user existente
       idUser: [null]
+    });
+
+    // Validaciones condicionales para credenciales
+    this.usuarioForm.get('crearCredenciales')?.valueChanges.subscribe(crear => {
+      if (crear) {
+        this.usuarioForm.get('username')?.setValidators([Validators.required, Validators.minLength(3)]);
+        this.usuarioForm.get('email')?.setValidators([Validators.required, Validators.email]);
+        this.usuarioForm.get('password')?.setValidators([Validators.required, Validators.minLength(6)]);
+        this.usuarioForm.get('confirmPassword')?.setValidators([Validators.required]);
+        this.usuarioForm.get('idUser')?.clearValidators();
+      } else {
+        this.usuarioForm.get('username')?.clearValidators();
+        this.usuarioForm.get('email')?.clearValidators();
+        this.usuarioForm.get('password')?.clearValidators();
+        this.usuarioForm.get('confirmPassword')?.clearValidators();
+      }
+      this.usuarioForm.get('username')?.updateValueAndValidity();
+      this.usuarioForm.get('email')?.updateValueAndValidity();
+      this.usuarioForm.get('password')?.updateValueAndValidity();
+      this.usuarioForm.get('confirmPassword')?.updateValueAndValidity();
     });
   }
 
@@ -71,24 +103,25 @@ export class UsuariosListComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error al cargar users disponibles:', error);
-        console.error('Status:', error.status);
-        console.error('StatusText:', error.statusText);
-        console.error('URL:', error.url);
-        console.error('Detalles del error:', error.error);
         this.usersDisponibles = [];
-        // No mostrar alerta para este error ya que no es crítico
       }
     });
   }
 
   abrirModalRegistro() {
     this.mostrarModalRegistro = true;
-    this.usuarioForm.reset({ estado: true, idUser: null });
+    this.crearCredenciales = true;
+    this.usuarioForm.reset({ 
+      estado: true, 
+      idUser: null,
+      crearCredenciales: true 
+    });
   }
 
   cerrarModalRegistro() {
     this.mostrarModalRegistro = false;
     this.usuarioForm.reset();
+    this.crearCredenciales = true;
   }
 
   abrirModalEdicion(usuario: User) {
@@ -115,24 +148,73 @@ export class UsuariosListComponent implements OnInit {
 
   registrarUsuario() {
     if (this.usuarioForm.valid) {
-      this.isLoading = true;
-      const nuevoUsuario = this.usuarioForm.value;
-      
-      this.usuarioService.crearUsuario(nuevoUsuario).subscribe({
-        next: (usuario) => {
-          // Recargar la lista completa en lugar de solo agregar
-          this.cargarUsuarios();
-          this.cerrarModalRegistro();
-          this.isLoading = false;
-          // Aquí podrías mostrar un mensaje de éxito
-          alert('Usuario registrado exitosamente');
-        },
-        error: (error) => {
-          this.isLoading = false;
-          console.error('Error al registrar usuario:', error);
-          alert('Error al registrar usuario. Por favor, inténtalo de nuevo.');
+      // Validar que las contraseñas coincidan si se están creando credenciales
+      if (this.crearCredenciales) {
+        const password = this.usuarioForm.get('password')?.value;
+        const confirmPassword = this.usuarioForm.get('confirmPassword')?.value;
+        
+        if (password !== confirmPassword) {
+          alert('Las contraseñas no coinciden');
+          return;
         }
-      });
+      }
+
+      this.isLoading = true;
+      const formData = this.usuarioForm.value;
+      
+      if (this.crearCredenciales) {
+        // Crear usuario con credenciales (ambas tablas)
+        const registerData = {
+          username: formData.username,
+          password: formData.password,
+          email: formData.email,
+          nombre: formData.nombre,
+          apellido: formData.apellido,
+          sexo: formData.sexo,
+          direccion: formData.direccion,
+          celular: formData.celular
+        };
+
+        this.authService.register(registerData).subscribe({
+          next: (response) => {
+            console.log('Usuario registrado exitosamente con credenciales:', response);
+            this.cargarUsuarios();
+            this.cerrarModalRegistro();
+            this.isLoading = false;
+            alert('Usuario registrado exitosamente con credenciales de acceso');
+          },
+          error: (error) => {
+            this.isLoading = false;
+            console.error('Error al registrar usuario con credenciales:', error);
+            alert('Error al registrar usuario: ' + (error.error?.message || 'Error desconocido'));
+          }
+        });
+      } else {
+        // Crear solo usuario sin credenciales (solo tabla usuarios)
+        const nuevoUsuario = {
+          nombre: formData.nombre,
+          apellido: formData.apellido,
+          sexo: formData.sexo,
+          direccion: formData.direccion,
+          celular: formData.celular,
+          estado: formData.estado,
+          idUser: formData.idUser || null
+        };
+
+        this.usuarioService.crearUsuario(nuevoUsuario).subscribe({
+          next: (usuario) => {
+            this.cargarUsuarios();
+            this.cerrarModalRegistro();
+            this.isLoading = false;
+            alert('Usuario registrado exitosamente');
+          },
+          error: (error) => {
+            this.isLoading = false;
+            console.error('Error al registrar usuario:', error);
+            alert('Error al registrar usuario. Por favor, inténtalo de nuevo.');
+          }
+        });
+      }
     } else {
       this.marcarCamposInvalidos();
     }
@@ -156,7 +238,6 @@ export class UsuariosListComponent implements OnInit {
         error: (error) => {
           this.isLoading = false;
           console.error('Error al actualizar usuario:', error);
-          console.error('Detalles del error:', error.error);
           alert('Error al actualizar usuario: ' + (error.error?.message || error.message || 'Error desconocido'));
         }
       });
@@ -185,10 +266,6 @@ export class UsuariosListComponent implements OnInit {
         error: (error) => {
           this.usuarioEliminandoId = null;
           console.error('Error al eliminar usuario:', error);
-          console.error('Status:', error.status);
-          console.error('StatusText:', error.statusText);
-          console.error('URL:', error.url);
-          console.error('Detalles del error:', error.error);
           alert('Error al eliminar usuario: ' + (error.error?.message || error.message || `Error ${error.status}: ${error.statusText}`));
         }
       });
@@ -198,7 +275,6 @@ export class UsuariosListComponent implements OnInit {
   cerrarModalConfirmacion() {
     this.mostrarModalConfirmacion = false;
     this.usuarioEliminando = null;
-    this.usuarioEliminandoId = null;
   }
 
   marcarCamposInvalidos() {
@@ -212,34 +288,41 @@ export class UsuariosListComponent implements OnInit {
 
   esCampoInvalido(campo: string): boolean {
     const control = this.usuarioForm.get(campo);
-    return control ? (control.invalid && control.touched) : false;
+    return !!(control?.invalid && control?.touched);
   }
 
   obtenerMensajeError(campo: string): string {
     const control = this.usuarioForm.get(campo);
-    if (control?.errors) {
-      if (control.errors['required']) return 'Este campo es requerido';
-      if (control.errors['minlength']) return `Mínimo ${control.errors['minlength'].requiredLength} caracteres`;
-      if (control.errors['pattern']) return 'Formato inválido';
+    if (control?.hasError('required')) {
+      return 'Este campo es requerido';
     }
-    return '';
+    if (control?.hasError('minlength')) {
+      return `Mínimo ${control.errors?.['minlength'].requiredLength} caracteres`;
+    }
+    if (control?.hasError('email')) {
+      return 'Email inválido';
+    }
+    if (control?.hasError('pattern')) {
+      return 'Formato inválido';
+    }
+    return 'Campo inválido';
   }
 
   filtrarUsuarios() {
     if (!this.terminoBusqueda.trim()) {
       this.usuariosFiltrados = this.usuarios;
-    } else {
-      const termino = this.terminoBusqueda.toLowerCase().trim();
-      this.usuariosFiltrados = this.usuarios.filter(usuario => 
-        usuario.nombre?.toLowerCase().includes(termino) ||
-        usuario.apellido?.toLowerCase().includes(termino) ||
-        usuario.celular?.includes(termino) ||
-        usuario.direccion?.toLowerCase().includes(termino) ||
-        usuario.sexo?.toLowerCase().includes(termino) ||
-        (usuario.identificador?.toString().includes(termino)) ||
-        (usuario.idUser?.toString().includes(termino))
-      );
+      return;
     }
+
+    const termino = this.terminoBusqueda.toLowerCase();
+    this.usuariosFiltrados = this.usuarios.filter(usuario =>
+      usuario.nombre?.toLowerCase().includes(termino) ||
+      usuario.apellido?.toLowerCase().includes(termino) ||
+      usuario.celular?.includes(termino) ||
+      usuario.direccion?.toLowerCase().includes(termino) ||
+      usuario.sexo?.toLowerCase().includes(termino) ||
+      usuario.identificador?.toString().includes(termino)
+    );
   }
 
   onBusquedaChange(event: any) {
