@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AutoService, Auto } from '../../../../services/auto.service';
+import { EditarAutoComponent } from '../editar-auto/editar-auto';
 
 @Component({
   selector: 'app-gestionar-autos',
   standalone: true,
-  imports: [CommonModule, HttpClientModule],
+  imports: [CommonModule, HttpClientModule, EditarAutoComponent],
   templateUrl: './gestionar-autos.html',
   styleUrls: ['./gestionar-autos.css']
 })
@@ -16,6 +17,8 @@ export class GestionarAutosComponent implements OnInit {
   autos: Auto[] = [];
   isLoading = false;
   errorMessage = '';
+  mostrarModalEditar = false;
+  autoSeleccionado: Auto | null = null;
 
   constructor(
     private router: Router,
@@ -68,7 +71,21 @@ export class GestionarAutosComponent implements OnInit {
 
   editarAuto(id: number): void {
     console.log('Editar auto con ID:', id);
-    // Aquí iría la lógica para editar
+    const auto = this.autos.find(a => a.id === id);
+    if (auto) {
+      this.autoSeleccionado = auto;
+      this.mostrarModalEditar = true;
+      console.log('Abriendo modal para editar auto:', auto);
+    }
+  }
+
+  cerrarModalEditar(): void {
+    this.mostrarModalEditar = false;
+    this.autoSeleccionado = null;
+  }
+
+  actualizarLista(): void {
+    this.cargarAutos(); // Recargar la lista después de editar
   }
 
   eliminarAuto(id: number): void {
