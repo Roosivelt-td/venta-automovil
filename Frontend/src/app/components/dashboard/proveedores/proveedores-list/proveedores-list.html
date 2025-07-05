@@ -130,5 +130,13 @@
             </div>
         </div>
     </main>
+
+    <!-- Modal de edición de proveedor -->
+    <app-editar-proveedor
+      [proveedor]="proveedorSeleccionado"
+      [mostrarModal]="mostrarModalEditar"
+      (cerrar)="cerrarModalEditar()"
+      (actualizado)="actualizarLista()">
+    </app-editar-proveedor>
 </body>
 </html>
