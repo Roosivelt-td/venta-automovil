@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { VentaService, Venta } from '../../../../services/venta.service';
 
 @Component({
   selector: 'app-ventas-list',
@@ -9,27 +11,38 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './ventas-list.html',
   styleUrl: './ventas-list.css'
 })
-export class VentasListComponent {
+export class VentasListComponent implements OnInit {
+  ventas: Venta[] = [];
   filtroVentas: string = '';
-  mostrarModalRegistro: boolean = false;
+  loading = false;
 
-  constructor() { }
+  constructor(
+    private router: Router,
+    private ventaService: VentaService
+  ) { }
 
   ngOnInit(): void {
+    this.cargarVentas();
+  }
+
+  cargarVentas(): void {
+    this.loading = true;
+    this.ventaService.obtenerTodasLasVentas().subscribe({
+      next: (ventas) => {
+        this.ventas = ventas;
+        this.loading = false;
+        console.log('Ventas cargadas:', ventas);
+      },
+      error: (error) => {
+        console.error('Error al cargar ventas:', error);
+        this.loading = false;
+        alert('Error al cargar las ventas');
+      }
+    });
   }
 
   abrirModalRegistro(): void {
-    this.mostrarModalRegistro = true;
-  }
-
-  cerrarModalRegistro(): void {
-    this.mostrarModalRegistro = false;
-  }
-
-  registrarNuevaVenta(): void {
-    // Lógica para registrar una nueva venta
-    console.log('Registrar nueva venta');
-    this.cerrarModalRegistro(); // Cerrar modal después de registrar
+    this.router.navigate(['/ventas/registrar']);
   }
 
   buscarVenta(): void {
