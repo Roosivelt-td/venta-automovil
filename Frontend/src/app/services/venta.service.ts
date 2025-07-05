@@ -57,4 +57,29 @@ export class VentaService {
   eliminarVenta(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/ventas/delete/${id}`);
   }
+
+  // Métodos de búsqueda
+  buscarVentasPorCliente(nombreCliente: string): Observable<Venta[]> {
+    return this.http.get<Venta[]>(`${this.apiUrl}/ventas/buscar/cliente/${encodeURIComponent(nombreCliente)}`);
+  }
+
+  buscarVentasPorAuto(marca: string, modelo: string): Observable<Venta[]> {
+    return this.http.get<Venta[]>(`${this.apiUrl}/ventas/buscar/auto?marca=${encodeURIComponent(marca)}&modelo=${encodeURIComponent(modelo)}`);
+  }
+
+  buscarVentasPorUsuario(nombreUsuario: string): Observable<Venta[]> {
+    return this.http.get<Venta[]>(`${this.apiUrl}/ventas/buscar/usuario/${encodeURIComponent(nombreUsuario)}`);
+  }
+
+  buscarVentasPorFecha(fechaInicio: string, fechaFin: string): Observable<Venta[]> {
+    return this.http.get<Venta[]>(`${this.apiUrl}/ventas/buscar/fecha?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`);
+  }
+
+  buscarVentasPorPrecio(precioMin: number, precioMax: number): Observable<Venta[]> {
+    return this.http.get<Venta[]>(`${this.apiUrl}/ventas/buscar/precio?precioMin=${precioMin}&precioMax=${precioMax}`);
+  }
+
+  buscarVentasPorTermino(termino: string): Observable<Venta[]> {
+    return this.http.get<Venta[]>(`${this.apiUrl}/ventas/buscar/termino/${encodeURIComponent(termino)}`);
+  }
 } 
