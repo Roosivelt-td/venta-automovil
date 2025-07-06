@@ -19,6 +19,7 @@ import { AgregarAutoComponent } from './components/dashboard/autos/agregar-auto/
 import { GestionarAutosComponent } from './components/dashboard/autos/gestionar-autos/gestionar-autos';
 import { AgregarProveedorComponent } from './components/dashboard/proveedores/agregar-proveedor/agregar-proveedor';
 import { RegistrarVentaComponent } from './components/dashboard/ventas/registrar-venta/registrar-venta';
+import { EditarVentaComponent } from './components/dashboard/ventas/editar-venta/editar-venta';
 
 export const routes: Routes = [
     // Ruta principal - redirigir al login
@@ -43,6 +44,7 @@ export const routes: Routes = [
         { path: 'compra', redirectTo: 'compras' },
         { path: 'ventas', component: VentasListComponent },
         { path: 'ventas/registrar', component: RegistrarVentaComponent },
+        { path: 'ventas/editar/:id', component: EditarVentaComponent },
         { path: 'clientes', component: ClientesListComponent },
         { path: 'proveedores', component: ProveedoresListComponent },
         { path: 'proveedores/agregar', component: AgregarProveedorComponent },
