@@ -71,7 +71,7 @@ export class AgregarAutoComponent implements OnInit {
 
   cerrarModal(): void {
     this.mostrarModal = false;
-    this.router.navigate(['/autos/gestionar']);
+    this.router.navigate(['/dashboard/autos/gestionar']);
   }
 
   onSubmit(): void {
