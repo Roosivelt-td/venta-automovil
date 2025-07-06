@@ -100,7 +100,7 @@ export class ProveedoresListComponent implements OnInit {
   }
 
   abrirModalRegistro() {
-    this.router.navigate(['/proveedores/agregar']);
+    this.router.navigate(['/dashboard/proveedores/agregar']);
   }
 
   cerrarModalRegistro() {
