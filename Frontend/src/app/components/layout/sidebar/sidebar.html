@@ -43,28 +43,28 @@
       </a>
       <hr>
       <!-- Ventas -->
-      <a routerLink="/ventas" routerLinkActive="bg-gray-800" class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white group transition-all duration-200">
+      <a routerLink="/dashboard/ventas" routerLinkActive="bg-gray-800" class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white group transition-all duration-200">
         <i class="fas fa-handshake pe-2"></i> <span>Ventas</span>
       </a>
 
       <!-- clientes -->
-      <a routerLink="/clientes" routerLinkActive="bg-gray-800" class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white group transition-all duration-200">
+      <a routerLink="/dashboard/clientes" routerLinkActive="bg-gray-800" class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white group transition-all duration-200">
         <i class="fas fa-users pe-2"></i> <span>Clientes</span>
       </a>
       <!-- Proveedores -->
-      <a routerLink="/proveedores" routerLinkActive="bg-gray-800" class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white group transition-all duration-200">
+      <a routerLink="/dashboard/proveedores" routerLinkActive="bg-gray-800" class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white group transition-all duration-200">
         <i class="fas fa-truck pe-2"></i> <span>Proveedores</span>
       </a>
       <!-- pagos -->
-       <a routerLink="/pagos" routerLinkActive="bg-gray-800" class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white group transition-all duration-200">
+       <a routerLink="/dashboard/pagos" routerLinkActive="bg-gray-800" class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white group transition-all duration-200">
          <i class="fas fa-money-bill-wave pe-2"></i> <span>Pagos</span>
        </a>
        <!-- Reembolsos -->
-       <a routerLink="/reembolsos" routerLinkActive="bg-gray-800" class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white group transition-all duration-200">
+       <a routerLink="/dashboard/reembolsos" routerLinkActive="bg-gray-800" class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white group transition-all duration-200">
          <i class="fas fa-undo pe-2"></i> <span>Reembolsos</span>
        </a>
       <!-- usuarios -->
-      <a routerLink="/usuarios" routerLinkActive="bg-gray-800" class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white group transition-all duration-200">
+      <a routerLink="/dashboard/usuarios" routerLinkActive="bg-gray-800" class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white group transition-all duration-200">
         <i class="fas fa-user-tie pe-2"></i> <span>Usuarios</span>
       </a>
 
@@ -79,15 +79,15 @@
           <i class="fas" [ngClass]="isAutoMenuOpen ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
         </button>
         <div class="space-y-1 pl-11" [ngClass]="{'hidden': !isAutoMenuOpen}">
-          <a routerLink="/autos/agregar" routerLinkActive="bg-gray-700 text-white"
+          <a routerLink="/dashboard/autos/agregar" routerLinkActive="bg-gray-700 text-white"
              class="group flex items-center px-4 py-2 text-sm text-gray-300 rounded-md hover:bg-gray-700 hover:text-white">
             <i class="fas fa-plus-circle pe-2"></i><span>Añadir Auto</span>
           </a>
-          <a routerLink="/autos/gestionar" routerLinkActive="bg-gray-700 text-white"
+          <a routerLink="/dashboard/autos/gestionar" routerLinkActive="bg-gray-700 text-white"
              class="group flex items-center px-4 py-2 text-sm text-gray-300 rounded-md hover:bg-gray-700 hover:text-white">
             <i class="fas fa-cogs pe-2"></i><span>Gestionar Autos</span>
           </a>
-          <a routerLink="/autos/compras" routerLinkActive="bg-gray-700 text-white"
+          <a routerLink="/dashboard/autos/compras" routerLinkActive="bg-gray-700 text-white"
              class="group flex items-center px-4 py-2 text-sm text-gray-300 rounded-md hover:bg-gray-700 hover:text-white">
             <i class="fas fa-shopping-cart pe-2"></i><span>Compras</span>
           </a>
