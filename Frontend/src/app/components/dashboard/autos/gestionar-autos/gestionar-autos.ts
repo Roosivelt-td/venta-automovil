@@ -69,7 +69,7 @@ export class GestionarAutosComponent implements OnInit {
   }
 
   navegarAAnadir(): void {
-    this.router.navigate(['/autos/agregar']);
+    this.router.navigate(['/dashboard/autos/agregar']);
   }
 
   editarAuto(id: number): void {
