@@ -72,6 +72,8 @@ public class VentaServiceImpl implements VentaService {
         venta.setUsuario(usuario);
         venta.setFecha(request.getFecha());
         venta.setPrecioVenta(request.getPrecioVenta());
+        venta.setMetodoPago(request.getMetodoPago());
+        venta.setObservaciones(request.getObservaciones());
 
         ventaRepository.save(venta);
 
@@ -113,6 +115,8 @@ public class VentaServiceImpl implements VentaService {
         ventaExistente.setUsuario(usuario);
         ventaExistente.setFecha(request.getFecha());
         ventaExistente.setPrecioVenta(request.getPrecioVenta());
+        ventaExistente.setMetodoPago(request.getMetodoPago());
+        ventaExistente.setObservaciones(request.getObservaciones());
 
         ventaRepository.save(ventaExistente);
 
