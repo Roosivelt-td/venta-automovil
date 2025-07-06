@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { ClienteService, Cliente, ClienteRequest } from '../../../../services/cliente.service';
 import { VentaService, VentaRequest } from '../../../../services/venta.service';
 import { AutoService } from '../../../../services/auto.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-registrar-venta',
@@ -94,6 +95,16 @@ export class RegistrarVentaComponent {
 
   buscarClientePorDni() {
     if (this.dniBusqueda) {
+      // Mostrar loading mientras busca
+      Swal.fire({
+        title: 'Buscando Cliente...',
+        text: 'Por favor espere mientras se busca el cliente',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+      
       this.clienteService.buscarClientesPorDni(this.dniBusqueda).subscribe({
         next: (clientes) => {
           if (clientes.length > 0) {
@@ -111,13 +122,79 @@ export class RegistrarVentaComponent {
             console.log('Formulario después de establecer clienteId:', this.ventaForm.value);
             console.log('clienteId después de patchValue:', this.ventaForm.get('clienteId')?.value);
             this.mostrarFormularioCliente = false;
+            
+            // Mostrar mensaje de cliente encontrado
+            Swal.fire({
+              icon: 'success',
+              title: '¡Cliente Encontrado!',
+              html: `
+                <div class="text-center">
+                  <div class="mb-4">
+                    <i class="fas fa-user-check text-5xl text-green-500"></i>
+                  </div>
+                  <p class="text-lg mb-2">Cliente encontrado exitosamente</p>
+                  <div class="mt-4 p-3 bg-green-50 rounded-lg">
+                    <p><strong>Nombre:</strong> ${this.clienteSeleccionado.nombre}</p>
+                    <p><strong>DNI:</strong> ${this.clienteSeleccionado.dni}</p>
+                    <p><strong>Teléfono:</strong> ${this.clienteSeleccionado.telefono}</p>
+                  </div>
+                </div>
+              `,
+              confirmButtonColor: '#10b981',
+              confirmButtonText: '¡Perfecto!',
+              showClass: {
+                popup: 'animate__animated animate__fadeInDown'
+              },
+              hideClass: {
+                popup: 'animate__animated animate__fadeOutUp'
+              },
+              timer: 2500,
+              timerProgressBar: true
+            });
           } else {
             this.mostrarFormularioCliente = true;
             this.clienteSeleccionado = null;
+            
+            // Mostrar mensaje de cliente no encontrado
+            Swal.fire({
+              icon: 'info',
+              title: 'Cliente No Encontrado',
+              html: `
+                <div class="text-center">
+                  <div class="mb-4">
+                    <i class="fas fa-user-plus text-5xl text-blue-500"></i>
+                  </div>
+                  <p class="text-lg mb-2">No se encontró un cliente con el DNI: <strong>${this.dniBusqueda}</strong></p>
+                  <p class="text-sm text-gray-600">Se ha abierto el formulario para registrar un nuevo cliente</p>
+                </div>
+              `,
+              confirmButtonColor: '#3b82f6',
+              confirmButtonText: 'Entendido',
+              showClass: {
+                popup: 'animate__animated animate__fadeInDown'
+              },
+              hideClass: {
+                popup: 'animate__animated animate__fadeOutUp'
+              }
+            });
           }
         },
         error: (error) => {
           console.error('Error al buscar cliente:', error);
+          
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error en la Búsqueda!',
+            text: 'Ha ocurrido un error al buscar el cliente. Por favor, inténtalo de nuevo.',
+            confirmButtonColor: '#ef4444',
+            confirmButtonText: 'Entendido',
+            showClass: {
+              popup: 'animate__animated animate__fadeInDown'
+            },
+            hideClass: {
+              popup: 'animate__animated animate__fadeOutUp'
+            }
+          });
         }
       });
     }
@@ -127,6 +204,17 @@ export class RegistrarVentaComponent {
     if (this.clienteForm.valid) {
       const clienteData: ClienteRequest = this.clienteForm.value;
       console.log('Datos del cliente a enviar:', clienteData);
+      
+      // Mostrar loading mientras se registra
+      Swal.fire({
+        title: 'Registrando Cliente...',
+        text: 'Por favor espere mientras se procesa la información',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+      
       this.clienteService.crearCliente(clienteData).subscribe({
         next: (clienteCreado) => {
           this.clienteSeleccionado = clienteCreado;
@@ -144,9 +232,52 @@ export class RegistrarVentaComponent {
           console.log('clienteId después de patchValue:', this.ventaForm.get('clienteId')?.value);
           this.mostrarFormularioCliente = false;
           this.cargarClientes(); // Recargar la lista de clientes
+          
+          // Mostrar mensaje de éxito
+          Swal.fire({
+            icon: 'success',
+            title: '¡Cliente Registrado Exitosamente!',
+            html: `
+              <div class="text-center">
+                <div class="mb-4">
+                  <i class="fas fa-user-plus text-5xl text-blue-500"></i>
+                </div>
+                <p class="text-lg mb-2">El cliente ha sido registrado correctamente</p>
+                <div class="mt-4 p-3 bg-blue-50 rounded-lg">
+                  <p><strong>Nombre:</strong> ${clienteCreado.nombre}</p>
+                  <p><strong>DNI:</strong> ${clienteCreado.dni}</p>
+                  <p><strong>Teléfono:</strong> ${clienteCreado.telefono}</p>
+                </div>
+              </div>
+            `,
+            confirmButtonColor: '#3b82f6',
+            confirmButtonText: '¡Perfecto!',
+            showClass: {
+              popup: 'animate__animated animate__fadeInDown'
+            },
+            hideClass: {
+              popup: 'animate__animated animate__fadeOutUp'
+            },
+            timer: 3000,
+            timerProgressBar: true
+          });
         },
         error: (error) => {
           console.error('Error al registrar cliente:', error);
+          
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error al Registrar Cliente!',
+            text: 'Ha ocurrido un error al registrar el cliente. Por favor, inténtalo de nuevo.',
+            confirmButtonColor: '#ef4444',
+            confirmButtonText: 'Entendido',
+            showClass: {
+              popup: 'animate__animated animate__fadeInDown'
+            },
+            hideClass: {
+              popup: 'animate__animated animate__fadeOutUp'
+            }
+          });
         }
       });
     }
@@ -169,7 +300,19 @@ export class RegistrarVentaComponent {
     if (this.ventaForm.valid) {
       // Verificar que hay autos disponibles
       if (this.autos.length === 0) {
-        alert('Error: No hay autos con stock disponible para vender.');
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'No hay autos con stock disponible para vender.',
+          confirmButtonColor: '#ef4444',
+          confirmButtonText: 'Entendido',
+          showClass: {
+            popup: 'animate__animated animate__fadeInDown'
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+          }
+        });
         return;
       }
       
@@ -179,7 +322,19 @@ export class RegistrarVentaComponent {
       console.log('Autos disponibles:', this.autos);
       
       if (!autoId) {
-        alert('Error: Por favor, seleccione un auto.');
+        Swal.fire({
+          icon: 'warning',
+          title: '¡Atención!',
+          text: 'Por favor, seleccione un automóvil.',
+          confirmButtonColor: '#f59e0b',
+          confirmButtonText: 'Entendido',
+          showClass: {
+            popup: 'animate__animated animate__fadeInDown'
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+          }
+        });
         return;
       }
       
@@ -191,49 +346,138 @@ export class RegistrarVentaComponent {
       console.log('Auto seleccionado encontrado:', autoSeleccionado);
       
       if (!autoSeleccionado) {
-        alert('Error: Auto no encontrado. Por favor, seleccione un auto válido.');
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Auto no encontrado. Por favor, seleccione un auto válido.',
+          confirmButtonColor: '#ef4444',
+          confirmButtonText: 'Entendido',
+          showClass: {
+            popup: 'animate__animated animate__fadeInDown'
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+          }
+        });
         console.error('No se encontró auto con ID:', autoIdNumber);
         console.error('Autos disponibles:', this.autos.map(a => ({ id: a.id, marca: a.marca, modelo: a.modelo })));
         return;
       }
       
       if (autoSeleccionado.stock <= 0) {
-        alert('Error: El auto seleccionado no tiene stock disponible');
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'El auto seleccionado no tiene stock disponible.',
+          confirmButtonColor: '#ef4444',
+          confirmButtonText: 'Entendido',
+          showClass: {
+            popup: 'animate__animated animate__fadeInDown'
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+          }
+        });
         return;
       }
-      this.loading = true;
-      
-      const ventaData: VentaRequest = {
-        idCliente: Number(this.ventaForm.get('clienteId')?.value),
-        idAuto: Number(this.ventaForm.get('autoId')?.value),
-        idUsuario: 1, // TODO: Obtener el ID del usuario logueado
-        fecha: this.ventaForm.get('fechaVenta')?.value,
-        precioVenta: this.ventaForm.get('precioVenta')?.value,
-        metodoPago: this.ventaForm.get('metodoPago')?.value
-      };
 
-      console.log('Datos de venta a enviar:', ventaData);
-
-      this.ventaService.crearVenta(ventaData).subscribe({
-        next: () => {
-          this.loading = false;
-          // Mostrar mensaje de éxito
-          this.mensajeExito = '¡Venta registrada exitosamente! El stock del auto ha sido actualizado.';
-          this.mostrarMensajeExito = true;
-          
-          // Recargar la lista de autos para reflejar los cambios en el stock
-          this.cargarAutos();
-          
-          // Ocultar mensaje después de 3 segundos y redirigir
-          setTimeout(() => {
-            this.mostrarMensajeExito = false;
-            this.router.navigate(['/dashboard/ventas']);
-          }, 3000);
+      // Mostrar confirmación antes de registrar
+      Swal.fire({
+        title: '¿Confirmar Venta?',
+        html: `
+          <div class="text-left">
+            <p><strong>Cliente:</strong> ${this.clienteSeleccionado?.nombre}</p>
+            <p><strong>Auto:</strong> ${autoSeleccionado.marca} ${autoSeleccionado.modelo}</p>
+            <p><strong>Precio:</strong> S/ ${this.ventaForm.get('precioVenta')?.value}</p>
+            <p><strong>Método de Pago:</strong> ${this.ventaForm.get('metodoPago')?.value}</p>
+          </div>
+        `,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#10b981',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: '¡Sí, Registrar Venta!',
+        cancelButtonText: 'Cancelar',
+        showClass: {
+          popup: 'animate__animated animate__fadeInDown'
         },
-        error: (error) => {
-          console.error('Error al registrar venta:', error);
-          this.loading = false;
-          alert('Error al registrar la venta. Por favor, inténtalo de nuevo.');
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp'
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.loading = true;
+          
+          const ventaData: VentaRequest = {
+            idCliente: Number(this.ventaForm.get('clienteId')?.value),
+            idAuto: Number(this.ventaForm.get('autoId')?.value),
+            idUsuario: 1, // TODO: Obtener el ID del usuario logueado
+            fecha: this.ventaForm.get('fechaVenta')?.value,
+            precioVenta: this.ventaForm.get('precioVenta')?.value,
+            metodoPago: this.ventaForm.get('metodoPago')?.value
+          };
+
+          console.log('Datos de venta a enviar:', ventaData);
+
+          this.ventaService.crearVenta(ventaData).subscribe({
+            next: () => {
+              this.loading = false;
+              
+              // Mostrar mensaje de éxito con SweetAlert2
+              Swal.fire({
+                icon: 'success',
+                title: '¡Venta Registrada Exitosamente!',
+                html: `
+                  <div class="text-center">
+                    <div class="mb-4">
+                      <i class="fas fa-check-circle text-6xl text-green-500"></i>
+                    </div>
+                    <p class="text-lg mb-2">La venta ha sido registrada correctamente</p>
+                    <p class="text-sm text-gray-600">El stock del automóvil ha sido actualizado</p>
+                    <div class="mt-4 p-3 bg-green-50 rounded-lg">
+                      <p><strong>Cliente:</strong> ${this.clienteSeleccionado?.nombre}</p>
+                      <p><strong>Auto:</strong> ${autoSeleccionado.marca} ${autoSeleccionado.modelo}</p>
+                      <p><strong>Precio:</strong> S/ ${this.ventaForm.get('precioVenta')?.value}</p>
+                    </div>
+                  </div>
+                `,
+                confirmButtonColor: '#10b981',
+                confirmButtonText: '¡Perfecto!',
+                showClass: {
+                  popup: 'animate__animated animate__fadeInDown'
+                },
+                hideClass: {
+                  popup: 'animate__animated animate__fadeOutUp'
+                },
+                timer: 4000,
+                timerProgressBar: true,
+                didClose: () => {
+                  // Recargar la lista de autos para reflejar los cambios en el stock
+                  this.cargarAutos();
+                  // Redirigir a la lista de ventas
+                  this.router.navigate(['/dashboard/ventas']);
+                }
+              });
+            },
+            error: (error) => {
+              console.error('Error al registrar venta:', error);
+              this.loading = false;
+              
+              Swal.fire({
+                icon: 'error',
+                title: '¡Error al Registrar!',
+                text: 'Ha ocurrido un error al registrar la venta. Por favor, inténtalo de nuevo.',
+                confirmButtonColor: '#ef4444',
+                confirmButtonText: 'Entendido',
+                showClass: {
+                  popup: 'animate__animated animate__fadeInDown'
+                },
+                hideClass: {
+                  popup: 'animate__animated animate__fadeOutUp'
+                }
+              });
+            }
+          });
         }
       });
     }
@@ -247,6 +491,30 @@ export class RegistrarVentaComponent {
     this.mostrarFormularioCliente = true;
     this.clienteSeleccionado = null;
     this.clienteForm.reset();
+  }
+
+  // Métodos para estadísticas de stock
+  get totalAutos(): number {
+    return this.autos.length;
+  }
+
+  get autosConStock(): number {
+    return this.autos.filter(auto => auto.stock > 0).length;
+  }
+
+  get autosSinStock(): number {
+    return this.autos.filter(auto => auto.stock <= 0).length;
+  }
+
+  // Método para obtener información del auto seleccionado
+  get autoSeleccionadoInfo(): string {
+    const autoId = this.ventaForm.get('autoId')?.value;
+    if (!autoId) return 'No seleccionado';
+    
+    const auto = this.autos.find(a => a.id == autoId);
+    if (!auto) return 'No encontrado';
+    
+    return `${auto.marca} ${auto.modelo}`;
   }
 
   debugFormulario() {
