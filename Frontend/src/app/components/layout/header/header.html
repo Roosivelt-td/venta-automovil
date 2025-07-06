@@ -47,7 +47,7 @@
                src="/auth/perfil/roosivelt.png"
                alt="Foto de perfil">
           <div class="hidden md:block text-left">
-            <p class="text-sm font-medium text-gray-700">Tom Cook</p>
+            <p class="text-sm font-medium text-gray-700">{{ getUserName() }}</p>
             <p class="text-xs text-gray-500">Administrador</p>
           </div>
           <i class="fas fa-chevron-down text-gray-400 hidden md:block"></i>
@@ -59,8 +59,8 @@
 ">
           <!-- Cabecera del menú -->
           <div class="px-4 py-3 border-b border-gray-100">
-            <p class="text-sm font-semibold text-gray-900">Tom Cook</p>
-            <p class="text-xs text-gray-500 mt-1">tom.cookxample.com</p>
+            <p class="text-sm font-semibold text-gray-900">{{ getUserName() }}</p>
+            <p class="text-xs text-gray-500 mt-1">{{ getUserEmail() }}</p>
           </div>
 
           <!-- Enlaces principales -->
