@@ -21,20 +21,23 @@ import { AgregarProveedorComponent } from './components/dashboard/proveedores/ag
 import { RegistrarVentaComponent } from './components/dashboard/ventas/registrar-venta/registrar-venta';
 
 export const routes: Routes = [
-    // Rutas públicas (sin layout)
+    // Ruta principal - redirigir al login
+    { path: '', redirectTo: '/login', pathMatch: 'full' },
+    
+    // Rutas públicas (sin autenticación)
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
     { path: 'forgot-password', component: ForgotPasswordComponent },
     { path: 'reset-password', component: ResetPasswordComponent },
     { path: 'reset-password/:token', component: ResetPasswordComponent },
 
-    // Todas las rutas del dashboard dentro del MainLayout
+    // Todas las rutas del dashboard protegidas con AuthGuard
     {
-      path: '',
+      path: 'dashboard',
       component: MainLayoutComponent,
+      canActivate: [AuthGuard],
       children: [
         { path: '', component: DashboardComponent },
-        { path: 'dashboard', component: DashboardComponent },
         { path: 'usuarios', component: UsuariosListComponent },
         { path: 'compras', component: ComprasListComponent },
         { path: 'compra', redirectTo: 'compras' },
@@ -52,5 +55,5 @@ export const routes: Routes = [
     },
 
     // Redirección global para rutas no encontradas
-    { path: '**', redirectTo: '/' }
+    { path: '**', redirectTo: '/login' }
 ];
