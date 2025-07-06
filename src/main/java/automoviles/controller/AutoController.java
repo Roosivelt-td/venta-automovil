@@ -17,7 +17,7 @@ public class AutoController {
     @Autowired
     private AutoService autoService;
 
-    @PostMapping ("/create")// crear auto
+    @PostMapping ("/create")// crear auto en base de datos
     public void crearAuto(@RequestBody AutoRequest request) { autoService.crearAuto(request);}
 
     @GetMapping("/{id}") // obtener un auto por su id
