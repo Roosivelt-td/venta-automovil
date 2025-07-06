@@ -33,6 +33,8 @@ public class VentaMapper {
             ventaResponse.setIdentificador(venta.getId());
             ventaResponse.setFecha(venta.getFecha());
             ventaResponse.setPrecioVenta(venta.getPrecioVenta());
+            ventaResponse.setMetodoPago(venta.getMetodoPago());
+            ventaResponse.setObservaciones(venta.getObservaciones());
             // Mapear Cliente
             Cliente cliente = venta.getCliente();
             if (cliente != null) {
