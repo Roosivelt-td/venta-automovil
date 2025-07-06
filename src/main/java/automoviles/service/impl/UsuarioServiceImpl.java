@@ -52,10 +52,6 @@ public class UsuarioServiceImpl implements UsuarioService {
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado para el User ID: " + userId));
         return usuarioMapper.toUsuarioToUsuarioResponse(usuario);
     }
-//    public UsuarioResponse obtenerUsuarioPorIdUser(Long user) {
-//        Usuario usuario = usuarioRepository.findByUser(user).orElse( null);
-//        return usuarioMapper.toUsuarioToUsuarioResponse(usuario);
-//    }
 
 
     @Override // obtener todos los usuarios
