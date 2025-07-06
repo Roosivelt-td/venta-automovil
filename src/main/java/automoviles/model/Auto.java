@@ -18,6 +18,23 @@ public class Auto {
     private Integer anio;
     private String color;
     private Integer kilometraje;
+
+
+    @Column(name = "tipo_combustible", nullable = false)
+    private String tipoCombustible;
+
+    @Column(nullable = false)
+    private String transmision;
+
+    @Column(nullable = false)
+    private Integer cilindrada;
+
+    @Column(nullable = false)
+    private Integer potencia;
+
+    @Column(nullable = false)
+    private Integer stock;
+
     private String tipo;
     @Column(name = "precio", nullable = false, precision = 10, scale = 2)
     private BigDecimal precio;
