@@ -14,15 +14,25 @@ export interface ApiConfig {
 }
 
 export const API_CONFIG = new InjectionToken<ApiConfig>('api.config', {
-  factory: () => ({
-    baseUrl: 'http://localhost:8080/api',
-    endpoints: {
-      auth: '/auth',
-      usuarios: '/usuarios',
-      compras: '/compras',
-      clientes: '/clientes',
-      ventas: '/ventas',
-      autos: '/autos'
-    }
-  })
+  factory: () => {
+    // Detectar el entorno
+    const isProduction = window.location.hostname !== 'localhost';
+    
+    // URL base según el entorno
+    const baseUrl = isProduction 
+      ? 'https://tu-backend.railway.app/api' // URL de producción
+      : 'http://localhost:8080/api'; // URL de desarrollo
+    
+    return {
+      baseUrl,
+      endpoints: {
+        auth: '/auth',
+        usuarios: '/usuarios',
+        compras: '/compras',
+        clientes: '/clientes',
+        ventas: '/ventas',
+        autos: '/autos'
+      }
+    };
+  }
 });
