@@ -64,12 +64,9 @@ export class AuthService {
       }
     ).pipe(
       tap(response => {
-        if (response.token) {
-          localStorage.setItem('auth_token', response.token);
-          // Marcar al usuario como logueado (sin verificar token)
-          localStorage.setItem('user_logged_in', 'true');
-          console.log('Usuario logueado exitosamente');
-        }
+        // Marcar al usuario como logueado (sin verificar token)
+        localStorage.setItem('user_logged_in', 'true');
+        console.log('Usuario logueado exitosamente');
       }),
       catchError(error => {
         console.error('Error en la autenticación:', error);
@@ -84,7 +81,6 @@ export class AuthService {
   }
 
   logout() {
-    localStorage.removeItem('auth_token');
     localStorage.removeItem('user_logged_in');
     this.router.navigate(['/login']);
   }
