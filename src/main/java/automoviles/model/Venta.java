@@ -32,4 +32,10 @@ public class Venta {
 
     @Column(name = "precio_venta", nullable = false, precision = 10, scale = 2)
     private BigDecimal precioVenta;
+    
+    @Column(name = "metodo_pago")
+    private String metodoPago;
+    
+    @Column(name = "observaciones", columnDefinition = "TEXT")
+    private String observaciones;
 }

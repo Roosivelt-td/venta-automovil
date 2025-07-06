@@ -9,9 +9,11 @@ import java.time.LocalDate;
 public class VentaResponse {
 
     private Long identificador;
-    private Long idCliente;  // Solo almacena el ID para simplificar
-    private Long idAuto;
-    private Long idUsuario;
     private LocalDate fecha;
     private BigDecimal precioVenta;
+    private String metodoPago;
+    private String observaciones;
+    private ClienteResponse cliente;
+    private AutoResponse auto;
+    private UsuarioResponse usuario;
 }
