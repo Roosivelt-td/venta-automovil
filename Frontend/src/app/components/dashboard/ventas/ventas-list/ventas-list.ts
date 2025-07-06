@@ -46,7 +46,7 @@ export class VentasListComponent implements OnInit {
   }
 
   abrirModalRegistro(): void {
-    this.router.navigate(['/ventas/registrar']);
+    this.router.navigate(['/dashboard/ventas/registrar']);
   }
 
   buscarVenta(): void {
