@@ -30,6 +30,6 @@ export class SidebarComponent {
   }
 
   navigateToUsuarios() {
-    this.router.navigate(['../../dashboard/usuario-list']);
+    this.router.navigate(['/dashboard/usuarios']);
   }
 }
