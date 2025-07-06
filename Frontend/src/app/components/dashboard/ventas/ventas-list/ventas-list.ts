@@ -114,8 +114,8 @@ export class VentasListComponent implements OnInit {
   }
 
   editarVenta(id: number): void {
-    // Lógica para editar una venta
-    console.log('Editar venta:', id);
+    // Navegar a la página de editar venta
+    this.router.navigate(['/dashboard/ventas/editar', id]);
   }
 
   eliminarVenta(id: number): void {
