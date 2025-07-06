@@ -38,11 +38,15 @@ public class AutoServiceImpl implements AutoService {
         autoNew.setAnio(request.getAnio());
         autoNew.setColor(request.getColor());
         autoNew.setKilometraje(request.getKilometraje());
-        autoNew.setTipo(request.getTipo());
+        autoNew.setTransmision(request.getTransmision());
+        autoNew.setCilindrada(request.getCilindrada());
+        autoNew.setPotencia(request.getPotencia());
+        autoNew.setStock(request.getStock());
         autoNew.setPrecio(request.getPrecio());
         autoNew.setDescripcion(request.getDescripcion());
         autoNew.setImagenUrl(request.getImagenUrl());
-        autoNew.setEstado("Disponible");
+        autoNew.setEstado(request.getEstado() != null ? request.getEstado() : "Disponible");
+
         autoRepository.save(autoNew);
         System.out.println("INFO: Auto creado exitosamente: " + autoNew.getMarca() + " " + autoNew.getModelo());
     }
@@ -90,12 +94,18 @@ public class AutoServiceImpl implements AutoService {
             auto.setAnio(request.getAnio());
             auto.setColor(request.getColor());
             auto.setKilometraje(request.getKilometraje());
-            auto.setTipo(request.getTipo());
+            auto.setTipoCombustible(request.getTipoCombustible());
+            auto.setTransmision(request.getTransmision());
+            auto.setCilindrada(request.getCilindrada());
+            auto.setPotencia(request.getPotencia());
+            auto.setStock(request.getStock());
             auto.setPrecio(request.getPrecio());
             auto.setDescripcion(request.getDescripcion());
             auto.setImagenUrl(request.getImagenUrl());
             auto.setEstado(request.getEstado());
             autoRepository.save(auto);
+            System.out.println("INFO: Auto actualizado exitosamente: " + auto.getMarca() + " " + auto.getModelo());
+
         }else {
             System.out.println("Auto no encontrado");
         }
@@ -106,9 +116,32 @@ public class AutoServiceImpl implements AutoService {
         Auto auto = autoRepository.findById(id).orElse(null);
         if (auto != null) {
             autoRepository.delete(auto);
+            System.out.println("INFO: Auto actualizado exitosamente: " + auto.getMarca() + " " + auto.getModelo());
+
         }else {
             System.out.println("Auto no encontrado");
         }
+    }
+    @Override
+    public void actualizarStock(Long idAuto, Integer cantidadVendida) {
+        Auto auto = autoRepository.findById(idAuto).orElseThrow(() ->
+                new RuntimeException("Auto no encontrado con ID: " + idAuto));
+
+        Integer stockActual = auto.getStock();
+        if (stockActual < cantidadVendida) {
+            throw new RuntimeException("Stock insuficiente. Stock actual: " + stockActual + ", Cantidad solicitada: " + cantidadVendida);
+        }
+
+        Integer nuevoStock = stockActual - cantidadVendida;
+        auto.setStock(nuevoStock);
+
+        // Si el stock llega a 0, cambiar el estado a "Vendido"
+        if (nuevoStock == 0) {
+            auto.setEstado("Vendido");
+        }
+
+        autoRepository.save(auto);
+        System.out.println("INFO: Stock actualizado para auto ID " + idAuto + ". Stock anterior: " + stockActual + ", Stock nuevo: " + nuevoStock);
     }
 
 }

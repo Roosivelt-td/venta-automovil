@@ -21,7 +21,11 @@ public class AutoMapper {
                 autoResponse.setAnio(auto.getAnio());
                 autoResponse.setColor(auto.getColor());
                 autoResponse.setKilometraje(auto.getKilometraje());
-                autoResponse.setTipo(auto.getTipo());
+                autoResponse.setTipoCombustible(auto.getTipoCombustible());
+                autoResponse.setTransmision(auto.getTransmision());
+                autoResponse.setCilindrada(auto.getCilindrada());
+                autoResponse.setPotencia(auto.getPotencia());
+                autoResponse.setStock(auto.getStock());
                 autoResponse.setPrecio(auto.getPrecio());
                 autoResponse.setDescripcion(auto.getDescripcion());
                 autoResponse.setImagenUrl(auto.getImagenUrl());
@@ -40,7 +44,11 @@ public class AutoMapper {
             autoResponse.setAnio(auto.getAnio());
             autoResponse.setColor(auto.getColor());
             autoResponse.setKilometraje(auto.getKilometraje());
-            autoResponse.setTipo(auto.getTipo());
+            autoResponse.setTipoCombustible(auto.getTipoCombustible());
+            autoResponse.setTransmision(auto.getTransmision());
+            autoResponse.setCilindrada(auto.getCilindrada());
+            autoResponse.setPotencia(auto.getPotencia());
+            autoResponse.setStock(auto.getStock());
             autoResponse.setPrecio(auto.getPrecio());
             autoResponse.setDescripcion(auto.getDescripcion());
             autoResponse.setImagenUrl(auto.getImagenUrl());
