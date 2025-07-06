@@ -66,6 +66,12 @@ export class AuthService {
       tap(response => {
         // Marcar al usuario como logueado (sin verificar token)
         localStorage.setItem('user_logged_in', 'true');
+        
+        // Guardar datos del usuario si están disponibles en la respuesta
+        if (response.user) {
+          localStorage.setItem('user_data', JSON.stringify(response.user));
+        }
+        
         console.log('Usuario logueado exitosamente');
       }),
       catchError(error => {
@@ -82,11 +88,47 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem('user_logged_in');
+    localStorage.removeItem('user_data');
     this.router.navigate(['/login']);
   }
 
   getToken(): string | null {
     return localStorage.getItem('auth_token');
+  }
+
+  // Método para obtener los datos del usuario
+  getUserData(): any {
+    const userData = localStorage.getItem('user_data');
+    return userData ? JSON.parse(userData) : null;
+  }
+
+  // Método para obtener el nombre del usuario
+  getUserName(): string {
+    const userData = this.getUserData();
+    if (userData) {
+      // Si tenemos nombre y apellido, mostrar nombre completo
+      if (userData.nombre && userData.apellido) {
+        return `${userData.nombre} ${userData.apellido}`;
+      }
+      // Si solo tenemos nombre
+      if (userData.nombre) {
+        return userData.nombre;
+      }
+      // Si solo tenemos username
+      if (userData.username) {
+        return userData.username;
+      }
+    }
+    return 'Usuario';
+  }
+
+  // Método para obtener el email del usuario
+  getUserEmail(): string {
+    const userData = this.getUserData();
+    if (userData) {
+      return userData.email || userData.username || '';
+    }
+    return '';
   }
 
   // --- Recuperación de contraseña ---
