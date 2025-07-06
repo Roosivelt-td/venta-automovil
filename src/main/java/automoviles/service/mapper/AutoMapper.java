@@ -14,19 +14,7 @@ public class AutoMapper {
         Collection<AutoResponse> listarAutoResponse = new ArrayList<AutoResponse>();
         if (listarAuto != null && !listarAuto.isEmpty()) {
             for (Auto auto : listarAuto) {
-                AutoResponse autoResponse = new AutoResponse();
-                autoResponse.setIdentificador(auto.getId());
-                autoResponse.setMarca(auto.getMarca());
-                autoResponse.setModelo(auto.getModelo());
-                autoResponse.setAnio(auto.getAnio());
-                autoResponse.setColor(auto.getColor());
-                autoResponse.setKilometraje(auto.getKilometraje());
-                autoResponse.setTipo(auto.getTipo());
-                autoResponse.setPrecio(auto.getPrecio());
-                autoResponse.setDescripcion(auto.getDescripcion());
-                autoResponse.setImagenUrl(auto.getImagenUrl());
-                autoResponse.setEstado(auto.getEstado());
-                listarAutoResponse.add(autoResponse);
+                listarAutoResponse.add(toAutoToAutoResponse(auto));
             }
         }
         return listarAutoResponse;
@@ -35,12 +23,17 @@ public class AutoMapper {
     public AutoResponse toAutoToAutoResponse(Auto auto) {
         AutoResponse autoResponse = new AutoResponse();
         if (auto != null) {
+            autoResponse.setId(auto.getId());
             autoResponse.setMarca(auto.getMarca());
             autoResponse.setModelo(auto.getModelo());
             autoResponse.setAnio(auto.getAnio());
             autoResponse.setColor(auto.getColor());
             autoResponse.setKilometraje(auto.getKilometraje());
-            autoResponse.setTipo(auto.getTipo());
+            autoResponse.setTipoCombustible(auto.getTipoCombustible());
+            autoResponse.setTransmision(auto.getTransmision());
+            autoResponse.setCilindrada(auto.getCilindrada());
+            autoResponse.setPotencia(auto.getPotencia());
+            autoResponse.setStock(auto.getStock());
             autoResponse.setPrecio(auto.getPrecio());
             autoResponse.setDescripcion(auto.getDescripcion());
             autoResponse.setImagenUrl(auto.getImagenUrl());

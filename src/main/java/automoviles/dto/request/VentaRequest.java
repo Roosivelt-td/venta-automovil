@@ -14,4 +14,5 @@ public class VentaRequest {
     private Long idUsuario;
     private LocalDate fecha;
     private BigDecimal precioVenta;
+    private String metodoPago;
 }

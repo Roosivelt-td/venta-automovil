@@ -37,6 +37,19 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/usuarios/todos").permitAll() // Temporalmente desprotegido para pruebas
+                        .requestMatchers("/api/usuarios/create").permitAll() // Temporalmente desprotegido para pruebas
+                        .requestMatchers("/api/usuarios/users-disponibles").permitAll() // Temporalmente desprotegido para pruebas
+                        .requestMatchers("/api/usuarios/update/**").permitAll() // Temporalmente desprotegido para pruebas
+                        .requestMatchers("/api/usuarios/delete/**").permitAll() // Temporalmente desprotegido para pruebas
+                        .requestMatchers("/api/usuarios/{id}").permitAll() // Temporalmente desprotegido para pruebas
+                        .requestMatchers("/api/autos/**").permitAll() // Permitir acceso público a autos
+                        .requestMatchers("/api/proveedores/**").permitAll() // Permitir acceso público a proveedores
+                        .requestMatchers("/api/clientes/**").permitAll() // Permitir acceso público a clientes
+                        .requestMatchers("/api/ventas/**").permitAll() // Permitir acceso público a ventas
+                        .requestMatchers("/api/pagos/**").permitAll() // Permitir acceso público a pagos
+                        .requestMatchers("/api/compras/**").permitAll() // Permitir acceso público a compras
+                        .requestMatchers("/api/reembolsos/**").permitAll() // Permitir acceso público a reembolsos
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
