@@ -10,6 +10,8 @@ export interface Venta {
   usuario: any;
   fecha: string;
   precioVenta: number;
+  metodoPago?: string;
+  observaciones?: string;
 }
 
 export interface VentaRequest {
@@ -19,6 +21,7 @@ export interface VentaRequest {
   fecha: string;
   precioVenta: number;
   metodoPago: string;
+  observaciones?: string;
 }
 
 @Injectable({
