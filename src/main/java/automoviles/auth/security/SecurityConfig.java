@@ -82,12 +82,20 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:4200"); // Origen de tu frontend
+        
+        // Orígenes permitidos (desarrollo y producción)
+        config.addAllowedOrigin("http://localhost:4200"); // Desarrollo local
+        config.addAllowedOrigin("https://tu-frontend.vercel.app"); // Vercel
+        config.addAllowedOrigin("https://tu-frontend.netlify.app"); // Netlify
+        config.addAllowedOrigin("https://tu-usuario.github.io"); // GitHub Pages
+        
+        // Para desarrollo, puedes permitir todos los orígenes temporalmente
+        // config.addAllowedOriginPattern("*");
+        
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
-
     }
 
 
