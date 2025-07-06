@@ -55,6 +55,7 @@ export class LoginComponent implements OnInit {
         next: (response) => {
           console.log('Login exitoso');
           this.isLoading = false;
+          // Redirigir automáticamente al dashboard
           this.router.navigate(['/dashboard']);
         },
         error: (error) => {
