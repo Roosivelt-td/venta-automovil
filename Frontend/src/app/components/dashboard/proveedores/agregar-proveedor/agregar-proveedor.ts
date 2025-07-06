@@ -45,7 +45,7 @@ export class AgregarProveedorComponent implements OnInit {
   cerrarModal(): void {
     this.mostrarModal = false;
     // Navegar de vuelta a la lista de proveedores
-    this.router.navigate(['/proveedores']);
+    this.router.navigate(['/dashboard/proveedores']);
   }
 
   onSubmit(): void {
