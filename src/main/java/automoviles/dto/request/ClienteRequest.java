@@ -8,6 +8,7 @@ import lombok.Setter;
 public class ClienteRequest {
     private Long id;
     private String nombre;
+//    private String apellidos;
     private Integer dni;
     private String telefono;
     private String direccion;

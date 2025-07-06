@@ -59,4 +59,14 @@ public class AutoController {
         }
     }
 
+    @PutMapping("/{id}/stock")
+    public ResponseEntity<String> actualizarStock(@PathVariable Long id, @RequestParam Integer cantidad) {
+        try {
+            autoService.actualizarStock(id, cantidad);
+            return ResponseEntity.ok("Stock actualizado exitosamente");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }

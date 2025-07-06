@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
-public class CompraResponse {
+public class    CompraResponse {
 
     private Long identificador;
     private Long idProveedor;  // ID del proveedor

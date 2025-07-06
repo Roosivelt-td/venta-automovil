@@ -20,6 +20,7 @@ public class AutoServiceImpl implements AutoService {
     // en otra, sin necesidad de crearla manualmente con new,
     // Se usa en campos, constructores o métodos
 //>>>>>>> main
+    @Autowired
     private AutoRepository autoRepository;
 
     @Autowired // Inyección del mapeador de autos.
@@ -33,11 +34,13 @@ public class AutoServiceImpl implements AutoService {
     public void crearAuto(AutoRequest request) {
         Auto autoNew = new Auto();
         System.out.println("INFO: Iniciando la creación de un nuevo auto con datos:" + autoNew);
+
         autoNew.setMarca(request.getMarca());
         autoNew.setModelo(request.getModelo());
         autoNew.setAnio(request.getAnio());
         autoNew.setColor(request.getColor());
         autoNew.setKilometraje(request.getKilometraje());
+        autoNew.setTipoCombustible(request.getTipoCombustible());
         autoNew.setTransmision(request.getTransmision());
         autoNew.setCilindrada(request.getCilindrada());
         autoNew.setPotencia(request.getPotencia());
@@ -105,8 +108,7 @@ public class AutoServiceImpl implements AutoService {
             auto.setEstado(request.getEstado());
             autoRepository.save(auto);
             System.out.println("INFO: Auto actualizado exitosamente: " + auto.getMarca() + " " + auto.getModelo());
-
-        }else {
+        } else {
             System.out.println("Auto no encontrado");
         }
     }
@@ -116,12 +118,12 @@ public class AutoServiceImpl implements AutoService {
         Auto auto = autoRepository.findById(id).orElse(null);
         if (auto != null) {
             autoRepository.delete(auto);
-            System.out.println("INFO: Auto actualizado exitosamente: " + auto.getMarca() + " " + auto.getModelo());
-
-        }else {
+            System.out.println("INFO: Auto eliminado exitosamente: " + auto.getMarca() + " " + auto.getModelo());
+        } else {
             System.out.println("Auto no encontrado");
         }
     }
+
     @Override
     public void actualizarStock(Long idAuto, Integer cantidadVendida) {
         Auto auto = autoRepository.findById(idAuto).orElseThrow(() ->

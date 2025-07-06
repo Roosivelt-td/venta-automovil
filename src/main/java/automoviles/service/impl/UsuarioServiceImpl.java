@@ -18,14 +18,15 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private UsuarioMapper usuarioMapper;
 
     @Override //registro de usuario
-    public void crearUsuario(UsuarioRequest  request) {
-        User user = userRepository.findById(request.getIdUser()).orElseThrow(() -> new RuntimeException("User encontrado con ID: " + request.getIdUser()));
+    public UsuarioResponse crearUsuario(UsuarioRequest  request) {
         Usuario  usuarioNew= new Usuario();
         System.out.println("Nuevo usuario" + usuarioNew);
         usuarioNew.setNombre(request.getNombre());
@@ -34,8 +35,25 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuarioNew.setDireccion(request.getDireccion());
         usuarioNew.setCelular(request.getCelular());
         usuarioNew.setEstado(request.getEstado());
-        usuarioNew.setUser(user);
-        usuarioRepository.save(usuarioNew);
+
+        // Si se proporciona un idUser, buscar el User correspondiente
+        if (request.getIdUser() != null) {
+            try {
+                System.out.println("Buscando User con ID: " + request.getIdUser());
+                User user = userRepository.findById(request.getIdUser()).orElseThrow(() ->
+                        new RuntimeException("No existe un User con el ID: " + request.getIdUser() + ". Por favor, verifica el ID o déjalo vacío."));
+                usuarioNew.setUser(user);
+                System.out.println("User encontrado y asignado: " + user.getUsername());
+            } catch (Exception e) {
+                System.err.println("Error al buscar User con ID " + request.getIdUser() + ": " + e.getMessage());
+                throw new RuntimeException("Error al buscar User con ID " + request.getIdUser() + ": " + e.getMessage());
+            }
+        } else {
+            System.out.println("No se proporcionó idUser, creando usuario sin relación con User");
+        }
+
+        Usuario usuarioGuardado = usuarioRepository.save(usuarioNew);
+        return usuarioMapper.toUsuarioToUsuarioResponse(usuarioGuardado);
     }
 
     @Override // buscar usuario por id
@@ -52,6 +70,10 @@ public class UsuarioServiceImpl implements UsuarioService {
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado para el User ID: " + userId));
         return usuarioMapper.toUsuarioToUsuarioResponse(usuario);
     }
+//    public UsuarioResponse obtenerUsuarioPorIdUser(Long user) {
+//        Usuario usuario = usuarioRepository.findByUser(user).orElse( null);
+//        return usuarioMapper.toUsuarioToUsuarioResponse(usuario);
+//    }
 
 
     @Override // obtener todos los usuarios
@@ -61,9 +83,8 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override // actualizar usuario
-    public void actualizarUsuario(Long id, UsuarioRequest request) {
+    public UsuarioResponse actualizarUsuario(Long id, UsuarioRequest request) {
         Usuario usuario = usuarioRepository.findById(id).orElse(null);
-        User user = userRepository.findById(request.getIdUser()).orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + request.getIdUser()));
 
         if (usuario != null) {
             usuario.setNombre(request.getNombre());
@@ -72,9 +93,24 @@ public class UsuarioServiceImpl implements UsuarioService {
             usuario.setDireccion(request.getDireccion());
             usuario.setCelular(request.getCelular());
             usuario.setEstado(request.getEstado());
-            usuario.setUser(user);
 
-            usuarioRepository.save(usuario);
+            // Manejar la relación con User
+            if (request.getIdUser() != null) {
+                try {
+                    User user = userRepository.findById(request.getIdUser()).orElseThrow(() ->
+                            new RuntimeException("No existe un User con el ID: " + request.getIdUser()));
+                    usuario.setUser(user);
+                } catch (Exception e) {
+                    throw new RuntimeException("Error al buscar User con ID " + request.getIdUser() + ": " + e.getMessage());
+                }
+            } else {
+                usuario.setUser(null); // Remover relación con User
+            }
+
+            Usuario usuarioActualizado = usuarioRepository.save(usuario);
+            return usuarioMapper.toUsuarioToUsuarioResponse(usuarioActualizado);
+        } else {
+            throw new RuntimeException("No existe un usuario con el id: " + id);
         }
     }
 

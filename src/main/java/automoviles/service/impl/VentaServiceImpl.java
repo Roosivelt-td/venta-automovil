@@ -38,12 +38,6 @@ public class VentaServiceImpl implements VentaService {
 
     @Autowired
     private AutoService autoService;
-    @Autowired
-    private PagoRepository pagoRepository;
-
-    @Autowired
-    private AutoService autoService;
-
 
     @Override
     public VentaResponse obtenerVentaPorId(Long id) {
@@ -82,6 +76,7 @@ public class VentaServiceImpl implements VentaService {
         venta.setObservaciones(request.getObservaciones());
 
         ventaRepository.save(venta);
+
         // Actualizar el stock del auto vendido (reducir en 1)
         autoService.actualizarStock(request.getIdAuto(), 1);
 
@@ -108,6 +103,7 @@ public class VentaServiceImpl implements VentaService {
             }
             autoRepository.save(autoAnterior);
         }
+
         // Cargar las entidades relacionadas
         Cliente cliente = clienteRepository.findById(request.getIdCliente()).orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + request.getIdCliente()));
         Auto auto = autoRepository.findById(request.getIdAuto()).orElseThrow(() -> new RuntimeException("Auto no encontrado con ID: " + request.getIdAuto()));
@@ -122,7 +118,7 @@ public class VentaServiceImpl implements VentaService {
         ventaExistente.setMetodoPago(request.getMetodoPago());
         ventaExistente.setObservaciones(request.getObservaciones());
 
-        autoService.actualizarStock(request.getIdAuto(), 1);
+        ventaRepository.save(ventaExistente);
 
         // Actualizar el stock del nuevo auto (reducir en 1)
         autoService.actualizarStock(request.getIdAuto(), 1);
@@ -148,7 +144,6 @@ public class VentaServiceImpl implements VentaService {
 
         ventaRepository.deleteById(id);
     }
-
 
     @Override
     public Collection<VentaResponse> buscarVentasPorCliente(String nombreCliente) {
@@ -201,39 +196,39 @@ public class VentaServiceImpl implements VentaService {
         Collection<Venta> todasLasVentas = ventaRepository.findAll();
 
         return todasLasVentas.stream()
-            .filter(venta -> {
-                String terminoLower = termino.toLowerCase();
+                .filter(venta -> {
+                    String terminoLower = termino.toLowerCase();
 
-                // Buscar en ID de venta
-                if (venta.getId().toString().contains(terminoLower)) {
-                    return true;
-                }
+                    // Buscar en ID de venta
+                    if (venta.getId().toString().contains(terminoLower)) {
+                        return true;
+                    }
 
-                // Buscar en cliente
-                if (venta.getCliente().getNombre().toLowerCase().contains(terminoLower) ||
-                        venta.getCliente().getDni().toString().contains(terminoLower)) {
-                    return true;
-                }
+                    // Buscar en cliente
+                    if (venta.getCliente().getNombre().toLowerCase().contains(terminoLower) ||
+                            venta.getCliente().getDni().toString().contains(terminoLower)) {
+                        return true;
+                    }
 
-                // Buscar en auto
-                if (venta.getAuto().getMarca().toLowerCase().contains(terminoLower) ||
-                        venta.getAuto().getModelo().toLowerCase().contains(terminoLower)) {
-                    return true;
-                }
+                    // Buscar en auto
+                    if (venta.getAuto().getMarca().toLowerCase().contains(terminoLower) ||
+                            venta.getAuto().getModelo().toLowerCase().contains(terminoLower)) {
+                        return true;
+                    }
 
-                // Buscar en usuario
-                if (venta.getUsuario().getNombre().toLowerCase().contains(terminoLower)) {
-                    return true;
-                }
+                    // Buscar en usuario
+                    if (venta.getUsuario().getNombre().toLowerCase().contains(terminoLower)) {
+                        return true;
+                    }
 
-                // Buscar en precio
-                if (venta.getPrecioVenta().toString().contains(terminoLower)) {
-                    return true;
-                }
+                    // Buscar en precio
+                    if (venta.getPrecioVenta().toString().contains(terminoLower)) {
+                        return true;
+                    }
 
-                return false;
-            })
-            .map(venta -> ventaMapper.toVentaToVentaResponse(venta))
-            .collect(java.util.stream.Collectors.toList());
+                    return false;
+                })
+                .map(venta -> ventaMapper.toVentaToVentaResponse(venta))
+                .collect(java.util.stream.Collectors.toList());
     }
 }

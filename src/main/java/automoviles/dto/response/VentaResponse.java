@@ -6,12 +6,18 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
-public class VentaResponse {
+public class    VentaResponse {
 
     private Long identificador;
-    private Long idCliente;  // Solo almacena el ID para simplificar
-    private Long idAuto;
-    private Long idUsuario;
+
+    private ClienteResponse cliente;
+    private AutoResponse auto;
+    private UsuarioResponse usuario;
+//    private Long idCliente;  // Solo almacena el ID para simplificar
+//    private Long idAuto;
+//    private Long idUsuario;
     private LocalDate fecha;
     private BigDecimal precioVenta;
+    private String metodoPago;
+    private String observaciones;
 }

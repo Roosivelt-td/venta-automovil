@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 
 @Service
-public class    ProveedorServiceImpl implements ProveedorService {
+public class ProveedorServiceImpl implements ProveedorService {
 
     @Autowired
     private ProveedorRepository proveedorRepository;

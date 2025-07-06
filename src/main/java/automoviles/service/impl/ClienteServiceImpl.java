@@ -31,17 +31,15 @@ public class ClienteServiceImpl implements ClienteService {
         System.out.println("=====================================");
 
         Cliente clienteNew = new Cliente();
-
         clienteNew.setNombre(request.getNombre());
         clienteNew.setDni(request.getDni());
         clienteNew.setTelefono(request.getTelefono());
         clienteNew.setDireccion(request.getDireccion());
         clienteNew.setCorreo(request.getCorreo());
-        System.out.println("Cliente a guardar: " + clienteNew);
 
+        System.out.println("Cliente a guardar: " + clienteNew);
         Cliente clienteGuardado = clienteRepository.save(clienteNew);
         System.out.println("Cliente guardado exitosamente con ID: " + clienteGuardado.getId());
-
     }
 
     @Override // buscar Cliente por id
@@ -55,7 +53,7 @@ public class ClienteServiceImpl implements ClienteService {
         return clienteMapper.toClienteToClienteResponse(cliente);
     }
 
-     // buscar Cliente por dni reniec
+    // buscar Cliente por dni reniec
     public ClienteResponse obtenerClientePorDniReniec(Long dni) {
         Cliente cliente = clienteRepository.findById(dni).orElse(null);
         return clienteMapper.toClienteToClienteResponse(cliente);
@@ -87,5 +85,11 @@ public class ClienteServiceImpl implements ClienteService {
         if (cliente != null) {
             clienteRepository.delete(cliente);
         }
+    }
+
+    @Override // buscar clientes por DNI
+    public Collection<ClienteResponse> buscarClientesPorDni(Integer dni) {
+        Collection<Cliente> clientes = clienteRepository.findByDni(dni);
+        return clienteMapper.toListClienteToClienteResponse(clientes);
     }
 }

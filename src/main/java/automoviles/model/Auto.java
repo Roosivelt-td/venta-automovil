@@ -35,7 +35,6 @@ public class Auto {
     @Column(nullable = false)
     private Integer stock;
 
-    private String tipo;
     @Column(name = "precio", nullable = false, precision = 10, scale = 2)
     private BigDecimal precio;
     @Column(name = "descripcion", columnDefinition = "TEXT")
