@@ -16,8 +16,14 @@ export class AuthGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): boolean {
-    // Permitir acceso a todas las rutas sin autenticación durante desarrollo
-    return true;
+    // Verificar si el usuario está logueado (sin verificar token)
+    if (this.authService.isLoggedIn()) {
+      return true;
+    } else {
+      // Si no está logueado, redirigir al login
+      this.router.navigate(['/login']);
+      return false;
+    }
   }
 }
 
