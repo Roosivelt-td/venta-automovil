@@ -227,7 +227,7 @@ export class RegistrarVentaComponent {
           // Ocultar mensaje después de 3 segundos y redirigir
           setTimeout(() => {
             this.mostrarMensajeExito = false;
-            this.router.navigate(['/ventas']);
+            this.router.navigate(['/dashboard/ventas']);
           }, 3000);
         },
         error: (error) => {
@@ -240,7 +240,7 @@ export class RegistrarVentaComponent {
   }
 
   cancelar() {
-    this.router.navigate(['/ventas']);
+            this.router.navigate(['/dashboard/ventas']);
   }
 
   mostrarFormularioNuevoCliente() {
