@@ -248,24 +248,24 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   // Navegación a diferentes secciones
-  irAAutos(): void {
-    this.router.navigate(['/autos']);
+  navegarAAutos() {
+    this.router.navigate(['/dashboard/autos/gestionar']);
   }
 
-  irAVentas(): void {
-    this.router.navigate(['/ventas']);
+  navegarAVentas() {
+    this.router.navigate(['/dashboard/ventas']);
   }
 
-  irAClientes(): void {
-    this.router.navigate(['/clientes']);
+  navegarAClientes() {
+    this.router.navigate(['/dashboard/clientes']);
   }
 
-  irAPagos(): void {
-    this.router.navigate(['/pagos']);
+  navegarAPagos() {
+    this.router.navigate(['/dashboard/pagos']);
   }
 
-  irAProveedores(): void {
-    this.router.navigate(['/proveedores']);
+  navegarAProveedores() {
+    this.router.navigate(['/dashboard/proveedores']);
   }
 
   // Formatear tiempo relativo
