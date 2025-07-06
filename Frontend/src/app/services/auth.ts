@@ -66,7 +66,9 @@ export class AuthService {
       tap(response => {
         if (response.token) {
           localStorage.setItem('auth_token', response.token);
-          console.log('Token almacenado exitosamente');
+          // Marcar al usuario como logueado (sin verificar token)
+          localStorage.setItem('user_logged_in', 'true');
+          console.log('Usuario logueado exitosamente');
         }
       }),
       catchError(error => {
@@ -77,11 +79,13 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return !!this.getToken();
+    // Verificar si el usuario está logueado (sin verificar token)
+    return !!localStorage.getItem('user_logged_in');
   }
 
   logout() {
     localStorage.removeItem('auth_token');
+    localStorage.removeItem('user_logged_in');
     this.router.navigate(['/login']);
   }
 
