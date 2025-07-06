@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Collection;
 
 @RestController
@@ -17,7 +16,7 @@ public class AutoController {
     @Autowired
     private AutoService autoService;
 
-    @PostMapping ("/create")// crear auto
+    @PostMapping ("/create")// crear auto en base de datos
     public void crearAuto(@RequestBody AutoRequest request) { autoService.crearAuto(request);}
 
     @GetMapping("/{id}") // obtener un auto por su id
