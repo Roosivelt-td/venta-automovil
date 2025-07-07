@@ -3,14 +3,15 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiUrlService } from '../config/ApiUrlService';
 import { Compra, CompraRequest } from '../models/compra';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CompraService {
   private http = inject(HttpClient);
+  private router = inject(Router);
   private apiUrl = inject(ApiUrlService);
-
   // Obtener todas las compras
   getCompras(): Observable<Compra[]> {
     return this.http.get<Compra[]>(this.apiUrl.getUrl('compras') + '/todos');
@@ -35,4 +36,4 @@ export class CompraService {
   deleteCompra(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl.getUrl('compras')}/delete/${id}`);
   }
-} 
+}

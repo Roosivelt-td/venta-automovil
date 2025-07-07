@@ -1,6 +1,8 @@
-import { Injectable } from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import {ApiUrlService} from '../config/ApiUrlService';
+import {Router} from '@angular/router';
 
 export interface Auto {
   id?: number;
@@ -24,47 +26,44 @@ export interface Auto {
   providedIn: 'root'
 })
 export class AutoService {
-  private apiUrl = 'http://localhost:8080/api/autos';
+  private http = inject(HttpClient);
+  private router = inject(Router);
+  private apiUrlService = inject(ApiUrlService);
 
-  constructor(private http: HttpClient) { }
+  private get baseUrl(): string {
+    return this.apiUrlService.getUrl('autos'); // Asegúrate que 'autos' exista en api.config.ts
+  }
 
-  // Crear un nuevo auto
   crearAuto(auto: Auto): Observable<any> {
-    return this.http.post(`${this.apiUrl}/create`, auto);
+    return this.http.post(`${this.baseUrl}/create`, auto);
   }
 
-  // Obtener todos los autos
   obtenerTodosLosAutos(): Observable<Auto[]> {
-    return this.http.get<Auto[]>(`${this.apiUrl}/`);
+    return this.http.get<Auto[]>(`${this.baseUrl}/`);
   }
 
-  // Obtener auto por ID
   obtenerAutoPorId(id: number): Observable<Auto> {
-    return this.http.get<Auto>(`${this.apiUrl}/${id}`);
+    return this.http.get<Auto>(`${this.baseUrl}/${id}`);
   }
 
-  // Actualizar auto
   actualizarAuto(id: number, auto: Auto): Observable<any> {
-    return this.http.put(`${this.apiUrl}/update/${id}`, auto);
+    return this.http.put(`${this.baseUrl}/update/${id}`, auto);
   }
 
-  // Eliminar auto
   eliminarAuto(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/delete/${id}`);
+    return this.http.delete(`${this.baseUrl}/delete/${id}`);
   }
 
-  // Obtener autos por marca
   obtenerAutosPorMarca(marca: string): Observable<Auto[]> {
-    return this.http.get<Auto[]>(`${this.apiUrl}/marca/${marca}`);
+    return this.http.get<Auto[]>(`${this.baseUrl}/marca/${marca}`);
   }
 
-  // Buscar autos por marca y modelo
   buscarAutosPorMarcaYModelo(marca: string, modelo: string): Observable<Auto[]> {
-    return this.http.get<Auto[]>(`${this.apiUrl}/buscar?marca=${marca}&modelo=${modelo}`);
+    return this.http.get<Auto[]>(`${this.baseUrl}/buscar?marca=${marca}&modelo=${modelo}`);
   }
 
-  // Actualizar stock de un auto
   actualizarStock(id: number, cantidad: number): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}/stock?cantidad=${cantidad}`, {});
+    return this.http.put(`${this.baseUrl}/${id}/stock?cantidad=${cantidad}`, {});
   }
+
 }

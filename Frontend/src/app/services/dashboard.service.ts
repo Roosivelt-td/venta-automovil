@@ -1,7 +1,9 @@
-import { Injectable } from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, forkJoin, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import {ApiUrlService} from '../config/ApiUrlService';
+import {Router} from '@angular/router';
 
 export interface DashboardStats {
   totalAutos: number;
@@ -31,10 +33,9 @@ export interface ActividadReciente {
   providedIn: 'root'
 })
 export class DashboardService {
-  private apiUrl = 'http://localhost:8080/api';
-
-  constructor(private http: HttpClient) { }
-
+  private http = inject(HttpClient);
+  private router = inject(Router);
+  private apiUrl = inject(ApiUrlService);
   // Obtener estadísticas completas del dashboard
   obtenerEstadisticas(): Observable<DashboardStats> {
     return forkJoin({
