@@ -1,7 +1,6 @@
-import {inject, Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import {ApiUrlService} from '../config/ApiUrlService';
 
 export interface Proveedor {
   identificador?: number;
@@ -16,9 +15,9 @@ export interface Proveedor {
   providedIn: 'root'
 })
 export class ProveedorService {
+  private apiUrl = 'http://localhost:8080/api/proveedores';
 
-  private http = inject(HttpClient);
-  private apiUrl = inject(ApiUrlService);
+  constructor(private http: HttpClient) { }
 
   // Crear un nuevo proveedor
   crearProveedor(proveedor: Proveedor): Observable<any> {

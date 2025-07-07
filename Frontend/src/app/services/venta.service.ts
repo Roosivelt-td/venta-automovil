@@ -34,7 +34,6 @@ export class VentaService {
     this.apiUrl = 'http://localhost:8080/api';
   }
 
-
   // Obtener todas las ventas
   obtenerTodasLasVentas(): Observable<Venta[]> {
     return this.http.get<Venta[]>(`${this.apiUrl}/ventas/todos`);
