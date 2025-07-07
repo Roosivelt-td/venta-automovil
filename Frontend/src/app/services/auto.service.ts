@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import {ApiUrlService} from '../config/ApiUrlService';
 
 export interface Auto {
   id?: number;
@@ -24,10 +25,9 @@ export interface Auto {
   providedIn: 'root'
 })
 export class AutoService {
-  private apiUrl = 'http://localhost:8080/api/autos';
 
-  constructor(private http: HttpClient) { }
-
+  private http = inject(HttpClient);
+  private apiUrl = inject(ApiUrlService);
   // Crear un nuevo auto
   crearAuto(auto: Auto): Observable<any> {
     return this.http.post(`${this.apiUrl}/create`, auto);
@@ -67,4 +67,4 @@ export class AutoService {
   actualizarStock(id: number, cantidad: number): Observable<any> {
     return this.http.put(`${this.apiUrl}/${id}/stock?cantidad=${cantidad}`, {});
   }
-} 
+}

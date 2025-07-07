@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import {ApiUrlService} from '../config/ApiUrlService';
 
 export interface Pago {
   identificador?: number;
@@ -22,10 +23,9 @@ export interface PagoRequest {
   providedIn: 'root'
 })
 export class PagoService {
-  private apiUrl = 'http://localhost:8080/api/pagos';
 
-  constructor(private http: HttpClient) { }
-
+  private http = inject(HttpClient);
+  private apiUrl = inject(ApiUrlService);
   // Obtener todos los pagos
   obtenerTodosLosPagos(): Observable<Pago[]> {
     return this.http.get<Pago[]>(`${this.apiUrl}/todos`);
@@ -50,4 +50,4 @@ export class PagoService {
   eliminarPago(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/delete/${id}`);
   }
-} 
+}

@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, forkJoin, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import {ApiUrlService} from '../config/ApiUrlService';
 
 export interface DashboardStats {
   totalAutos: number;
@@ -31,9 +32,9 @@ export interface ActividadReciente {
   providedIn: 'root'
 })
 export class DashboardService {
-  private apiUrl = 'http://localhost:8080/api';
 
-  constructor(private http: HttpClient) { }
+  private http = inject(HttpClient);
+  private apiUrl = inject(ApiUrlService);
 
   // Obtener estadísticas completas del dashboard
   obtenerEstadisticas(): Observable<DashboardStats> {
@@ -57,10 +58,10 @@ export class DashboardService {
         const totalProveedores = data.proveedores.length;
         const totalCompras = data.compras.length;
         const totalReembolsos = data.reembolsos.length;
-        
+
         // Calcular ingresos totales
         const ingresosTotales = data.pagos.reduce((sum, pago) => sum + (pago.monto || 0), 0);
-        
+
         // Calcular promedio de venta
         const promedioVenta = totalVentas > 0 ? ingresosTotales / totalVentas : 0;
 
@@ -164,7 +165,7 @@ export class DashboardService {
           const fecha = new Date(venta.fecha);
           const mesIndex = fecha.getMonth();
           const currentMonth = new Date().getMonth();
-          
+
           // Solo considerar los últimos 6 meses
           if (currentMonth - mesIndex < 6) {
             const index = 5 - (currentMonth - mesIndex);
@@ -186,7 +187,7 @@ export class DashboardService {
     return this.http.get<any[]>(`${this.apiUrl}/ventas/todos`).pipe(
       map(ventas => {
         const autosCount: { [key: string]: any } = {};
-        
+
         ventas.forEach(venta => {
           const autoKey = `${venta.auto?.marca} ${venta.auto?.modelo}`;
           if (!autosCount[autoKey]) {
@@ -243,7 +244,7 @@ export class DashboardService {
 
         // Alerta de ventas del día
         const hoy = new Date().toDateString();
-        const ventasHoy = data.ventas.filter(venta => 
+        const ventasHoy = data.ventas.filter(venta =>
           new Date(venta.fecha).toDateString() === hoy
         );
         if (ventasHoy.length > 0) {
@@ -259,4 +260,4 @@ export class DashboardService {
       })
     );
   }
-} 
+}
