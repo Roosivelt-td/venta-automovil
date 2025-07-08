@@ -24,9 +24,9 @@ public class VentaController {
     @PostMapping("/create") // crear una venta de auto
     public void crearVenta(@RequestBody VentaRequest request) { ventaService.crearVenta(request);
     }
-    @GetMapping("/{id}") // obtener un venta por su id
-    public ResponseEntity<VentaResponse> obtenerVentaPorId(@PathVariable Long id) {
-        return ResponseEntity.ok(ventaService.obtenerVentaPorId(id));
+@GetMapping("/{id}") // obtener un venta por su id
+        public ResponseEntity<VentaResponse> obtenerVentaPorId(@PathVariable Long id) {
+            return ResponseEntity.ok(ventaService.obtenerVentaPorId(id));
     }
 
     @GetMapping("/todos")// obtener todos los ventas
@@ -43,7 +43,7 @@ public class VentaController {
         }
     }
 
-    @DeleteMapping("/delete/{id}") // eliminar un venta  por id
+@DeleteMapping("/delete/{id}") // eliminar un venta  por id
     public void eliminarVentaId(@PathVariable Long id) {
         ventaService.eliminarVenta(id);
     }
@@ -60,7 +60,7 @@ public class VentaController {
 
     @GetMapping("/buscar/auto")
     public ResponseEntity<Collection<VentaResponse>> buscarVentasPorAuto(
-            @RequestParam String marca,
+            @RequestParam String marca, 
             @RequestParam String modelo) {
         try {
             return ResponseEntity.ok(ventaService.buscarVentasPorAuto(marca, modelo));
@@ -80,7 +80,7 @@ public class VentaController {
 
     @GetMapping("/buscar/fecha")
     public ResponseEntity<Collection<VentaResponse>> buscarVentasPorFecha(
-            @RequestParam String fechaInicio,
+            @RequestParam String fechaInicio, 
             @RequestParam String fechaFin) {
         try {
             LocalDate inicio = LocalDate.parse(fechaInicio);
@@ -93,7 +93,7 @@ public class VentaController {
 
     @GetMapping("/buscar/precio")
     public ResponseEntity<Collection<VentaResponse>> buscarVentasPorPrecio(
-            @RequestParam BigDecimal precioMin,
+            @RequestParam BigDecimal precioMin, 
             @RequestParam BigDecimal precioMax) {
         try {
             return ResponseEntity.ok(ventaService.buscarVentasPorPrecio(precioMin, precioMax));

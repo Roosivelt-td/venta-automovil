@@ -18,7 +18,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
-
+    
     @Autowired
     private UserRepository userRepository;
 
@@ -35,13 +35,13 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuarioNew.setDireccion(request.getDireccion());
         usuarioNew.setCelular(request.getCelular());
         usuarioNew.setEstado(request.getEstado());
-
+        
         // Si se proporciona un idUser, buscar el User correspondiente
         if (request.getIdUser() != null) {
             try {
                 System.out.println("Buscando User con ID: " + request.getIdUser());
-                User user = userRepository.findById(request.getIdUser()).orElseThrow(() ->
-                        new RuntimeException("No existe un User con el ID: " + request.getIdUser() + ". Por favor, verifica el ID o déjalo vacío."));
+                User user = userRepository.findById(request.getIdUser()).orElseThrow(() -> 
+                    new RuntimeException("No existe un User con el ID: " + request.getIdUser() + ". Por favor, verifica el ID o déjalo vacío."));
                 usuarioNew.setUser(user);
                 System.out.println("User encontrado y asignado: " + user.getUsername());
             } catch (Exception e) {
@@ -51,7 +51,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         } else {
             System.out.println("No se proporcionó idUser, creando usuario sin relación con User");
         }
-
+        
         Usuario usuarioGuardado = usuarioRepository.save(usuarioNew);
         return usuarioMapper.toUsuarioToUsuarioResponse(usuarioGuardado);
     }
@@ -85,7 +85,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override // actualizar usuario
     public UsuarioResponse actualizarUsuario(Long id, UsuarioRequest request) {
         Usuario usuario = usuarioRepository.findById(id).orElse(null);
-
+        
         if (usuario != null) {
             usuario.setNombre(request.getNombre());
             usuario.setApellido(request.getApellido());
@@ -93,12 +93,12 @@ public class UsuarioServiceImpl implements UsuarioService {
             usuario.setDireccion(request.getDireccion());
             usuario.setCelular(request.getCelular());
             usuario.setEstado(request.getEstado());
-
+            
             // Manejar la relación con User
             if (request.getIdUser() != null) {
                 try {
-                    User user = userRepository.findById(request.getIdUser()).orElseThrow(() ->
-                            new RuntimeException("No existe un User con el ID: " + request.getIdUser()));
+                    User user = userRepository.findById(request.getIdUser()).orElseThrow(() -> 
+                        new RuntimeException("No existe un User con el ID: " + request.getIdUser()));
                     usuario.setUser(user);
                 } catch (Exception e) {
                     throw new RuntimeException("Error al buscar User con ID " + request.getIdUser() + ": " + e.getMessage());

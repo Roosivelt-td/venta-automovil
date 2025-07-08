@@ -34,7 +34,7 @@ public class AutoServiceImpl implements AutoService {
     public void crearAuto(AutoRequest request) {
         Auto autoNew = new Auto();
         System.out.println("INFO: Iniciando la creación de un nuevo auto con datos:" + autoNew);
-
+        
         autoNew.setMarca(request.getMarca());
         autoNew.setModelo(request.getModelo());
         autoNew.setAnio(request.getAnio());
@@ -49,7 +49,7 @@ public class AutoServiceImpl implements AutoService {
         autoNew.setDescripcion(request.getDescripcion());
         autoNew.setImagenUrl(request.getImagenUrl());
         autoNew.setEstado(request.getEstado() != null ? request.getEstado() : "Disponible");
-
+        
         autoRepository.save(autoNew);
         System.out.println("INFO: Auto creado exitosamente: " + autoNew.getMarca() + " " + autoNew.getModelo());
     }
@@ -126,22 +126,22 @@ public class AutoServiceImpl implements AutoService {
 
     @Override
     public void actualizarStock(Long idAuto, Integer cantidadVendida) {
-        Auto auto = autoRepository.findById(idAuto).orElseThrow(() ->
-                new RuntimeException("Auto no encontrado con ID: " + idAuto));
-
+        Auto auto = autoRepository.findById(idAuto).orElseThrow(() -> 
+            new RuntimeException("Auto no encontrado con ID: " + idAuto));
+        
         Integer stockActual = auto.getStock();
         if (stockActual < cantidadVendida) {
             throw new RuntimeException("Stock insuficiente. Stock actual: " + stockActual + ", Cantidad solicitada: " + cantidadVendida);
         }
-
+        
         Integer nuevoStock = stockActual - cantidadVendida;
         auto.setStock(nuevoStock);
-
+        
         // Si el stock llega a 0, cambiar el estado a "Vendido"
         if (nuevoStock == 0) {
             auto.setEstado("Vendido");
         }
-
+        
         autoRepository.save(auto);
         System.out.println("INFO: Stock actualizado para auto ID " + idAuto + ". Stock anterior: " + stockActual + ", Stock nuevo: " + nuevoStock);
     }

@@ -22,38 +22,38 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
-
+    
     @Autowired
     private UserRepository userRepository;
 
     @PostMapping ("/create")// crear un usuario
-    public ResponseEntity<UsuarioResponse> crearUsuario(@RequestBody UsuarioRequest request) {
+    public ResponseEntity<UsuarioResponse> crearUsuario(@RequestBody UsuarioRequest request) { 
         return ResponseEntity.ok(usuarioService.crearUsuario(request));
     }
 
     @GetMapping("/{id}") // obtener un usuario por su id
     public ResponseEntity<UsuarioResponse> obtenerUsuarioPorId(@PathVariable Long id) {
-        return ResponseEntity.ok(usuarioService.obtenerUsuarioPorId(id));
+       return ResponseEntity.ok(usuarioService.obtenerUsuarioPorId(id));
     }
 
     @GetMapping("/todos")// obtener todos los usuarios
     public ResponseEntity<Collection<UsuarioResponse>> obtenerTodosLosUsuarios() {
-        return ResponseEntity.ok(usuarioService.obtenerTodosLosUsuarios());
+       return ResponseEntity.ok(usuarioService.obtenerTodosLosUsuarios());
     }
-
+    
     @GetMapping("/users-disponibles")// obtener todos los Users disponibles
     public ResponseEntity<List<Map<String, Object>>> obtenerUsersDisponibles() {
         List<User> users = userRepository.findAll();
         List<Map<String, Object>> usersSimplificados = users.stream()
-                .map(user -> {
-                    Map<String, Object> userMap = new HashMap<>();
-                    userMap.put("id", user.getId());
-                    userMap.put("username", user.getUsername() != null ? user.getUsername() : "");
-                    userMap.put("email", user.getEmail() != null ? user.getEmail() : "");
-                    userMap.put("rol", user.getRol() != null ? user.getRol().name() : "");
-                    return userMap;
-                })
-                .collect(Collectors.toList());
+            .map(user -> {
+                Map<String, Object> userMap = new HashMap<>();
+                userMap.put("id", user.getId());
+                userMap.put("username", user.getUsername() != null ? user.getUsername() : "");
+                userMap.put("email", user.getEmail() != null ? user.getEmail() : "");
+                userMap.put("rol", user.getRol() != null ? user.getRol().name() : "");
+                return userMap;
+            })
+            .collect(Collectors.toList());
         return ResponseEntity.ok(usersSimplificados);
     }
 

@@ -64,7 +64,20 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(user);
 
         var jwtToken = jwtService.generateToken(user);
-        return AuthResponse.builder().token(jwtToken).build();
+        
+        // Crear objeto UserData con los datos del usuario
+        AuthResponse.UserData userData = new AuthResponse.UserData(
+            user.getUsername(),
+            user.getEmail(),
+            usuario.getNombre(),
+            usuario.getApellido(),
+            user.getRol().name()
+        );
+        
+        return AuthResponse.builder()
+                .token(jwtToken)
+                .user(userData)
+                .build();
     }
 
     @Override
@@ -78,8 +91,19 @@ public class AuthServiceImpl implements AuthService {
         var user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow();
         var jwtToken = jwtService.generateToken(user);
+        
+        // Crear objeto UserData con los datos del usuario
+        AuthResponse.UserData userData = new AuthResponse.UserData(
+            user.getUsername(),
+            user.getEmail(),
+            user.getUsuarioDetalles() != null ? user.getUsuarioDetalles().getNombre() : "",
+            user.getUsuarioDetalles() != null ? user.getUsuarioDetalles().getApellido() : "",
+            user.getRol().name()
+        );
+        
         return AuthResponse.builder()
                 .token(jwtToken)
+                .user(userData)
                 .build();
     }
 
@@ -94,7 +118,20 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(user);
 
         String newToken = jwtService.generateToken(user);
-        return AuthResponse.builder().token(newToken).build();
+        
+        // Crear objeto UserData con los datos del usuario
+        AuthResponse.UserData userData = new AuthResponse.UserData(
+            user.getUsername(),
+            user.getEmail(),
+            user.getUsuarioDetalles() != null ? user.getUsuarioDetalles().getNombre() : "",
+            user.getUsuarioDetalles() != null ? user.getUsuarioDetalles().getApellido() : "",
+            user.getRol().name()
+        );
+        
+        return AuthResponse.builder()
+                .token(newToken)
+                .user(userData)
+                .build();
     }
 
     @Override

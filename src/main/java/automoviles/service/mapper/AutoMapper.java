@@ -14,9 +14,7 @@ public class AutoMapper {
         Collection<AutoResponse> listarAutoResponse = new ArrayList<AutoResponse>();
         if (listarAuto != null && !listarAuto.isEmpty()) {
             for (Auto auto : listarAuto) {
-
                 listarAutoResponse.add(toAutoToAutoResponse(auto));
-
             }
         }
         return listarAutoResponse;

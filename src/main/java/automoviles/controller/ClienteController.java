@@ -16,13 +16,13 @@ public class ClienteController {
     private ClienteService clienteService;
 
     @PostMapping ("/create")// crear un cliente
-    public ResponseEntity<ClienteResponse> crearCliente(@RequestBody ClienteRequest request) {
+    public ResponseEntity<ClienteResponse> crearCliente(@RequestBody ClienteRequest request) { 
         System.out.println("=== CONTROLADOR RECIBIÓ REQUEST ===");
         System.out.println("Request completa: " + request);
         System.out.println("Nombre: " + request.getNombre());
         System.out.println("DNI: " + request.getDni());
         System.out.println("=====================================");
-
+        
         clienteService.crearCliente(request);
         // Buscar el cliente recién creado para devolverlo
         ClienteResponse clienteCreado = clienteService.buscarClientesPorDni(request.getDni()).iterator().next();

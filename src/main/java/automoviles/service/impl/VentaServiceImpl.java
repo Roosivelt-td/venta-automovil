@@ -130,7 +130,7 @@ public class VentaServiceImpl implements VentaService {
         if (!ventaRepository.existsById(id)) {
             throw new RuntimeException("Venta no encontrada con ID: " + id);
         }
-
+        
         // Restaurar el stock del auto cuando se elimina la venta
         if (venta != null && venta.getAuto() != null) {
             Auto auto = venta.getAuto();
@@ -141,7 +141,7 @@ public class VentaServiceImpl implements VentaService {
             autoRepository.save(auto);
             System.out.println("INFO: Stock restaurado para auto ID " + auto.getId() + " al eliminar venta ID " + id);
         }
-
+        
         ventaRepository.deleteById(id);
     }
 
@@ -194,41 +194,41 @@ public class VentaServiceImpl implements VentaService {
     public Collection<VentaResponse> buscarVentasPorTermino(String termino) {
         // Búsqueda general que combina múltiples criterios
         Collection<Venta> todasLasVentas = ventaRepository.findAll();
-
+        
         return todasLasVentas.stream()
-                .filter(venta -> {
-                    String terminoLower = termino.toLowerCase();
-
-                    // Buscar en ID de venta
-                    if (venta.getId().toString().contains(terminoLower)) {
-                        return true;
-                    }
-
-                    // Buscar en cliente
-                    if (venta.getCliente().getNombre().toLowerCase().contains(terminoLower) ||
-                            venta.getCliente().getDni().toString().contains(terminoLower)) {
-                        return true;
-                    }
-
-                    // Buscar en auto
-                    if (venta.getAuto().getMarca().toLowerCase().contains(terminoLower) ||
-                            venta.getAuto().getModelo().toLowerCase().contains(terminoLower)) {
-                        return true;
-                    }
-
-                    // Buscar en usuario
-                    if (venta.getUsuario().getNombre().toLowerCase().contains(terminoLower)) {
-                        return true;
-                    }
-
-                    // Buscar en precio
-                    if (venta.getPrecioVenta().toString().contains(terminoLower)) {
-                        return true;
-                    }
-
-                    return false;
-                })
-                .map(venta -> ventaMapper.toVentaToVentaResponse(venta))
-                .collect(java.util.stream.Collectors.toList());
+            .filter(venta -> {
+                String terminoLower = termino.toLowerCase();
+                
+                // Buscar en ID de venta
+                if (venta.getId().toString().contains(terminoLower)) {
+                    return true;
+                }
+                
+                // Buscar en cliente
+                if (venta.getCliente().getNombre().toLowerCase().contains(terminoLower) ||
+                    venta.getCliente().getDni().toString().contains(terminoLower)) {
+                    return true;
+                }
+                
+                // Buscar en auto
+                if (venta.getAuto().getMarca().toLowerCase().contains(terminoLower) ||
+                    venta.getAuto().getModelo().toLowerCase().contains(terminoLower)) {
+                    return true;
+                }
+                
+                // Buscar en usuario
+                if (venta.getUsuario().getNombre().toLowerCase().contains(terminoLower)) {
+                    return true;
+                }
+                
+                // Buscar en precio
+                if (venta.getPrecioVenta().toString().contains(terminoLower)) {
+                    return true;
+                }
+                
+                return false;
+            })
+            .map(venta -> ventaMapper.toVentaToVentaResponse(venta))
+            .collect(java.util.stream.Collectors.toList());
     }
 }

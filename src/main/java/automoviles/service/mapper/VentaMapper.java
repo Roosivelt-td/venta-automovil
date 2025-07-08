@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 @Component
-public class    VentaMapper {
+public class VentaMapper {
 
     public Collection<VentaResponse> toListVentaToVentaResponse(Collection<Venta> listarVenta) {
         Collection<VentaResponse> listarVentaResponse = new ArrayList<VentaResponse>();
