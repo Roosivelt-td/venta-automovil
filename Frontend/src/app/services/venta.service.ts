@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiUrlService } from '../config/ApiUrlService';
@@ -28,61 +28,61 @@ export interface VentaRequest {
   providedIn: 'root'
 })
 export class VentaService {
-  private apiUrl: string;
+  private http = inject(HttpClient);
+  private apiUrlService = inject(ApiUrlService);
 
-  constructor(private http: HttpClient, private apiUrlService: ApiUrlService) {
-    this.apiUrl = 'http://localhost:8080/api';
-  }
-
-  // Obtener todas las ventas
   obtenerTodasLasVentas(): Observable<Venta[]> {
-    return this.http.get<Venta[]>(`${this.apiUrl}/ventas/todos`);
+   const url = this.apiUrlService.getUrl('ventas') + '/todos';
+    return this.http.get<Venta[]>(url);
   }
 
-  // Obtener venta por ID
   obtenerVentaPorId(id: number): Observable<Venta> {
-    return this.http.get<Venta>(`${this.apiUrl}/ventas/${id}`);
+    const url = this.apiUrlService.getUrl('ventas') + `/${id}`;
+    return this.http.get<Venta>(url);
   }
 
-  // Crear nueva venta
   crearVenta(venta: VentaRequest): Observable<void> {
-    console.log('URL de venta:', `${this.apiUrl}/ventas/create`);
-    console.log('Datos de venta a enviar:', JSON.stringify(venta, null, 2));
-    return this.http.post<void>(`${this.apiUrl}/ventas/create`, venta);
+    const url = this.apiUrlService.getUrl('ventas') + '/create';
+    return this.http.post<void>(url, venta);
   }
 
-  // Actualizar venta
   actualizarVenta(id: number, venta: VentaRequest): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/ventas/update/${id}`, venta);
+    const url = this.apiUrlService.getUrl('ventas') + `/update/${id}`;
+    return this.http.put<void>(url, venta);
   }
 
-  // Eliminar venta
   eliminarVenta(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/ventas/delete/${id}`);
+    const url = this.apiUrlService.getUrl('ventas') + `/delete/${id}`;
+    return this.http.delete<void>(url);
   }
 
-  // Métodos de búsqueda
   buscarVentasPorCliente(nombreCliente: string): Observable<Venta[]> {
-    return this.http.get<Venta[]>(`${this.apiUrl}/ventas/buscar/cliente/${encodeURIComponent(nombreCliente)}`);
+    const url = this.apiUrlService.getUrl('ventas') + `/buscar/cliente/${encodeURIComponent(nombreCliente)}`;
+    return this.http.get<Venta[]>(url);
   }
 
   buscarVentasPorAuto(marca: string, modelo: string): Observable<Venta[]> {
-    return this.http.get<Venta[]>(`${this.apiUrl}/ventas/buscar/auto?marca=${encodeURIComponent(marca)}&modelo=${encodeURIComponent(modelo)}`);
+    const url = this.apiUrlService.getUrl('ventas') + `/buscar/auto?marca=${encodeURIComponent(marca)}&modelo=${encodeURIComponent(modelo)}`;
+    return this.http.get<Venta[]>(url);
   }
 
   buscarVentasPorUsuario(nombreUsuario: string): Observable<Venta[]> {
-    return this.http.get<Venta[]>(`${this.apiUrl}/ventas/buscar/usuario/${encodeURIComponent(nombreUsuario)}`);
+    const url = this.apiUrlService.getUrl('ventas') + `/buscar/usuario/${encodeURIComponent(nombreUsuario)}`;
+    return this.http.get<Venta[]>(url);
   }
 
   buscarVentasPorFecha(fechaInicio: string, fechaFin: string): Observable<Venta[]> {
-    return this.http.get<Venta[]>(`${this.apiUrl}/ventas/buscar/fecha?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`);
+    const url = this.apiUrlService.getUrl('ventas') + `/buscar/fecha?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`;
+    return this.http.get<Venta[]>(url);
   }
 
   buscarVentasPorPrecio(precioMin: number, precioMax: number): Observable<Venta[]> {
-    return this.http.get<Venta[]>(`${this.apiUrl}/ventas/buscar/precio?precioMin=${precioMin}&precioMax=${precioMax}`);
+    const url = this.apiUrlService.getUrl('ventas') + `/buscar/precio?precioMin=${precioMin}&precioMax=${precioMax}`;
+    return this.http.get<Venta[]>(url);
   }
 
   buscarVentasPorTermino(termino: string): Observable<Venta[]> {
-    return this.http.get<Venta[]>(`${this.apiUrl}/ventas/buscar/termino/${encodeURIComponent(termino)}`);
+    const url = this.apiUrlService.getUrl('ventas') + `/buscar/termino/${encodeURIComponent(termino)}`;
+    return this.http.get<Venta[]>(url);
   }
 }

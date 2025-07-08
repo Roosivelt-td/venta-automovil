@@ -1,6 +1,8 @@
-import { Injectable } from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import {ApiUrlService} from '../config/ApiUrlService';
+import {Router} from '@angular/router';
 
 export interface Pago {
   identificador?: number;
@@ -22,10 +24,9 @@ export interface PagoRequest {
   providedIn: 'root'
 })
 export class PagoService {
-  private apiUrl = 'http://localhost:8080/api/pagos';
-
-  constructor(private http: HttpClient) { }
-
+  private http = inject(HttpClient);
+  private router = inject(Router);
+  private apiUrl = inject(ApiUrlService);
   // Obtener todos los pagos
   obtenerTodosLosPagos(): Observable<Pago[]> {
     return this.http.get<Pago[]>(`${this.apiUrl}/todos`);

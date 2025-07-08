@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiUrlService } from '../config/ApiUrlService';
@@ -26,41 +26,35 @@ export interface ClienteRequest {
   providedIn: 'root'
 })
 export class ClienteService {
-  private apiUrl: string;
+  private http = inject(HttpClient);
+  private apiUrlService = inject(ApiUrlService);
 
-  constructor(private http: HttpClient, private apiUrlService: ApiUrlService) {
-    this.apiUrl = 'http://localhost:8080/api';
+  private get baseUrl(): string {
+    return this.apiUrlService.getUrl('clientes');
   }
 
-  // Obtener todos los clientes
   obtenerTodosLosClientes(): Observable<Cliente[]> {
-    return this.http.get<Cliente[]>(`${this.apiUrl}/clientes/todos`);
+    return this.http.get<Cliente[]>(`${this.baseUrl}/todos`);
   }
 
-  // Obtener cliente por ID
   obtenerClientePorId(id: number): Observable<Cliente> {
-    return this.http.get<Cliente>(`${this.apiUrl}/clientes/${id}`);
+    return this.http.get<Cliente>(`${this.baseUrl}/${id}`);
   }
 
-  // Crear nuevo cliente
   crearCliente(cliente: ClienteRequest): Observable<Cliente> {
-    console.log('URL de creación:', `${this.apiUrl}/clientes/create`);
-    console.log('Datos a enviar:', cliente);
-    return this.http.post<Cliente>(`${this.apiUrl}/clientes/create`, cliente);
+    console.log('URL de creación:', `${this.baseUrl}/create`);
+    return this.http.post<Cliente>(`${this.baseUrl}/create`, cliente);
   }
 
-  // Actualizar cliente
   actualizarCliente(id: number, cliente: ClienteRequest): Observable<Cliente> {
-    return this.http.put<Cliente>(`${this.apiUrl}/clientes/update/${id}`, cliente);
+    return this.http.put<Cliente>(`${this.baseUrl}/update/${id}`, cliente);
   }
 
-  // Eliminar cliente
   eliminarCliente(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/clientes/delete/${id}`);
+    return this.http.delete<void>(`${this.baseUrl}/delete/${id}`);
   }
 
-  // Buscar clientes por DNI
   buscarClientesPorDni(dni: number): Observable<Cliente[]> {
-    return this.http.get<Cliente[]>(`${this.apiUrl}/clientes/buscar?dni=${dni}`);
+    return this.http.get<Cliente[]>(`${this.baseUrl}/buscar?dni=${dni}`);
   }
-} 
+}
